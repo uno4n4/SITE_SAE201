@@ -43,6 +43,92 @@ html, body {
     flex: 1;
 }
 
+button {
+   background-color: #141139; 
+   color: white;
+   border-radius: 5px;
+   padding: 5px;
+}
+
+#form-container {
+    display: none;
+    border: 1px solid black;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.form-style {
+    text-align: left;
+    max-width: 600px;
+    margin: auto;
+}
+
+
+.input-icon {
+    position: relative;
+    margin-bottom: 15px;
+}
+  
+.input-icon input {
+    width: 100%;
+    padding: 10px 40px 10px 10px; /* espace à droite pour l'icône */
+    border: 1px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+  
+.input-icon i {
+    position: absolute;
+    right: 10px;
+    top: 56%;
+    transform: translateY(-50%);
+    color: black;
+    pointer-events: none;
+}
+  
+
+#submit1 {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: fit-content !important;
+    padding: 10px 20px;
+    background-color: #141139;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#submit2 {
+    display: block;
+    margin: 20px auto 0 auto;
+    width: fit-content !important;
+    padding: 10px 20px;
+    background-color: #141139;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#form-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#form-container select {
+    width: 25%;
+    padding: 3px;
+    margin: 10px auto 10px;
+    border-radius: 5px;
+}
+
 footer{
     color:white;
     background-color: #141139;
