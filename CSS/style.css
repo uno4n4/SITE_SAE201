@@ -122,12 +122,14 @@ button {
     border-radius: 5px;
 }
 
+
 #form-container select {
     width: 25%;
     padding: 3px;
     margin: 10px auto 10px;
     border-radius: 5px;
 }
+
 
 footer{
     color:white;
