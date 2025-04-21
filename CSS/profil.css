@@ -1,0 +1,83 @@
+body {
+    background-color: #D3D2D2;
+    margin: 0;
+}
+
+#logo-iut-head {
+    max-height: 40px; 
+}
+
+#tableau {
+    border: none;
+    white-space: nowrap;
+    padding: 0 20px 70px;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.custom-bg {
+    background-color: white;
+    width: 100%;
+    overflow-x: hidden;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 10px;
+    margin-top: -50px;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.calendar-header {
+    display: flex; /* Permet de mettre tous les éléments sur une même ligne */
+    align-items: center; /* Aligne les éléments verticalement au centre */
+    padding: 10px 20px;
+}
+
+#month-year {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.notifications {
+    white-space: nowrap;
+}
+
+.notifications select {
+    border: none;
+    font-size: 12px;
+}
+
+.notifs {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+#telecharger {
+    text-decoration: none;
+    color: black;
+}
+
+#telecharger i {
+    right: 10px;
+}
+
+.notifs:hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e1e1e1;
+}
