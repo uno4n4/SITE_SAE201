@@ -81,3 +81,49 @@ button {
 button:hover {
     background-color: #e1e1e1;
 }
+
+/* Réglages */
+
+#form-container {
+    display: none;
+    margin: auto;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+#changer, #supp {
+    align-items: flex-end;
+}
+
+#changer {
+    background-color: #2F2A85;
+    color: white;
+    padding: 5px;
+}
+
+#supp {
+    background-color: #6E6E6E;
+    color: #0000005b;
+    padding: 5px;
+}
+
+#photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+input {
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 10px;
+}
+
+#submit {
+    background-color: #2F2A85;
+    color: white;
+    padding: 5px;
+    margin-top: 20px;
+    align-items: flex-end;
+}
