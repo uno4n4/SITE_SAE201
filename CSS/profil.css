@@ -82,6 +82,13 @@ button:hover {
     background-color: #e1e1e1;
 }
 
+#form-reglages {
+    display: none;
+    margin: auto;
+    margin-top: 10px;
+    padding-left: 10px; 
+}
+
 /* Réglages */
 
 #form-container {
@@ -125,5 +132,23 @@ input {
     color: white;
     padding: 5px;
     margin-top: 20px;
-    align-items: flex-end;
+}
+
+#submit2 {
+    background-color: #6E6E6E;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+#confirmer {
+    background-color: #2F2A85;
+    color: white;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+#gif {
+    width: 100px;
+    display: flex;
+    align-items: center;
 }
