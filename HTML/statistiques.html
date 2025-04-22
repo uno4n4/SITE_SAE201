@@ -40,5 +40,61 @@
         </a>
     </div>
 
+    <div class="d-flex justify-content-between custom-bg">
+        <h2>Statistiques</h2>
+        <div class="stats" id="stat1">
+            <a href="#" id="calendrier"><i class="fa-solid fa-calendar-days"></i></a>
+            <p id="month"></p>
+            <div class="reservations">
+                <div class="container-total">
+                    <p>Total des réservations : </p>
+                    <h3 id="nb-reservation"></h3>
+                </div>
+                <div class="container-venir">
+                    <p>Total des réservations à venir :</p>
+                    <h3 id="nb-venir"></h3>
+                </div>
+                <div class="container-plus">
+                    <p>L'article le plus réservé : </p>
+                    <h3 id="nb-article"></h3>
+                    <img src="#" id="photo-article">
+                    <h4 id="nom-article"></h4>
+                </div>
+                <div class="stats-reservation">
+                    <h5>Statistiques des réservations ce mois-ci :</h5>
+                    <select name="profil">
+                        <option value="etudiant">Etudiants</option>
+                        <option value="prof">Professeurs</option>
+                    </select>
+                </div>
+                <div class="pdf">
+                    <a href="#" download="" id="telecharger">Télécharger sous format PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section du calendrier à droite -->
+            
+            <div id="form-reglages" style="display: none;">
+                <h2>Réglages du compte</h2>
+                <button type="button" id="reglage"><i class="fa-solid fa-user"></i> Réglages du profil</button>
+                <button type="button" id="verif"><i class="fa-solid fa-check"></i> Vérification</button>
+              </div>
+              
+              <!-- Formulaire dynamique -->
+              <div id="form-container"></div>
+            </div>
+          
+          
+          <!-- Bouton réglages en bas -->
+          <div class="d-flex flex-nowrap">
+            <a href="../HTML/setting.html">
+              <button type="button" id="setting"><i class="fa-solid fa-gear"></i>Réglages</button>
+          </a>
+          </div>
+
+
+
+
 </body>
 </html>
