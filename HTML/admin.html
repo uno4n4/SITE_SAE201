@@ -68,13 +68,38 @@
                     <option value="Prof">Professeurs</option>
                 </select>
                 <div class="notifs">
-                    <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
+                    <p>Souhaite effectuer une réservation pour le : <bold id="jour"></bold></p>
                     <p id="nom"></p>
                     <div class="text-end">
-                        <a href="#" download="" id="telecharger">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
+                      <a href="#" id="accepter">Accepter</a>
+                      <a href="#" id="refuser">Refuser</a>
+                      <a href="#" id="modifier-reser">Modifier la réservation</a>
                     </div>
                 </div>
-            </div>
+              </div>
+              <div class="materiel" id="gest-materiels">
+                <h5>Gérer le matériel</h5>
+                <a href="#" id="voir">Voir tous</a>
+                <button type="button" id="plus">+</button>
+                <a href="#" id="ajouter">Ajouter du matériel</a>
+                <div class="notifs">
+                  <img src="../IMAGE/logo-iut.png" id="img-produit">
+                  <h4 id="produit">Caméra untel</h4>
+                  <p id="description">Description</p>
+                  <a href="#" id="dispo">Disponible</a>
+                  <a href="#" id="indispo">Indisponible</a>
+                  <a href="#" id="modifier-mat">Modifier le matériel</a>
+                </div>
+                <div id="container-account">
+                  <h5>Approuver des utilisateurs</h5>
+                  <a href="#" id="voir">Voir plus</a>
+                  <p id="nom">Nom</p>
+                  <p id="prenom">Prenom</p>
+                  <p id="etudiant">Num etudiant</p>
+                  <button id="accepter1"><i class="fa-solid fa-circle-check"></i></button>
+                  <button id="refuser1"><i class="fa-solid fa-circle-xmark"></i></button>
+                </div>    
+              </div>
     
             <!-- Section du calendrier à droite -->
             <div id="container-calendrier">
@@ -96,6 +121,5 @@
                     <tbody id="calendar-days"></tbody>
                 </table>
             </div>
-    
 </body>
 </html>
