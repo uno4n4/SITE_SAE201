@@ -152,3 +152,93 @@ input {
     display: flex;
     align-items: center;
 }
+
+
+/* Admin */ 
+
+#modifier-reser, #modifier-mat {
+    color: black;
+}
+
+#accepter {
+    color: rgb(1, 250, 1);
+}
+
+#refuser {
+    color: red;
+}
+
+#voir {
+    text-decoration: none;
+    color: #D3D2D2;
+}
+
+#plus {
+    font-size: 20px;
+    border: 1px solid black;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+#ajouter {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    white-space: nowrap;
+}
+
+#img-produit {
+    width: 40px;
+}
+
+#dispo {
+    color: rgb(1, 250, 1);
+}
+
+#indispo {
+    color: red;
+}
+
+#accepter1 {
+    color: white;
+    background-color: rgb(1, 250, 1);
+}
+
+#refuser1 {
+    color: white;
+    background-color: red;
+}
+
+/* Stat */ 
+
+.container-total {
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 4px 2px 5px 5px;
+    font-weight: bold;
+}
+
+.container-venir {
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 4px 2px 5px 5px;
+    font-weight: bold;
+}
+
+.container-plus {
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 4px 2px 5px 5px;
+    font-weight: bold;
+}
+
+.stats-reservation {
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 4px 2px 5px 5px;
+    font-weight: bold;
+}
+
