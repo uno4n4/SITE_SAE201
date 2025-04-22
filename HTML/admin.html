@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <script src="../JS/profile.js" defer></script>
-    <script src="../JS/setting.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <title>Profil de l'admin</title>
 </head>
@@ -40,97 +39,112 @@
             <a href="../HTML/consignes.html">
               <button type="button" id="gest-consignes"><i class="fa-solid fa-file"></i>Gestion des consignes de sécurité</button>
             </a>
-          </div>
+        </div>
 
-          <div class="d-flex justify-content-between custom-bg">
-            <div class="notifications" id="notif">
-                <label for="filtre">Filtrer par :</label>
-                <select name="Mois">
-                    <option value="Jan">Janvier</option>
-                    <option value="Fevr">Février</option>
-                    <option value="Mar">Mars</option>
-                    <option value="Avril">Avril</option>
-                    <option value="Mai">Mai</option>
-                    <option value="Juin">Juin</option>
-                    <option value="Juillet">Juillet</option>
-                    <option value="Août">Août</option>
-                    <option value="Sept">Septembre</option>
-                    <option value="Oct">Octobre</option>
-                    <option value="Nov">Novembre</option>
-                    <option value="Dec">Décembre</option>
-                </select>
-                <select name="Types">
-                    <option value="Mat">Matériels</option>
-                    <option value="Sall">Salles</option>
-                </select>
-                <select name="Profiles">
-                    <option value="Etu">Etudiants</option>
-                    <option value="Prof">Professeurs</option>
-                </select>
-                <div class="notifs">
-                    <p>Souhaite effectuer une réservation pour le : <bold id="jour"></bold></p>
-                    <p id="nom"></p>
-                    <div class="text-end">
-                      <a href="#" id="accepter">Accepter</a>
-                      <a href="#" id="refuser">Refuser</a>
-                      <a href="#" id="modifier-reser">Modifier la réservation</a>
-                    </div>
-                </div>
+        <div class="d-flex justify-content-between custom-bg">
+  
+          <!-- Bloc notifications -->
+          <div class="notifications" id="notif">
+            <label for="filtre">Filtrer par :</label>
+            <select name="Mois">
+              <option value="Jan">Janvier</option>
+              <option value="Fevr">Février</option>
+              <option value="Mar">Mars</option>
+              <option value="Avril">Avril</option>
+              <option value="Mai">Mai</option>
+              <option value="Juin">Juin</option>
+              <option value="Juillet">Juillet</option>
+              <option value="Août">Août</option>
+              <option value="Sept">Septembre</option>
+              <option value="Oct">Octobre</option>
+              <option value="Nov">Novembre</option>
+              <option value="Dec">Décembre</option>
+            </select>
+            <select name="Types">
+              <option value="Mat">Matériels</option>
+              <option value="Sall">Salles</option>
+            </select>
+            <select name="Profiles">
+              <option value="Etu">Etudiants</option>
+              <option value="Prof">Professeurs</option>
+            </select>
+        
+            <div class="notifs">
+              <p>Souhaite effectuer une réservation pour le : <strong id="jour"></strong></p>
+              <p id="nom"></p>
+              <div class="text-end">
+                <a href="#" id="accepter">Accepter</a>
+                <a href="#" id="refuser">Refuser</a>
+                <a href="#" id="modifier-reser">Modifier la réservation</a>
               </div>
-              <div class="materiel" id="gest-materiels">
-                <h5>Gérer le matériel</h5>
-                <a href="#" id="voir">Voir tous</a>
-                <button type="button" id="plus">+</button>
-                <a href="#" id="ajouter">Ajouter du matériel</a>
-                <div class="notifs">
-                  <img src="../IMAGE/logo-iut.png" id="img-produit">
-                  <h4 id="produit">Caméra untel</h4>
-                  <p id="description">Description</p>
-                  <a href="#" id="dispo">Disponible</a>
-                  <a href="#" id="indispo">Indisponible</a>
-                  <a href="#" id="modifier-mat">Modifier le matériel</a>
-                </div>
-                <div id="container-account">
-                  <h5>Approuver des utilisateurs</h5>
-                  <a href="#" id="voir">Voir plus</a>
-                  <p id="nom">Nom</p>
-                  <p id="prenom">Prenom</p>
-                  <p id="etudiant">Num etudiant</p>
-                  <button id="accepter1"><i class="fa-solid fa-circle-check"></i></button>
-                  <button id="refuser1"><i class="fa-solid fa-circle-xmark"></i></button>
-                </div>    
-              </div>
-    
-            <!-- Section du calendrier à droite -->
-            <div id="container-calendrier">
-                <div class="calendar-header">
-                    <button class="prev-month"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 id="month-year">Avril 2025</h2>
-                    <button class="after-month"><i class="fa-solid fa-arrow-right"></i></button>
-                </div>
-                <table class="calendar">
-                    <thead>
-                        <tr>
-                            <th>Lun</th>
-                            <th>Mar</th>
-                            <th>Mer</th>
-                            <th>Jeu</th>
-                            <th>Ven</th>
-                        </tr>
-                    </thead>
-                    <tbody id="calendar-days"></tbody>
-                </table>
-                <div id="form-reglages">
-                  <h2>Réglages du compte</h2>
-                  <button type="button" id="reglage"><i class="fa-solid fa-user"></i>Réglages du profil</button>
-                  <button type="button" id="verif"><i class="fa-solid fa-check"></i>Vérification</button>
-              </div>
-              <div id="form-container"></div>
             </div>
           </div>
-
-          <div class="d-flex flex-nowrap">
-            <button type="button" id="setting"><i class="fa-solid fa-gear"></i>Réglages</button>
+        
+          <!-- Bloc gestion matériel -->
+          <div class="materiel" id="gest-materiel">
+            <h5>Gérer le matériel</h5>
+            <a href="#" id="voir">Voir tous</a>
+            <button type="button" id="plus">+</button>
+            <a href="#" id="ajouter">Ajouter du matériel</a>
+        
+            <div class="gest-produit">
+              <img src="../IMAGE/logo-iut.png" id="img-produit">
+              <h4 id="produit">Caméra untel</h4>
+              <p id="description">Description</p>
+              <a href="#" id="dispo">Disponible</a>
+              <a href="#" id="indispo">Indisponible</a>
+              <a href="#" id="modifier-mat">Modifier le matériel</a>
+            </div>
+        
+            <div id="container-account">
+              <h5>Approuver des utilisateurs</h5>
+              <a href="#" id="voir">Voir plus</a>
+              <p id="nom">Nom</p>
+              <p id="prenom">Prenom</p>
+              <p id="etudiant">Num étudiant</p>
+              <button id="accepter1"><i class="fa-solid fa-circle-check"></i></button>
+              <button id="refuser1"><i class="fa-solid fa-circle-xmark"></i></button>
+            </div>
           </div>
+        
+          <!-- Bloc calendrier -->
+          <div id="container-calendrier">
+            <div class="calendar-header">
+              <button class="prev-month"><i class="fa-solid fa-arrow-left"></i></button>
+              <h2 id="month-year">Avril 2025</h2>
+              <button class="after-month"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        
+            <table class="calendar">
+              <thead>
+                <tr>
+                  <th>Lun</th>
+                  <th>Mar</th>
+                  <th>Mer</th>
+                  <th>Jeu</th>
+                  <th>Ven</th>
+                </tr>
+              </thead>
+              <tbody id="calendar-days"></tbody>
+            </table>
+        
+            <!-- Formulaire de réglages -->
+            <div id="form-reglages" style="display: none;">
+              <h2>Réglages du compte</h2>
+              <button type="button" id="reglage"><i class="fa-solid fa-user"></i> Réglages du profil</button>
+              <button type="button" id="verif"><i class="fa-solid fa-check"></i> Vérification</button>
+            </div>
+            
+            <!-- Formulaire dynamique -->
+            <div id="form-container"></div>
+          </div>
+        
+        </div>
+        
+        <!-- Bouton réglages en bas -->
+        <div class="d-flex flex-nowrap">
+          <button type="button" id="setting"><a href="../HTML/setting.html"><i class="fa-solid fa-gear"></i>Réglages</a></button>
+        </div>
+        
 </body>
 </html>
