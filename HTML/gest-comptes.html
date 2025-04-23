@@ -39,6 +39,52 @@
           <button type="button" id="gest-consignes"><i class="fa-solid fa-file"></i>Gestion des consignes de sécurité</button>
         </a>
     </div>
+
+    <div class="d-flex justify-content-between custom-bg">
+        <h2>Gestions des comptes</h2>
+        <h5 id="nb-comptes"></h5>
+        <div class="compte" id="comptes">
+            <label for="filtre">Filtrer par :</label>
+            <select name="Profiles">
+              <option value="Etu">Etudiants</option>
+              <option value="Prof">Professeurs</option>
+            </select>
+            <select name="Classes">
+                <option value="MMI1">MMI 1</option>
+                <option value="MMI2">MMI 2</option>
+                <option value="MMI">MMI 3</option>
+            </select>
+            <select name="TP">
+                <option value="TPA">TP A</option>
+                <option value="TPB">TP B</option>
+                <option value="TPC">TP C</option>
+                <option value="TPD">TP D</option>
+                <option value="TPE">TP E</option>
+                <option value="TPF">TP F</option>
+            </select>
+            <div class="selection"></div>
+            <div class="ligne"></div>
+            <button type="button" id="ajouter">+ Ajouter un compte</button>
+            <div class="card" style="width: 10rem;">
+                <div class="card-top">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <input type="radio">
+                        </div>
+                    </div>
+                </div>
+                <img class="card-img-top" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+                <h6 id="nom-prenom"></h6>
+                <p id="classe"></p>
+                <div class="card-body">
+                    <p id="derniere-reservation">Dernière réservation</p>
+                    <p id="email"></p>
+                    <p id="num-etudiant"></p>
+                    <p id="num-tel"></p>
+                    <p id="pseudo"></p>
+                </div>
+            </div>
+        </div>
     
 </body>
 </html>
