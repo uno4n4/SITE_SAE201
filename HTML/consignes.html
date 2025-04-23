@@ -42,7 +42,24 @@
 
     <div class="d-flex justify-content-between custom-bg">
         <h2>Gestions des consignes de sécurité</h2>
-        
+        <div class="container">
+            <div class="d-flex p-2 custom-back">
+                <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
+                <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
+                <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
+                <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
+                <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
+                <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
+                <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
+                <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
+                <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
+                <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
+                <button id="voir" class="visu">Visualiser</button>
+            </div>
+            <hr id="ligne">
+            <p id="ecrire">Aa<i class="fa-solid fa-i-cursor"></i></p>
+            <button id="enregistrer">Enregistrer</button>
+        </div>
     </div>
     
 </body>
