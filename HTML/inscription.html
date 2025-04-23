@@ -10,7 +10,7 @@
     <script src="../JS/inscription.js" defer></script>
     <title>Inscription</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <header class="container-fluid px-0">
         <div class="d-flex align-items-center justify-content-between flex-nowrap px-3 py-2">
@@ -23,46 +23,42 @@
         </div>
     </header> 
 
-      <div class="container-fluid text-center">
+    <main class="d-flex flex-column justify-content-center align-items-center flex-fill text-center">
+      <div class="container-fluid">
         <h2>Choissisez votre statut : </h2>
-        <button type="button" id="btn-etudiant">Je suis étudiant</button>
-        <button type="button" id="btn-prof">Je suis professeur</button>
+        <button type="button" class="btn border rounded text-white bouton-choix" id="btn-etudiant">Je suis étudiant</button>
+        <button type="button" class="btn border rounded text-white bouton-choix" id="btn-prof">Je suis professeur</button>
         <div id="form-container"></div>
       </div>
+    </main>
 
-      <footer class="container-fluid mt-5 text-white">
-        <div class="row px-5">
-          <div class="col-md-2 mt-5">
-            <a class="navbar-brand" href="#">
-              <img src="../IMAGE/logo-iut.png" alt="logo iut" id="logo-iut-foot">
-            </a>
+    <footer class="container-fluid mt-5 text-white custom-bg">
+      <img src="../IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left my-3" alt="logo iut">
+    
+      <div class="row px-5 mt-4">
+        <div class="col-12 d-flex flex-wrap gap-5">
+          <!-- Bloc Informations -->
+          <div>
+            <div class="fw-bold mb-2">INFORMATIONS</div>
+            <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+          </div>
+    
+          <!-- Bloc Contactez-nous -->
+          <div>
+            <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
+            <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
           </div>
         </div>
-      
-        <div class="row px-5 mt-4">
-          <div class="col-12 d-flex flex-wrap gap-5">
-            <!-- Bloc Informations -->
-            <div>
-              <div class="fw-bold mb-2">INFORMATIONS</div>
-              <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
-            </div>
-      
-            <!-- Bloc Contactez-nous -->
-            <div>
-              <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-              <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
-            </div>
-          </div>
+      </div>
+    
+      <hr class="mt-5 border-white opacity-50">
+    
+      <div class="row px-5">
+        <div class="col-12 text-center text-white mb-3">
+          &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
         </div>
-      
-        <hr class="mt-5 border-white opacity-50">
-      
-        <div class="row px-5">
-          <div class="col-12 text-center text-white mb-3">
-            &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
-          </div>
-        </div>
-      </footer>
+      </div>
+    </footer>
 
 </body>
 </html>
