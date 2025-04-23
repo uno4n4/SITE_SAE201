@@ -1,14 +1,17 @@
+/* Agent */
 document.addEventListener("DOMContentLoaded", function() {
     const settingButton = document.getElementById("setting");
     const reglages = document.getElementById("form-reglages");
     const container = document.getElementById("form-container");
     const notif = document.getElementById("notif");
     const calendrier = document.getElementById("container-calendrier");
+    const materiel = document.getElementById("mat");
     settingButton.onclick = function(){
         reglages.style.display = "block";
         container.style.display = "none";
         notif.style.display = "none";
         calendrier.style.display = "none";
+        
         container.innerHTML = "";
     };
 
@@ -58,4 +61,4 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 });
 
-        
+
