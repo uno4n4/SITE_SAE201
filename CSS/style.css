@@ -40,7 +40,6 @@
     margin: auto;
 }
 
-/* Inscription 
 #form-container {
     display: none;
     border: 1px solid black;
@@ -56,7 +55,6 @@
     max-width: 600px;
     margin: auto;
 }
-
 
 .input-icon {
     position: relative;
@@ -79,30 +77,25 @@
     color: black;
     pointer-events: none;
 }
-  
 
-#submit1 {
-    display: block;
-    margin: 20px auto 0 auto;
-    width: fit-content !important;
-    padding: 10px 20px;
-    background-color: #141139;
-    color: white;
-    border: none;
+.button-container {
     border-radius: 5px;
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
 }
 
-#submit2 {
-    display: block;
-    margin: 20px auto 0 auto;
-    width: fit-content !important;
-    padding: 10px 20px;
-    background-color: #141139;
+#form-container button {
     color: white;
+    background-color: #141139;
+    border-radius: 10px;
     border: none;
-    border-radius: 5px;
-    margin-top: 20px;
+    padding: 10px;
+}
+
+.submit {
+    display: block;
+    margin: 0 auto;
 }
 
 #form-container input {
@@ -120,9 +113,6 @@
     margin: 10px auto 10px;
     border-radius: 5px;
 }
-
-*/
-
 
 footer{
     background-color: #141139;
