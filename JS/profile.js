@@ -1,3 +1,5 @@
+//CALENDRIER :
+
 let currentYear = 2025; // Année par défaut
 let currentMonth = 3; // Mois d'Avril (Les mois commencent à 0 donc 3 = Avril)
 
@@ -79,3 +81,5 @@ document.querySelector(".after-month").addEventListener("click", nextMonth);
 
 // Initialiser le calendrier
 generateCalendar(currentYear, currentMonth);
+
+

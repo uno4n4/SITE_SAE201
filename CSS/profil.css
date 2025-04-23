@@ -312,6 +312,10 @@ input {
     color: black;
 }
 
+#ecrire {
+    opacity: 50%;
+}
+
 #enregistrer {
     color: black;
     background-color: green;
@@ -321,3 +325,5 @@ input {
     bottom: 10px;
     right: 10px;
 }
+
+
