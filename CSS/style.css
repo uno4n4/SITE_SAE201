@@ -8,20 +8,36 @@
 
 .bouton-co:hover {
     background-color: #12A19A;
-    color: white;
 }
 
 #gradient-text {
     background: linear-gradient(to right, #0F756B, #37A6A1);
     -webkit-background-clip: text;
     color: transparent;
-    font-size: 40px;
+    font-size: 48px;
     margin: auto;
     max-width: 800px;
 }
 
 .text-style {
+    font-size: 18px;
+    max-width: 545px;
+    margin: 0 auto;
+}
+
+/* INSCRIPTION */
+
+.bouton-choix {
+    background-color: #0F756B;
+}
+
+.bouton-choix:hover {
+    background-color: #141139;
+}
+
+.choix-container {
     max-width: 800px;
+    margin: auto;
 }
 
 /* Inscription 
