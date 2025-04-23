@@ -1,4 +1,5 @@
-document.getElementById("btn-etudiant").onclick = function() {
+document.getElementById("btn-etudiant").onclick = etape1;
+function etape1() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
@@ -10,7 +11,17 @@ document.getElementById("btn-etudiant").onclick = function() {
     <input type="text" placeholder="Ex : Clara" required><br>
     <label>Date de naissance :</label>
     <input type="date" required><br>
+    <div class="button-container">
+        <button type="button" onclick="etape2()">Suivant</button>
+    </div>
+    </form>`;
+}
 
+function etape2() {
+    document.getElementById("form-container").style.display = "block";
+    document.getElementById("form-container").innerHTML = 
+    `<h2>Formulaire d'inscription pour les étudiants : </h2>
+    <form id="form-etudiant" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
         <label>Adresse email universitaire :</label>
@@ -24,7 +35,19 @@ document.getElementById("btn-etudiant").onclick = function() {
         <label>Adresse postale :</label>
         <input type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
     </div>
-    
+    <div class="button-container">
+        <button type="button" onclick="etape1()">Précédent</button>
+        <button type="button" onclick="etape3()">Suivant</button>
+    </div>
+    </form>
+    `;
+}
+
+function etape3() {
+    document.getElementById("form-container").style.display = "block";
+    document.getElementById("form-container").innerHTML = 
+    `<h2>Formulaire d'inscription pour les étudiants : </h2>
+    <form id="form-etudiant" class="form-style">
     <h3>3. Informations académiques</h3>
     <label>Numéro étudiant : </label>
     <input type="text" placeholder="Ex : 210000" required><br>
@@ -47,29 +70,38 @@ document.getElementById("btn-etudiant").onclick = function() {
         <option value="TPE">TP E</option>
         <option value="TPF">TP F</option>
     </select>
-    
+    <div class="button-container">
+        <button type="button" onclick="etape2()">Précédent</button>
+        <button type="button" onclick="etape4()">Suivant</button>
+    </div>
+    </form>
+    `;
+}
+
+function etape4() {
+    document.getElementById("form-container").style.display = "block";
+    document.getElementById("form-container").innerHTML = 
+    `<h2>Formulaire d'inscription pour les étudiants : </h2>
+    <form id="form-etudiant" class="form-style">
     <h3>4. Informations du compte</h3>
     <label>Pseudo : </label>
     <input type="text" placeholder="Ex : noob1234" required><br>
     <label>Mot de passe : </label>
     <input type="password" required><br>
+    <div class="button-container">
+        <button type="button" onclick="etape3()">Précédent</button>
+    </div>
     
-    <input type="submit" value="Soumettre" id="submit1">
-    </form>`;
+    <button type="submit" class="submit">Soumettre</button>
+    </form>
+    `;
+}
 
-    //validation email étudiant : 
-    document.getElementById("form-etudiant").onsubmit = function(event) {
-        const email = document.getElementById("email-etudiant").value;
-        const regex = /^[a-zA-Z0-9._%+-]+@edu\.univ-eiffel\.fr$/;
+// FORMULAIRE POUR LES PROFS : 
 
-        if(!regex.text(email)) {
-            alert("L'email doit être de la forme xxx@edu.univ-eiffel.fr");
-            event.preventDefault();
-        }
-    };
-};
 
-document.getElementById("btn-prof").onclick = function() {
+document.getElementById("btn-prof").onclick = etape1prof;
+function etape1prof() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
@@ -81,7 +113,18 @@ document.getElementById("btn-prof").onclick = function() {
     <input type="text" placeholder="Ex : Clara" required><br>
     <label>Date de naissance :</label>
     <input type="date" required><br>
+    <div class="button-container">
+        <button type="button" onclick="etape2prof()">Suivant</button>
+    </div>
+    </form>
+    `;
+}
 
+function etape2prof() {
+    document.getElementById("form-container").style.display = "block";
+    document.getElementById("form-container").innerHTML = 
+    `<h2>Formulaire d'inscription pour les professeurs : </h2>
+    <form id="form-prof" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
         <label>Adresse email universitaire :</label>
@@ -95,24 +138,33 @@ document.getElementById("btn-prof").onclick = function() {
         <label>Adresse postale :</label>
         <input type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
     </div>
-    
+    <div class="button-container">
+        <button type="button" onclick="etape1prof()">Précédent</button>
+        <button type="button" onclick="etape3prof()">Suivant</button>
+    </div>
+    </form>
+    `; 
+}
+
+function etape3prof() {
+    document.getElementById("form-container").style.display = "block";
+    document.getElementById("form-container").innerHTML = 
+    `<h2>Formulaire d'inscription pour les professeurs : </h2>
+    <form id="form-prof" class="form-style">
     <h3>3. Informations du compte</h3>
     <label>Pseudo : </label>
     <input type="text" placeholder="Ex : noob1234" required><br>
     <label>Mot de passe : </label>
     <input type="password" required><br>
+    <div class="button-container">
+        <button type="button" onclick="etape2prof()">Précédent</button>
+    </div>
     
-    <input type="submit" value="Soumettre" id="submit2">
-    </form>`;
+    <button type="submit" class="submit">Soumettre</button>
 
- //validation email prof : 
-    document.getElementById("form-prof").onsubmit = function(event) {
-        const email = document.getElementById("email-prof").value;
-        const regex = /^[a-zA-Z0-9._%+-]+@univ-eiffel\.fr$/;
+    </form>
+    `;
+}
+    
 
-        if(!regex.text(email)) {
-            alert("L'email doit être de la forme xxx@univ-eiffel.fr");
-            event.preventDefault();
-        }
-    };
-};
+
