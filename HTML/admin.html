@@ -81,7 +81,6 @@
                     <div class="d-flex justify-content-between w-100">
                       <label for="filtre" class="me-3">Filtrer par :</label>
                       
-                      <!-- Application d'une classe personnalisée pour réduire la répétition -->
                       <div class="filters-container d-flex flex-column flex-md-row text-end align-items-md-center ms-auto">
                         <select class="custom-select mb-2 mb-md-0 me-md-2">
                           <option selected>Mois</option>
@@ -98,16 +97,19 @@
                           <option value="Nov">Novembre</option>
                           <option value="Dec">Décembre</option>
                         </select>
+
                         <select class="custom-select mb-2 mb-md-0 me-md-2">
                           <option selected>Types</option>
                           <option value="Mat">Matériels</option>
                           <option value="Sall">Salles</option>
                         </select>
+
                         <select class="custom-select mb-2 mb-md-0">
                           <option selected>Profiles</option>
                           <option value="Etu">Etudiants</option>
                           <option value="Prof">Professeurs</option>
                         </select>
+
                       </div>
                     </div>
                   </div>
@@ -117,20 +119,22 @@
                 </div>
               </form>
               
-
-          <div class="card custom-card">
-              <p>Souhaite effectuer une réservation pour le : <strong id="jour"></strong></p>
-              <p id="nom"></p>
-              <div class="card-body">
-                <div class="button-group">
-                  <a href="#" class="card-link vert" id="accepter">Accepter</a>
-                  <a href="#" class="card-link rouge" id="refuser">Refuser</a>
+              <div class="card w-100 custom-card">
+                <p>Souhaite effectuer une réservation pour le : <strong id="jour"></strong></p>
+                <p id="nom"></p>
+                <div class="card-body">
+                  <div class="d-flex align-items-center">
+                    <!-- Les boutons à gauche -->
+                    <div class="button-group d-flex">
+                      <a href="#" class="card-link vert" id="accepter">Accepter</a>
+                      <a href="#" class="card-link rouge" id="refuser">Refuser</a>
+                    </div>
+                    <a href="#" class="card-link text-dark ms-auto px-5" id="modifier-reser">Modifier la réservation</a>
+                  </div>
                 </div>
-                <a href="#" class="card-link text-dark" id="modifier-reser">Modifier la réservation</a>
               </div>
-            </div>
-          </div>
-        
+              
+
           <!-- Bloc gestion matériel -->
           <div class="materiel" id="gest-materiel">
             <h2>Gérer le matériel</h2>
