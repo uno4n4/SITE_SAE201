@@ -307,6 +307,161 @@ input[type="text"] {
     object-fit: cover;
 }
 
+/* GEST-COMPTES */
+.custom-bg1 {
+    min-height: 100vh; /* ou 100% si tu as un parent avec hauteur définie */
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    margin-right: 30px;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 1rem; /* pour éviter que ça colle */
+}
+
+.ligne-verticale {
+    width: 1px;
+    height: 40px;  /* Hauteur de la ligne verticale ajustée */
+    background-color: #ccc;
+}
+
+  
+@media (max-width: 768px) {
+    .custom-card {
+      width: 10rem; /* plus fine sur petit écran */
+      margin: 0 auto;
+    }
+} 
+
+.img-card {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50px;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+#nom-prenom, #classe {
+    margin: 0;
+}
+
+.custom-body {
+    background-color: #D3D2D2;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+#derniere-reservation {
+    font-size: 10px;
+    margin-left: 6px;
+}
+
+#date-reser {
+    font-size: 10px;
+    margin-right: 6px;
+}
+
+#email, #num-etudiant, #num-tel, #pseudo {
+    margin: 0;
+}
+
+.button-class {
+    color: black;
+}
+
+/* Style pour les petits écrans (max-width: 768px) */
+@media (max-width: 768px) {
+
+    /* Évite que le contenu dépasse */
+    .custom-bg1 {
+        overflow-x: hidden;
+        padding: 1rem;
+        margin-right: 0;
+    }
+
+    /* Rendre les cartes plus compactes et centrées */
+    .custom-card {
+        width: 100%; /* Occupe toute la largeur */
+        margin: 0.5rem 0; /* Ajoute un petit espace entre les cartes */
+    }
+
+    .img-card {
+        width: 40px;  /* Petite taille d'image sur téléphone */
+        height: 40px;
+    }
+
+    /* Centrer les titres et ajuster l'espacement */
+    #nom-prenom, #classe {
+        font-size: 1rem;  /* Taille de texte plus petite */
+        text-align: center;
+        margin: 0;
+    }
+
+    /* Alignement des éléments de filtre et de boutons */
+    .d-flex.flex-md-row.justify-content-between {
+        flex-direction: column;  /* Mettre les éléments sur une seule colonne */
+        align-items: flex-start;
+    }
+
+    .d-flex.align-items-center.mb-3.mb-md-0 {
+        flex-wrap: wrap;  /* Permet aux éléments de s'adapter facilement */
+        gap: 0.5rem;  /* Un peu d'espace entre chaque élément */
+        justify-content: space-between;
+    }
+
+    /* Ajuster la pagination pour que tout soit lisible */
+    .pagination-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    /* Boutons et sélecteurs s'adaptent mieux */
+    .custom-select,
+    .btn-custom,
+    #ajouter {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+        width: 100%; /* Les boutons prennent toute la largeur */
+        text-align: center;
+    }
+
+    /* Ajuster les titres pour qu'ils ne prennent pas trop de place */
+    h2 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    h5#nb-comptes {
+        font-size: 1rem;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    /* Le logo de l'IUT dans l'en-tête sera plus petit */
+    #logo-iut-head {
+        width: 60px;
+        height: auto;
+        margin: 1rem;
+    }
+
+    /* Réduire la hauteur des lignes verticales sur téléphone */
+    .ligne-verticale {
+        height: 25px;
+        margin: 0 auto;
+    }
+    
+    /* Changer les marges sur la sidebar */
+    .col-auto {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+
+
 /*
 #tableau {
     border: none;
