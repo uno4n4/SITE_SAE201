@@ -72,14 +72,22 @@
       </div>
   
       <!-- Main content -->
-      <div class="col py-3 custom-bg">
-        <div id="setting" style="display: block;">
-          <h2>Réglages du compte</h2>
-          <button type="button" id="reglage"><i class="fa-solid fa-user"></i>Réglages du profil</button>
-          <button type="button" id="verif"><i class="fa-solid fa-check"></i>Vérification</button>
+      <div class="col py-3 custom-bg d-flex justify-content-lg-start">
+        <div class="d-flex flex-column flex-lg-column align-items-start gap-3">
+        <h2 class="m-0">Réglages du compte</h2>
+        <div id="setting" class="p-2 mx-0 my-0 mt-0">
+          <div class="d-flex flex-column gap-2 align-items-start">
+            <button type="button" id="reglage" class="btn">
+              <i class="fa-solid fa-user"></i> Réglages du profil
+            </button>
+            <button type="button" id="verif" class="btn">
+              <i class="fa-solid fa-check"></i> Vérification
+            </button>
+          </div>
         </div>
-        <div id="form-container"></div>
-      </div>
+        </div>
+        <div id="form-container" class="mt-5"></div>
+      </div>   
     </div>
   </div>
   
