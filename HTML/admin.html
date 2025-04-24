@@ -70,81 +70,91 @@
             </div>
         </div>
       </div>
-  
-      <!-- Main content -->
+ 
       <div class="col py-3 custom-bg d-flex justify-content-lg-start">
         <div class="d-flex flex-column flex-lg-column align-items-start gap-3">
-  
-          <!-- Bloc notifications -->
-          <div class="notifications" id="notif">
-            <label for="filtre">Filtrer par :</label>
-            <select name="Mois">
-              <option value="Jan">Janvier</option>
-              <option value="Fevr">Février</option>
-              <option value="Mar">Mars</option>
-              <option value="Avril">Avril</option>
-              <option value="Mai">Mai</option>
-              <option value="Juin">Juin</option>
-              <option value="Juillet">Juillet</option>
-              <option value="Août">Août</option>
-              <option value="Sept">Septembre</option>
-              <option value="Oct">Octobre</option>
-              <option value="Nov">Novembre</option>
-              <option value="Dec">Décembre</option>
-            </select>
-            <select name="Types">
-              <option value="Mat">Matériels</option>
-              <option value="Sall">Salles</option>
-            </select>
-            <select name="Profiles">
-              <option value="Etu">Etudiants</option>
-              <option value="Prof">Professeurs</option>
-            </select>
-        
-            <div class="notifs">
+            <div class="d-flex flex-column gap-2 align-items-start">
+
+        <form>
+          <div class="form-row align-items-center" id="notif">
+            <div class="col-auto my-1">
+              <label for="filtre">Filtrer par :</label>
+              <select class="custom-select mr-sm-2">
+                <option selected>Mois</option>
+                  <option value="Jan">Janvier</option>
+                  <option value="Fevr">Février</option>
+                  <option value="Mar">Mars</option>
+                  <option value="Avril">Avril</option>
+                  <option value="Mai">Mai</option>
+                  <option value="Juin">Juin</option>
+                  <option value="Juillet">Juillet</option>
+                  <option value="Août">Août</option>
+                  <option value="Sept">Septembre</option>
+                  <option value="Oct">Octobre</option>
+                  <option value="Nov">Novembre</option>
+                  <option value="Dec">Décembre</option>
+              </select>
+              <select class="custom-select mr-sm-2">
+                <option selected>Types</option>
+                  <option value="Mat">Matériels</option>
+                  <option value="Sall">Salles</option>
+              </select>
+              <select class="custom-select mr-sm-2">
+                <option selected>Profiles</option>
+                  <option value="Etu">Etudiants</option>
+                  <option value="Prof">Professeurs</option>
+              </select>
+            </div>
+              <div class="col-auto my-1">
+                <button type="submit" class="btn btn-custom">Confirmer</button>
+              </div>
+          </div>
+        </form>
+
+          <div class="card custom-card">
               <p>Souhaite effectuer une réservation pour le : <strong id="jour"></strong></p>
               <p id="nom"></p>
-              <div class="text-end">
-                <a href="#" id="accepter">Accepter</a>
-                <a href="#" id="refuser">Refuser</a>
-                <a href="#" id="modifier-reser">Modifier la réservation</a>
+              <div class="card-body">
+                <div class="button-group">
+                  <a href="#" class="card-link vert" id="accepter">Accepter</a>
+                  <a href="#" class="card-link rouge" id="refuser">Refuser</a>
+                </div>
+                <a href="#" class="card-link text-dark" id="modifier-reser">Modifier la réservation</a>
               </div>
             </div>
           </div>
         
           <!-- Bloc gestion matériel -->
           <div class="materiel" id="gest-materiel">
-            <h5>Gérer le matériel</h5>
-            <a href="#" id="voir">Voir tous</a>
-            <button type="button" id="plus">+</button>
-            <a href="#" id="ajouter">Ajouter du matériel</a>
-        
-            <div class="gest-produit">
+            <h2>Gérer le matériel</h2>
+            <a href="#" id="voir"><small class="text-muted">Voir plus</small></a>
+            <a href="#" id="ajouter" class="fs-4 text-dark">Ajouter du matériel</a>
+            <div class="card customcard">
               <img src="../IMAGE/logo-iut.png" id="img-produit">
               <h4 id="produit">Caméra untel</h4>
               <p id="description">Description</p>
-              <a href="#" id="dispo">Disponible</a>
-              <a href="#" id="indispo">Indisponible</a>
-              <a href="#" id="modifier-mat">Modifier le matériel</a>
+              <a href="#" class="card-link vert" id="dispo">Disponible</a>
+              <a href="#" class="card-link rouge" id="indispo">Indisponible</a>
+              <a href="#" class="card-link text-dark" id="modifier-mat">Modifier le matériel</a>
             </div>
+          </div>
         
-            <div id="container-account">
-              <h5>Approuver des utilisateurs</h5>
-              <a href="#" id="voir">Voir plus</a>
-              <p id="nom">Nom</p>
-              <p id="prenom">Prenom</p>
-              <p id="etudiant">Num étudiant</p>
-              <button id="accepter1"><i class="fa-solid fa-circle-check"></i></button>
-              <button id="refuser1"><i class="fa-solid fa-circle-xmark"></i></button>
-            </div>
+          <div id="container-account">
+            <h2>Approuver des utilisateurs</h2>
+            <a href="#" id="voir"><small class="text-muted">Voir plus</small></a>
+            <p id="nom">Nom</p>
+            <p id="prenom">Prenom</p>
+            <p id="etudiant">Num étudiant</p>
+            <button class="card-link text-light border-0 rounded w-25" id="accepter1"><i class="fa-solid fa-circle-check"></i></button>
+            <button class="card-link text-light border-0 rounded w-25" id="refuser1"><i class="fa-solid fa-circle-xmark"></i></button>
           </div>
         
           <!-- Bloc calendrier -->
           <div id="container-calendrier">
             <div class="calendar-header">
-              <button class="prev-month"><i class="fa-solid fa-arrow-left"></i></button>
+              <button class="prev-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-left"></i></button>
               <h2 id="month-year">Avril 2025</h2>
-              <button class="after-month"><i class="fa-solid fa-arrow-right"></i></button>
+              <button class="after-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-right"></i></button>
             </div>
         
             <table class="calendar">
@@ -160,25 +170,11 @@
               <tbody id="calendar-days"></tbody>
             </table>
         
-            <!-- Formulaire de réglages -->
-            <div id="form-reglages" style="display: none;">
-              <h2>Réglages du compte</h2>
-              <button type="button" id="reglage"><i class="fa-solid fa-user"></i> Réglages du profil</button>
-              <button type="button" id="verif"><i class="fa-solid fa-check"></i> Vérification</button>
-            </div>
-            
-            <!-- Formulaire dynamique -->
-            <div id="form-container"></div>
           </div>
-        
         </div>
-        
-        <!-- Bouton réglages en bas -->
-        <div class="d-flex flex-nowrap">
-          <a href="../HTML/setting.html">
-            <button type="button" id="setting"><i class="fa-solid fa-gear"></i>Réglages</button>
-        </a>
-        </div>
+      </div>
+    </div>
+  </div>
         
 </body>
 </html>
