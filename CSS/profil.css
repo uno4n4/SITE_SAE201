@@ -461,6 +461,38 @@ input[type="text"] {
 }
 
 
+/* CONSIGNES */ 
+
+.custom-bg-2 {
+    background-color: #f5f5f5;
+    flex-direction: column; /* Pour empiler verticalement */
+    padding: 20px;
+}
+
+.custom-back {
+    margin-top: 5px; /* Réduit l'écart au-dessus de la barre d'outils */
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: flex-start;
+}
+
+#ecrire {
+    min-height: 150px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+}
+
+#enregistrer {
+    margin-top: 20px;
+    float: right;
+    background-color: #00c851;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+
 
 /*
 #tableau {
