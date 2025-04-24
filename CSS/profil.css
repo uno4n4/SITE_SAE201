@@ -206,6 +206,61 @@ input[type="text"] {
     padding-bottom: 10px;
 }
 
+/* ADMIN */
+
+.custom-select {
+    border: none;
+    margin-left: 50px;
+}
+
+.btn-custom {
+    background-color: #141139;
+    color: white;
+}
+
+.custom-card {
+    padding-left: 90px;
+    padding-right: 90px;
+}
+  
+.card.custom-card {
+    padding-left: 10px;
+}  
+
+.vert {
+    color: rgb(3, 240, 3);
+}
+
+.rouge {
+    color: red;
+}
+
+.materiel {
+    margin-top: 10px;
+}
+
+#voir {
+    text-decoration: none;
+}
+
+#img-produit {
+    max-width: 100px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+#accepter1 {
+    background-color: rgb(3, 240, 3);
+}
+
+#refuser1 {
+    background-color: red;
+}
+
+.bgcustom {
+    background-color: transparent;
+}
+
 /*
 #tableau {
     border: none;
@@ -240,9 +295,6 @@ input[type="text"] {
     font-weight: bold;
 }
 
-.notifications {
-    white-space: nowrap;
-}
 
 .notifications select {
     border: none;
