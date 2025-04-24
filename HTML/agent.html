@@ -14,21 +14,64 @@
 </head>
 <body>
     
-    <header class="container-fluid px-0 mt-0">
-        <div class="d-flex align-items-center justify-content-between px-3 py-2">
-            <div class="me-auto">
-                <img src="../IMAGE/logo-iut.png" id="logo-iut-head" alt="Logo IUT">
-            </div>
+    <header class="container-fluid px-0">
+        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+          <div class="me-auto">
+            <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+          </div>
         </div>
-    </header>
+      </header> 
     
-    <!-- Ligne avec tableau de bord et contenu à droite -->
-    <div class="d-flex flex-nowrap align-items-center justify-content-between">
-        <div class="d-flex flex-nowrap">
-            <a href="../HTML/agent.html">
-                <button type="button" id="tableau">Tableau de bord</button>
-            </a>
-        </div>
+      <div class="container-fluid">
+        <div class="row flex-nowrap">
+          <!-- Sidebar -->
+          <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+      
+                <li class="nav-item">
+                  <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+                    <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
+                  </a>
+                </li>
+      
+                <li>
+                  <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+                    <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
+                  </a>
+                </li>
+              </ul>
+                <div class="mt-auto w-100">
+                  <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                    <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+                  </a>
+                </div>
+            </div>
+          </div>
     
         <div class="d-flex justify-content-between custom-bg">
             <div class="notifications" id="notif">
@@ -91,9 +134,6 @@
             </div>
             <div id="form-container"></div>
         </div>
-    </div>
-    <div class="d-flex flex-nowrap">
-    <button type="button" id="setting"><i class="fa-solid fa-gear"></i>Réglages</button>
     </div>
     
     
