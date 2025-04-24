@@ -219,7 +219,7 @@ input[type="text"] {
 
 .custom-card {
     width: 100%; /* Réduit la largeur de la carte */
-    max-width: 600px; /* Optionnel, définit une largeur maximale */
+    max-width: 600px;
     box-sizing: border-box;
     margin-bottom: 20px; /* Ajoute un peu d'espace en dessous de la carte */
     margin-right: auto; /* Centre l'élément horizontalement */
@@ -234,7 +234,7 @@ input[type="text"] {
 }
 
 .button-group a {
-    text-decoration: none; /* Retirer le soulignement si nécessaire */
+    text-decoration: none; 
 }
 
 .modifierl {
@@ -309,7 +309,7 @@ input[type="text"] {
 
 /* GEST-COMPTES */
 .custom-bg1 {
-    min-height: 100vh; /* ou 100% si tu as un parent avec hauteur définie */
+    min-height: 100vh; 
     display: flex;
     background-color: white;
     border-radius: 10px;
