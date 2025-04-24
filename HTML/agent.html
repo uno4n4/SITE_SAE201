@@ -22,7 +22,7 @@
         </div>
       </header> 
     
-      <div class="container-fluid">
+    <div class="container-fluid">
         <div class="row flex-nowrap">
           <!-- Sidebar -->
           <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
@@ -30,7 +30,7 @@
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
       
                 <li class="nav-item">
-                  <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+                  <a href="../HTML/agent.html" class="nav-link align-middle px-0">
                     <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                   </a>
                 </li>
@@ -40,33 +40,9 @@
                     <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
                   </a>
                 </li>
-      
-                <li>
-                  <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
-                    <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
-                  </a>
-                </li>
-      
-                <li>
-                  <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
-                  </a>
-                </li>
-      
-                <li>
-                  <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
-                  </a>
-                </li>
-      
-                <li>
-                  <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
-                    <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
-                  </a>
-                </li>
               </ul>
                 <div class="mt-auto w-100">
-                  <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                  <a href="../HTML/setting2.html" class="nav-link align-middle px-0">
                     <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
                   </a>
                 </div>
@@ -119,46 +95,59 @@
                       </div>
                     </div>
                   </form>
-                <div class="notifs">
-                    <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
-                    <p id="nom"></p>
-                    <div class="text-end">
-                        <a href="#" download="" id="telecharger">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
+
+                <div class="container">
+                    <div class="row d-flex">
+                        <!-- Calendrier (reste en place) -->
+                        <div class="col-12 col-lg-6 mb-4 ms-auto text-end order-1">
+                            <div id="container-calendrier">
+                                <div class="calendar-header d-flex justify-content-between align-items-center">
+                                    <button class="prev-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-left"></i></button>
+                                    <h2 id="month-year">Avril 2025</h2>
+                                    <button class="after-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-right"></i></button>
+                                </div>
+                
+                                <table class="calendar ms-auto text-end w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Lun</th>
+                                            <th>Mar</th>
+                                            <th>Mer</th>
+                                            <th>Jeu</th>
+                                            <th>Ven</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="calendar-days"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                
+                        <!-- Section des cartes à droite -->
+                        <div class="col-12 col-lg-6 d-flex flex-column order-2">
+                            <!-- Première carte -->
+                            <div class="card custom-card mb-4">
+                                <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
+                                <p id="nom"></p>
+                                <div class="card-body">
+                                    <div class="text-end">
+                                        <a href="#" download="" id="telecharger" class="text-black px-2">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card custom-card">
+                                <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
+                                <p id="nom2"></p>
+                                <div class="card-body">
+                                    <div class="text-end">
+                                        <a href="#" download="" id="telecharger" class="text-black px-2">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-    
-            <!-- Section du calendrier à droite -->
-            <div id="container-calendrier">
-                <div class="calendar-header">
-                    <button class="prev-month"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h2 id="month-year">Avril 2025</h2>
-                    <button class="after-month"><i class="fa-solid fa-arrow-right"></i></button>
-                </div>
-                <table class="calendar">
-                    <thead>
-                        <tr>
-                            <th>Lun</th>
-                            <th>Mar</th>
-                            <th>Mer</th>
-                            <th>Jeu</th>
-                            <th>Ven</th>
-                        </tr>
-                    </thead>
-                    <tbody id="calendar-days"></tbody>
-                </table>
-            </div>
-            <div id="form-reglages">
-                <h2>Réglages du compte</h2>
-                <button type="button" id="reglage"><i class="fa-solid fa-user"></i>Réglages du profil</button>
-                <button type="button" id="verif"><i class="fa-solid fa-check"></i>Vérification</button>
-            </div>
-            <div id="form-container"></div>
         </div>
-    </div>
-    
-    
-    
-
 </body>
 </html>
