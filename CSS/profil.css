@@ -206,8 +206,7 @@ input[type="text"] {
     padding-bottom: 10px;
 }
 
-/* ADMIN */
-
+/* ADMIN */  
 .custom-select {
     border: none;
     margin-left: 50px;
@@ -219,20 +218,39 @@ input[type="text"] {
 }
 
 .custom-card {
-    padding-left: 90px;
-    padding-right: 90px;
+    width: 100%; /* Réduit la largeur de la carte */
+    max-width: 600px; /* Optionnel, définit une largeur maximale */
+    box-sizing: border-box;
+    margin-bottom: 20px; /* Ajoute un peu d'espace en dessous de la carte */
+    margin-right: auto; /* Centre l'élément horizontalement */
 }
-  
+
 .card.custom-card {
     padding-left: 10px;
-}  
+}
+
+.card-body {
+    padding: 0;
+}
+
+.button-group a {
+    text-decoration: none; /* Retirer le soulignement si nécessaire */
+}
+
+.modifierl {
+    margin-top: 10px;
+}
 
 .vert {
+    margin-top: 10px;
+    margin-right: 5px;
     color: rgb(3, 240, 3);
 }
 
 .rouge {
     color: red;
+    margin-top: 10px;
+    margin-left: 30px;
 }
 
 .materiel {
@@ -257,8 +275,28 @@ input[type="text"] {
     background-color: red;
 }
 
+#pp {
+    display: block;
+    margin-right: auto;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+#nom, #prenom, #etudiant {
+    margin-right: 25px;
+}
+
+.btn-acces {
+    padding-inline: 15px;
+}
+
 .bgcustom {
     background-color: transparent;
+}
+
+#container-calendrier {
+    width: 90%;
 }
 
 /*
