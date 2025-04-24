@@ -1,51 +1,47 @@
-//CALENDRIER :
+let currentYear = 2025;
+let currentMonth = 3; // Avril (0 = janvier)
 
-let currentYear = 2025; // Année par défaut
-let currentMonth = 3; // Mois d'Avril (Les mois commencent à 0 donc 3 = Avril)
+const monthYearElement = document.getElementById("month-year");
+const calendarDaysElement = document.getElementById("calendar-days");
 
-const monthYearElement = document.getElementById("month-year"); // Titre mois et année
-const calendarDaysElement = document.getElementById("calendar-days"); // Corps du tableau
-
-// Fonction pour générer le calendrier
 function generateCalendar(year, month) {
     // Obtenir le premier jour du mois
-    let firstDay = new Date(year, month, 1).getDay(); // Premier jour du mois
-    let daysInMonth = new Date(year, month + 1, 0).getDate(); // Nombre de jours dans le mois
+    let firstDay = new Date(year, month, 1).getDay();
+    let adjustedFirstDay = (firstDay === 0) ? 6 : firstDay - 1;
 
-    // Mettre à jour le titre avec le mois et l'année
-    const monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
+    let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Capitaliser le nom du mois
+    const monthNameRaw = new Date(year, month).toLocaleString('default', { month: 'long' });
+    const monthName = monthNameRaw.charAt(0).toUpperCase() + monthNameRaw.slice(1);
     monthYearElement.textContent = `${monthName} ${year}`;
 
-    // Calculer les jours sans week-end (samedi et dimanche)
-    let days = [];
-    for (let day = 1; day <= daysInMonth; day++) {
-        let currentDay = new Date(year, month, day).getDay(); // Jour de la semaine (0 = dimanche, 6 = samedi)
-        if (currentDay !== 6 && currentDay !== 0) { // Exclure samedi et dimanche
-            days.push(day);
-        }
-    }
-
-    // Remplir le calendrier avec les jours
-    calendarDaysElement.innerHTML = ""; // Vider le calendrier avant de le remplir
+    calendarDaysElement.innerHTML = "";
     let row = document.createElement("tr");
 
-    // Placer des espaces vides pour les jours précédents du mois (avant le premier jour)
-    for (let i = 0; i < firstDay - 1; i++) {
+    // Cellules vides avant le 1er du mois
+    for (let i = 0; i < adjustedFirstDay; i++) {
         let cell = document.createElement("td");
         row.appendChild(cell);
     }
 
-    // Ajouter les jours valides (sans week-end)
-    days.forEach((day, index) => {
-        if ((index + firstDay - 1) % 5 === 0 && index !== 0) {
-            calendarDaysElement.appendChild(row); // Ajouter la ligne de jours
-            row = document.createElement("tr"); // Créer une nouvelle ligne pour les jours suivants
-        }
+    let currentColumn = adjustedFirstDay;
 
-        let cell = document.createElement("td");
-        cell.textContent = day;
-        row.appendChild(cell);
-    });
+    for (let day = 1; day <= daysInMonth; day++) {
+        let weekday = new Date(year, month, day).getDay();
+        if (weekday !== 0 && weekday !== 6) { // Exclure dimanche et samedi
+            if (currentColumn > 4) {
+                calendarDaysElement.appendChild(row);
+                row = document.createElement("tr");
+                currentColumn = 0;
+            }
+
+            let cell = document.createElement("td");
+            cell.textContent = day;
+            row.appendChild(cell);
+            currentColumn++;
+        }
+    }
 
     // Ajouter la dernière ligne si nécessaire
     if (row.childElementCount > 0) {
@@ -53,7 +49,6 @@ function generateCalendar(year, month) {
     }
 }
 
-// Fonction pour naviguer au mois précédent
 function prevMonth() {
     if (currentMonth === 0) {
         currentMonth = 11;
@@ -64,7 +59,6 @@ function prevMonth() {
     generateCalendar(currentYear, currentMonth);
 }
 
-// Fonction pour naviguer au mois suivant
 function nextMonth() {
     if (currentMonth === 11) {
         currentMonth = 0;
@@ -75,11 +69,7 @@ function nextMonth() {
     generateCalendar(currentYear, currentMonth);
 }
 
-// Événements pour les boutons de navigation
 document.querySelector(".prev-month").addEventListener("click", prevMonth);
 document.querySelector(".after-month").addEventListener("click", nextMonth);
 
-// Initialiser le calendrier
 generateCalendar(currentYear, currentMonth);
-
-
