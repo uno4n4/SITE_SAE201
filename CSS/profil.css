@@ -492,6 +492,18 @@ input[type="text"] {
     border-radius: 5px;
 }
 
+/* AJOUT - COMPTE */ 
+
+.btn-retour {
+    background-color: #141139;
+    color: white;
+}
+
+.btn-retour:hover {
+    background-color: #2F2A85;
+    color: white;
+}
+
 
 
 /*
