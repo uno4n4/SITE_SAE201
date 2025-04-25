@@ -25,19 +25,22 @@
       <main class="d-flex flex-column justify-content-center align-items-center flex-fill text-center">
       <div class="container text-center">
         <div id="form-container" style="display: block;">
-            <form class="form-style">
+            <form class="form-inline form-style">
+              <div class="form-group">
               <h2>Connexion : </h2>
-                <div class="input-icon">
-                    <label>Adresse email universitaire ou pseudo :</label>
-                    <input type="text" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr ou noob1234" required>
-                    <i class="fa-solid fa-envelope"></i>
-                </div>
+              <label for="inputEmailPseudo">Adresse email universitaire ou pseudo :</label>
+              <div class="input-icon-e">
+                <input type="text" class="form-control" id="inputEmailPseudo" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr ou noob1234" required>
+                <i class="fa-solid fa-envelope icon-inside"></i>
+              </div>
+              
       
-                <label>Mot de passe :</label>
-                <input type="password" required><br>
+                <label for="inputPassword">Mot de passe :</label>
+                <input type="password" id="inputPassword" class="form-control" required><br>
       
-                <button type="submit" class="submit">Soumettre</button>
-                <button type="button" class="mdp">Mot de passe oublié ?</button>
+                <button type="submit" class="btn submit">Soumettre</button>
+                <button type="button" class="btn mdp">Mot de passe oublié ?</button>
+              </div>
             </form>
         </div>
       </div>
