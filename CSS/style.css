@@ -25,7 +25,7 @@
     margin: 0 auto;
 }
 
-/* INSCRIPTION */
+/* INSCRIPTION ET AUTHENTIFICATION */
 
 .bouton-choix {
     background-color: #0F756B;
@@ -78,6 +78,32 @@
     pointer-events: none;
 }
 
+.input-icon-e {
+    position: relative;
+}
+
+.icon-inside {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: black;
+    pointer-events: none;
+}
+
+@media (max-width: 576px) {
+    #inputEmailPseudo::placeholder {
+      font-size: 12px; 
+    }
+    .icon-inside {
+        font-size: 12px;
+        bottom: 15px;
+    }
+}
+  
+  
+  
+
 .button-container {
     border-radius: 5px;
     display: flex;
@@ -127,6 +153,7 @@ footer{
 #logo-iut-foot{
     max-height: 50px;
 }
+
 
 
   
