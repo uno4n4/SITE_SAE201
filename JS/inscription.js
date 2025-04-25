@@ -11,7 +11,7 @@ function etape1() {
     <input type="text" placeholder="Ex : Clara" required><br>
     <label>Date de naissance :</label>
     <input type="date" required><br>
-    <div class="button-container">
+    <div class="button-container-r">
         <button type="button" onclick="etape2()">Suivant</button>
     </div>
     </form>`;
@@ -113,7 +113,7 @@ function etape1prof() {
     <input type="text" placeholder="Ex : Clara" required><br>
     <label>Date de naissance :</label>
     <input type="date" required><br>
-    <div class="button-container">
+    <div class="button-container-r">
         <button type="button" onclick="etape2prof()">Suivant</button>
     </div>
     </form>
@@ -165,6 +165,8 @@ function etape3prof() {
     </form>
     `;
 }
+
+
     
 
 
