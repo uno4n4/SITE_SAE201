@@ -101,14 +101,15 @@
     }
 }
   
-  
-  
-
 .button-container {
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
+}
+
+.button-container-r {
+    text-align: right;
 }
 
 #form-container button {
