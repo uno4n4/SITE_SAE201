@@ -94,7 +94,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -113,7 +113,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -132,7 +132,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
@@ -151,7 +151,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -172,7 +172,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -191,7 +191,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
@@ -210,7 +210,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -229,7 +229,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
