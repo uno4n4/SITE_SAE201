@@ -46,7 +46,7 @@
                         </li>
                     </ul>
 
-                    <a class="btn btn-primary ms-2 bouton-co" href="#" role="button">Se déconnecter</a>
+                    <a class="btn btn-primary ms-2 bouton-co" href="../index.html" role="button">Se déconnecter</a>
                 </div>
             </div>
         </nav>
