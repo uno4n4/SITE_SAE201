@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
     <title>Réserver</title>
 </head>
+
 <body>
     <section>
         <nav class="navbar navbar-expand-lg">
@@ -93,215 +95,218 @@
         </div>
     </section>
 
-        <div class="container mt-5">
-            <div class="stepper-container">
-                <div class="stepper-line"></div>
+    <div class="container mt-5">
+        <div class="stepper-container">
+            <div class="stepper-line"></div>
 
-                <div id="steps" class="d-flex justify-content-between align-items-center stepper-steps">
-                    <!-- Étape 1 -->
-                    <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
-                        1
+            <div id="steps" class="d-flex justify-content-between align-items-center stepper-steps">
+                <!-- Étape 1 -->
+                <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
+                    1
+                </div>
+
+                <!-- Étape 2 -->
+                <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
+                    2
+                </div>
+
+                <!-- Étape 3 -->
+                <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
+                    3
+                </div>
+
+                <!-- Étape 4 en cours -->
+                <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
+                    4
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="formulaires" class="container mx-5 my-5">
+        <!-- Formulaire informations personnelles -->
+        <form action="../PHP/reserver.php" method="post"
+            class="col-sm-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
+            <ol>
+                <section id="0">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Informations Personnelles</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
+                        <div class="col-sm-10">
+                            <input name="nom" type="text" class="form-control" id="nom" placeholder="Ex: Domingues">
+                        </div>
                     </div>
 
-                    <!-- Étape 2 -->
-                    <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
-                        2
+                    <div class="mb-3 row">
+                        <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
+                        <div class="col-sm-10">
+                            <input name="prenom" type="text" class="form-control" id="prenom" placeholder="Ex: Clara">
+                        </div>
                     </div>
 
-                    <!-- Étape 3 -->
-                    <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
-                        3
+                    <div class="mb-3 row">
+                        <label for="numcarteetud" class="col-sm-2 col-form-label">Numéro étudiant :</label>
+                        <div class="col-sm-10">
+                            <input name="numcarteetud" type="text" class="form-control" id="numcarteetud"
+                                placeholder="Ex: 280000">
+                        </div>
                     </div>
 
-                    <!-- Étape 4 en cours -->
-                    <div class="step-circle bg-primary text-white d-flex justify-content-center align-items-center">
-                        4
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
+                        <div class="col-sm-10">
+                            <input name="email" type="email" class="form-control" id="email"
+                                placeholder="Ex: clara.domingues@edu.univ-eiffel.fr">
+                        </div>
                     </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
+                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formulaire période de réservation -->
+                <section id="1" class="formetape">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Période de réservation</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="date" class="col-sm-12 offset-sm-1 col-form-label">Date de réservation :</label>
+                        <div class="col-sm-12">
+                            <input name="date" type="date" class="form-control" id="date">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
+                            :</label>
+                        <div class="col-sm-12">
+                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="heureRetour" class="col-sm-12 offset-sm-1 col-form-label">Heure de retour du
+                            matériel
+                            :</label>
+                        <div class="col-sm-12">
+                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
+                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formulaire projet en cours -->
+                <section id="2" class="formetape">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Projet en cours</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="nomProjet" class="col-sm-2 col-form-label">Nom du Projet :</label>
+                        <div class="col-sm-10">
+                            <input name="nomProjet" type="text" class="form-control" id="nomProjet"
+                                placeholder="Ex: Cornelio">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="participants" class="col-sm-2 col-form-label">Etudiants Participants :</label>
+                        <div class="col-sm-10">
+                            <input name="participants" type="text" class="form-control" id="participants"
+                                placeholder="Ex: Clara DeneuVille, Jean Patrick, ...">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="enseignantResponsable" class="col-sm-2 col-form-label">Enseignant responsable du
+                            projet
+                            :</label>
+                        <div class="col-sm-10">
+                            <input name="enseignantResponsable" type="text" class="form-control"
+                                id="enseignantResponsable" placeholder="Ex: Thierry Caron">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="signature" class="col-sm-2 col-form-label">Signature :</label>
+                        <div class="col-sm-10">
+                            <canvas id="signature" class="col-sm-8 rounded"></canvas>
+                            <button type="button" id="clear" class="btn btn-secondary col-sm-3 mx-2">Effacer</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
+                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="submit" name="submit" class="btn btn-info">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+            </ol>
+        </form>
+    </div>
+
+    <div class="clearfix"></div>
+    <div class="w-100"></div>
+
+    <footer class="container-fluid mt-5 text-white custom-bg">
+        <div class="my-3">
+            <img src="./IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left" alt="logo iut">
+        </div>
+
+        <div class="row px-5 mt-4">
+            <div class="col-12 d-flex flex-wrap gap-5">
+                <!-- Bloc Informations -->
+                <div>
+                    <div class="fw-bold mb-2">INFORMATIONS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                </div>
+
+                <!-- Bloc Contactez-nous -->
+                <div>
+                    <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>
 
-        <div id="formulaires" class="container mx-5 my-5">
-            <!-- Formulaire informations personnelles -->
-            <form action="../PHP/reserver.php" method="post"
-                class="col-sm-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
-                <ol>
-                    <section id="0">
-                        <li class="ms-4">
-                            <h5 class="mb-4">Informations Personnelles</h5>
-                        </li>
+        <hr class="mt-5 border-white opacity-50">
 
-                        <div class="mb-3 row">
-                            <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
-                            <div class="col-sm-10">
-                                <input name="nom" type="text" class="form-control" id="nom" placeholder="Ex: Domingues">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
-                            <div class="col-sm-10">
-                                <input name="prenom" type="text" class="form-control" id="prenom"
-                                    placeholder="Ex: Clara">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="numcarteetud" class="col-sm-2 col-form-label">Numéro étudiant :</label>
-                            <div class="col-sm-10">
-                                <input name="numcarteetud" type="text" class="form-control" id="numcarteetud"
-                                    placeholder="Ex: 280000">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
-                            <div class="col-sm-10">
-                                <input name="email" type="email" class="form-control" id="email"
-                                    placeholder="Ex: clara.domingues@edu.univ-eiffel.fr">
-                            </div>
-                        </div>
-
-                        <div class="row mt-5">
-                            <div class="col-sm-4">
-                                <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                        src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
-                            </div>
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                        src="../IMG/fleche-droite.png" alt="suivant"></button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Formulaire période de réservation -->
-                    <section id="1" class="formetape">
-                        <li class="ms-4">
-                            <h5 class="mb-4">Période de réservation</h5>
-                        </li>
-
-                        <div class="mb-3 row">
-                            <label for="date" class="col-sm-12 offset-sm-1 col-form-label">Date de réservation :</label>
-                            <div class="col-sm-12">
-                                <input name="date" type="date" class="form-control" id="date">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
-                                :</label>
-                            <div class="col-sm-12">
-                                <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="heureRetour" class="col-sm-12 offset-sm-1 col-form-label">Heure de retour du
-                                matériel
-                                :</label>
-                            <div class="col-sm-12">
-                                <input name="heureRetour" type="time" class="form-control" id="heureRetour">
-                            </div>
-                        </div>
-
-                        <div class="row mt-5">
-                            <div class="col-sm-4">
-                                <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                        src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
-                            </div>
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                        src="../IMG/fleche-droite.png" alt="suivant"></button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Formulaire projet en cours -->
-                    <section id="2" class="formetape">
-                        <li class="ms-4">
-                            <h5 class="mb-4">Projet en cours</h5>
-                        </li>
-
-                        <div class="mb-3 row">
-                            <label for="nomProjet" class="col-sm-2 col-form-label">Nom du Projet :</label>
-                            <div class="col-sm-10">
-                                <input name="nomProjet" type="text" class="form-control" id="nomProjet"
-                                    placeholder="Ex: Cornelio">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="participants" class="col-sm-2 col-form-label">Etudiants Participants :</label>
-                            <div class="col-sm-10">
-                                <input name="participants" type="text" class="form-control" id="participants"
-                                    placeholder="Ex: Clara DeneuVille, Jean Patrick, ...">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="enseignantResponsable" class="col-sm-2 col-form-label">Enseignant responsable du
-                                projet
-                                :</label>
-                            <div class="col-sm-10">
-                                <input name="enseignantResponsable" type="text" class="form-control"
-                                    id="enseignantResponsable" placeholder="Ex: Thierry Caron">
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="signature" class="col-sm-2 col-form-label">Signature :</label>
-                            <div class="col-sm-10">
-                                <canvas id="signature" class="col-sm-8 rounded"></canvas>
-                                <button type="button" id="clear"
-                                    class="btn btn-secondary col-sm-3 mx-2">Effacer</button>
-                            </div>
-                        </div>
-
-                        <div class="row mt-5">
-                            <div class="col-sm-4">
-                                <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                        src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
-                            </div>
-                            <div class="col-sm-4"></div>
-                            <div class="col-sm-4">
-                                <button type="submit" name="submit" class="btn btn-info">Suivant<img
-                                        src="../IMG/fleche-droite.png" alt="suivant"></button>
-                            </div>
-                        </div>
-                    </section>
-                </ol>
-            </form>
+        <div class="row px-5">
+            <div class="col-12 text-center text-white mb-3">
+                &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
+            </div>
         </div>
+    </footer>
+</body>
 
-        <div class="clearfix"></div>
-        <div class="w-100"></div>
-
-        <footer class="container-fluid bg-info mt-5">
-            <div class="row ms-5">
-                <div class="col-sm-2 mt-5">
-                    <a class="navbar-brand" href="#">
-                        <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut-footer">
-                    </a>
-                </div>
-            </div>
-            <div class="row ms-5">
-                <div class="col-sm-2 mt-5">
-                    <div class="row">INFORMATIONS</div>
-                    <div class="row"><a href="#">Mentions légales</a></div>
-                </div>
-                <div class="col-sm-2 mt-5">
-                    <div class="row">CONTACTEZ-NOUS</div>
-                    <div class="row"><a href="#">Contact</a></div>
-                </div>
-            </div>
-            <hr class="mt-5">
-            <div class="row ms-5">
-                <div class="col-sm mt-2 mb-5 text-center">
-                    &copy Samoura Diaba et Gilet Amel | Tous droits réservés.
-                </div>
-            </div>
-        </footer>
-    </body>
 </html>

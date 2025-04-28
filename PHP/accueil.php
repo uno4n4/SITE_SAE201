@@ -246,28 +246,32 @@
 
     </div>
 
-    <footer class="container-fluid bg-info mt-5">
-        <div class="row ms-5">
-            <div class="col-sm-2 mt-5">
-                <a class="navbar-brand" href="#">
-                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut-footer">
-                </a>
+    <footer class="container-fluid mt-5 text-white custom-bg">
+        <div class="my-3">
+            <img src="./IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left" alt="logo iut">
+        </div>
+
+        <div class="row px-5 mt-4">
+            <div class="col-12 d-flex flex-wrap gap-5">
+                <!-- Bloc Informations -->
+                <div>
+                    <div class="fw-bold mb-2">INFORMATIONS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                </div>
+
+                <!-- Bloc Contactez-nous -->
+                <div>
+                    <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                </div>
             </div>
         </div>
-        <div class="row ms-5">
-            <div class="col-sm-2 mt-5">
-                <div class="row">INFORMATIONS</div>
-                <div class="row"><a href="#">Mentions légales</a></div>
-            </div>
-            <div class="col-sm-2 mt-5">
-                <div class="row">CONTACTEZ-NOUS</div>
-                <div class="row"><a href="#">Contact</a></div>
-            </div>
-        </div>
-        <hr class="mt-5">
-        <div class="row ms-5">
-            <div class="col-sm mt-2 mb-5 text-center">
-                &copy Samoura Diaba et Gilet Amel | Tous droits réservés.
+
+        <hr class="mt-5 border-white opacity-50">
+
+        <div class="row px-5">
+            <div class="col-12 text-center text-white mb-3">
+                &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
             </div>
         </div>
     </footer>
