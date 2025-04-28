@@ -22,7 +22,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut">
+                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut-head">
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
