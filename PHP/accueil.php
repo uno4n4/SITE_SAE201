@@ -14,6 +14,7 @@
         rel="stylesheet">
     <script src="../JS/reserve.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
+    <link rel="stylesheet" type="text/css" href="../CSS/parcours-user.css">
     <title>Recherche</title>
 </head>
 
