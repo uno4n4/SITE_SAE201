@@ -5,12 +5,12 @@ function etape1() {
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
     <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>1. Informations Personnelles</h3>
-    <label>Nom :</label>
-    <input type="text" placeholder="Ex : Domingues" required><br>
-    <label>Prénom :</label>
-    <input type="text" placeholder="Ex : Clara" required><br>
-    <label>Date de naissance :</label>
-    <input type="date" required><br>
+    <label for="Nom">Nom :</label>
+    <input name="Nom" id="Nom" type="text" placeholder="Ex : Domingues" required><br>
+    <label for="Prenom">Prénom :</label>
+    <input name="Prenom" id="Prenom" type="text" placeholder="Ex : Clara" required><br>
+    <label for="Anniv">Date de naissance :</label>
+    <input name="Anniv" id="Anniv" type="date" required><br>
     <div class="button-container-r">
         <button type="button" onclick="etape2()">Suivant</button>
     </div>
@@ -24,16 +24,16 @@ function etape2() {
     <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
-        <label>Adresse email universitaire :</label>
-        <input type="email" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+        <label for="Email">Adresse email universitaire :</label>
+        <input name="Email" id="Email" type="email" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
     </div>
     <div class="input-icon">
-        <label>Numéro de téléphone :</label>
-        <input type="tel" placeholder="Ex : 0606060606" required><i class="fa-solid fa-phone"></i>
+        <label for="Tel">Numéro de téléphone :</label>
+        <input name="Tel" id="Tel" type="tel" placeholder="Ex : 0606060606" required><i class="fa-solid fa-phone"></i>
     </div>
     <div class="input-icon">
-        <label>Adresse postale :</label>
-        <input type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
+        <label for="Adresse">Adresse postale :</label>
+        <input name="Adresse" id="Adresse" type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
     </div>
     <div class="button-container">
         <button type="button" onclick="etape1()">Précédent</button>
@@ -49,10 +49,10 @@ function etape3() {
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
     <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>3. Informations académiques</h3>
-    <label>Numéro étudiant : </label>
-    <input type="text" placeholder="Ex : 210000" required><br>
+    <label for="Numetu">Numéro étudiant : </label>
+    <input name="Numetu" id="Numetu" type="text" placeholder="Ex : 210000" required><br>
     <label for="formations">Formation :</label>
-    <select name="formations">
+    <select name="formations" id="Formations">
         <option value="MMI1">BUT MMI 1</option>
         <option value="MMI2">BUT MMI 2</option>
         <option value="MMI3">BUT MMI 3</option>
@@ -84,10 +84,10 @@ function etape4() {
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
     <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>4. Informations du compte</h3>
-    <label>Pseudo : </label>
-    <input type="text" placeholder="Ex : noob1234" required><br>
-    <label>Mot de passe : </label>
-    <input type="password" required><br>
+    <label for="Pseudo">Pseudo : </label>
+    <input name="Pseudo" id="Pseudo" type="text" placeholder="Ex : noob1234" required><br>
+    <label for="Mdp">Mot de passe : </label>
+    <input name="Mdp" id="Mdp" type="password" required><br>
     <div class="button-container">
         <button type="button" onclick="etape3()">Précédent</button>
     </div>
@@ -107,12 +107,12 @@ function etape1prof() {
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
     <form method="post" action="" id="form-prof" class="form-style">
     <h3>1. Informations Personnelles</h3>
-    <label>Nom :</label>
-    <input type="text" placeholder="Ex : Domingues" required><br>
-    <label>Prénom :</label>
-    <input type="text" placeholder="Ex : Clara" required><br>
-    <label>Date de naissance :</label>
-    <input type="date" required><br>
+    <label for="Nomprof">Nom :</label>
+    <input name="Nomprof" id="Nomprof" type="text" placeholder="Ex : Domingues" required><br>
+    <label for="Prenomprof">Prénom :</label>
+    <input name="Prenomprof" id="Prenomprof" type="text" placeholder="Ex : Clara" required><br>
+    <label for="Annivprof">Date de naissance :</label>
+    <input name="Annivprof" id="Annivprof" type="date" required><br>
     <div class="button-container-r">
         <button type="button" onclick="etape2prof()">Suivant</button>
     </div>
@@ -127,16 +127,16 @@ function etape2prof() {
     <form method="post" action="" id="form-prof" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
-        <label>Adresse email universitaire :</label>
-        <input type="email" placeholder="Ex : clara.domingues@univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+        <label for="Emailprof">Adresse email universitaire :</label>
+        <input name="Emailprof" id="Emailprof" type="email" placeholder="Ex : clara.domingues@univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
     </div>
     <div class="input-icon">
-        <label>Numéro de téléphone :</label>
-        <input type="tel" placeholder="Ex : 0606060606" required><i class="fa-solid fa-phone"></i>
+        <label for="Numprof">Numéro de téléphone :</label>
+        <input name="Numprof" id="Numprof" type="tel" placeholder="Ex : 0606060606" required><i class="fa-solid fa-phone"></i>
     </div>
     <div class="input-icon">
-        <label>Adresse postale :</label>
-        <input type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
+        <label for="Adresseprof">Adresse postale :</label>
+        <input name="Adresseprof" id="Adresseprof" type="text" placeholder="Ex : 1 Rue de Paris" required><i class="fa-solid fa-house"></i>
     </div>
     <div class="button-container">
         <button type="button" onclick="etape1prof()">Précédent</button>
@@ -152,10 +152,10 @@ function etape3prof() {
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
     <form method="post" action="" id="form-prof" class="form-style">
     <h3>3. Informations du compte</h3>
-    <label>Pseudo : </label>
-    <input type="text" placeholder="Ex : noob1234" required><br>
-    <label>Mot de passe : </label>
-    <input type="password" required><br>
+    <label for="Pseudoprof">Pseudo : </label>
+    <input name="Pseudoprof" id="Pseudoprof" type="text" placeholder="Ex : noob1234" required><br>
+    <label for="Mdpprof">Mot de passe : </label>
+    <input name="Mdpprof" id="Mdpprof" type="password" required><br>
     <div class="button-container">
         <button type="button" onclick="etape2prof()">Précédent</button>
     </div>
