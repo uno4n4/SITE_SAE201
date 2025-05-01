@@ -1,3 +1,17 @@
+<?php 
+
+include 'inscription.php';
+
+$sql_eleve = "SELECT * FROM inscription_eleve WHERE statut = 'en attente'";
+$result_eleve = $conn->query($sql_eleve);
+
+$sql_prof = "SELECT * FROM inscription_prof WHERE statut = 'en attente'";
+$result_prof = $conn->query($sql_prof);
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -207,20 +221,25 @@
                     <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
                     <a href="#" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
                   </div>
+                <?php while ($row = $result->fetch_assoc()) { ?>
                   <div class="d-flex justify-content-end">
                     <img src="../IMAGE/logo-iut.png" id="pp">
-                    <br><p id="nom">Nom</p>
-                    <br><p id="prenom">Prenom</p>
-                    <br><p id="etudiant">Num étudiant</p>
+                    <br><p id="Nom"><?= htmlspecialchars($row['Nom']) ?></p>
+                    <br><p id="Prenom"><?= htmlspecialchars($row['Prenom']) ?></p>
+                    <br><p id="Numetu"><?= htmlspecialchars($row['Numetu']) ?></p>
                   </div>
                   <div class="d-flex gap-3 justify-content-end">
-                    <button class="card-link text-light border-0 rounded btn-acces" id="accepter1">
-                      <i class="fa-solid fa-circle-check"></i>
-                    </button>
-                    <button class="card-link text-light border-0 rounded btn-acces" id="refuser1">
-                      <i class="fa-solid fa-circle-xmark"></i>
-                    </button>
+                    <form method="post" action="">
+                      <input type="hidden" name="id" value="<?= $row['ID'] ?>">
+                      <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1">
+                        <i class="fa-solid fa-circle-check"></i>
+                      </button>
+                      <button class="card-link text-light border-0 rounded btn-acces" id="refuser1" name="refuser1">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                      </button>
+                    </form>
                   </div>
+                <?php } ?>
                 </div>
               </div>
             </div>

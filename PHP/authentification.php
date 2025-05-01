@@ -1,3 +1,53 @@
+<?php
+session_start();
+
+$host="localhost";
+$user="root";
+$pass="";
+$db="utilisateur";
+$conn=new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error){
+  die("Echec de la connexon :" . $conn->connect_error);
+}
+
+if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['Pseudo'], $_POST['Mdp'])){
+  $Pseudo = $_POST['Pseudo'];
+  $Mdp = $_POST['Mdp'];
+
+  $utilisateurs = [
+    'inscription_admin' => 'admin.php',
+    'inscription_agent' => 'agent.html',
+    'inscription_prof' => 'accueil.php',
+    'inscription_eleve' => 'accueil.php',
+  ];
+
+foreach($utilisateurs as $table => $redirect){
+  $sql = "SELECT * FROM $table WHERE (adresse_email = ? OR pseudo = ?)";
+  $stmt = $conn->prepare($sql);
+  $stmt->bind_param("ss", $Pseudo, $Pseudo);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if($result && $result->num_rows > 0){
+    $user = $result->fetch_assoc();
+    if(password_verify($Mdp, $user['Mdp'])){
+      $_SESSION['user'] = $user;
+      header("Location: $redirect");
+      exit();
+    } else {
+      echo "Identifiants incorrects.";
+      exit();
+    }
+  }
+}
+}
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -17,7 +67,7 @@
             <img src="../IMAGE/logo-iut.png" id="logo-iut-head" alt="Logo IUT">
           </div>
           <div class="d-flex flex-nowrap gap-2">
-            <a href="./inscription.html" class="btn border rounded text-white bouton-co">Créer un compte</a>
+            <a href="inscription.php" class="btn border rounded text-white bouton-co">Créer un compte</a>
           </div>
         </div>
       </header>
@@ -25,18 +75,18 @@
       <main class="d-flex flex-column justify-content-center align-items-center flex-fill text-center">
       <div class="container text-center">
         <div id="form-container" style="display: block;">
-            <form class="form-inline form-style">
+            <form class="form-inline form-style" action="authentification.php" method="post">
               <div class="form-group">
               <h2>Connexion : </h2>
-              <label for="inputEmailPseudo">Adresse email universitaire ou pseudo :</label>
+              <label for="Pseudo">Adresse email universitaire ou pseudo :</label>
               <div class="input-icon-e">
-                <input type="text" class="form-control" id="inputEmailPseudo" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr ou noob1234" required>
+                <input type="text" class="form-control" id="Pseudo" name="Pseudo" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr ou noob1234" required>
                 <i class="fa-solid fa-envelope icon-inside"></i>
               </div>
               
       
-                <label for="inputPassword">Mot de passe :</label>
-                <input type="password" id="inputPassword" class="form-control" required><br>
+                <label for="Mdp">Mot de passe :</label>
+                <input type="password" id="Mdp" name="Mdp" class="form-control" required><br>
       
                 <button type="submit" class="btn submit">Soumettre</button>
                 <button type="button" class="btn mdp">Mot de passe oublié ?</button>

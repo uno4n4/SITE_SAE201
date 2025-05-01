@@ -1,3 +1,61 @@
+<?php
+
+$host="localhost";
+$user="root";
+$pass="";
+$db="utilisateur";
+$conn=new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error){
+  die("Echec de la connexon :" . $conn->connect_error);
+}
+
+if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
+  $Nom=$_POST['Nom'];
+  $Prenom=$_POST['Prenom'];
+  $Email=$_POST['Email'];
+  $Role=$_POST['Role'];
+  $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
+  $Statut = 'accepté';
+
+  switch($Role){
+    case 'admin':
+      $table = 'inscription_admin';
+      break;
+    case 'agent':
+      $table = 'inscription_agent';
+      break;
+    case 'etudiant':
+      $table = 'inscription_eleve';
+      break;
+    case 'prof':
+      $table = 'inscription_prof';
+      break;
+    default:
+      die("Rôle invalide.");
+      
+  }
+
+  $sql = "INSERT INTO $table (nom, prenom, adresse_email, mdp, statut)
+        VALUES (?, ?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql);
+  if ($stmt === false){
+    die("Erreur préparation : " . $conn->error); 
+  }
+  $stmt->bind_param("sssss", $Nom, $Prenom, $Email, $Mdp, $Statut);
+
+  if($stmt->execute()){
+    echo "Inscription réussie !";
+  } else {
+    echo "Erreur : " . $stmt->error;
+  }
+  $stmt->close();
+}
+
+$conn->close();
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -78,45 +136,45 @@
                     <a href="./gest-comptes.html" class="btn btn-retour">Retour en arrière</a>
                   </div>
                   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
-                    <form>
+                    <form method="post" action="ajout-compte.php">
                         <div class="row">
-                            <label for="inputPrenom" class="col-sm-2 col-form-label">Prénom * :</label>
+                            <label for="Prenom" class="col-sm-2 col-form-label">Prénom * :</label>
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Ex : Clara">
+                                <input name="Prenom" type="text" class="form-control" placeholder="Ex : Clara">
                             </div>
-                            <label for="inputNom" class="col-sm-2 col-form-label">Nom * :</label>
+                            <label for="Nom" class="col-sm-2 col-form-label">Nom * :</label>
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Ex : domingues">
+                                <input name="Nom" type="text" class="form-control" placeholder="Ex : domingues">
                             </div>
                         </div>
                         <div class="row">
-                            <label for="inputEmail" class="col-sm-2 col-form-label mt-4">Email * :</label>
+                            <label for="Email" class="col-sm-2 col-form-label mt-4">Email * :</label>
                             <div class="col mt-4">
-                                <input type="email" class="form-control border-dark" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr">
+                                <input name="Email" type="email" class="form-control border-dark" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr">
                         </div>
                         <div class="row">
                             <legend class="col-form-label col-sm-2 pt-0 mt-4">Rôles :</legend>
                             <div class="col-sm-10 mt-4">
                                 <div class="form-check">
-                                    <input class="form-check-input border-dark" type="radio" name="radio" value="option1">
+                                    <input class="form-check-input border-dark" type="radio" name="Role" value="etudiant">
                                     <label class="form-check-label" for="etudiant">
                                     Etudiant
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input border-dark" type="radio" name="radio" value="option2">
+                                    <input class="form-check-input border-dark" type="radio" name="Role" value="prof">
                                     <label class="form-check-label" for="prof">
                                     Professeur
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input border-dark" type="radio" name="radio" value="option3">
+                                    <input class="form-check-input border-dark" type="radio" name="Role" value="agent">
                                     <label class="form-check-label" for="agent">
                                     Agent
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input border-dark" type="radio" name="radio" value="option4">
+                                    <input class="form-check-input border-dark" type="radio" name="Role" value="admin">
                                     <label class="form-check-label" for="admin">
                                     Admin
                                     </label>
@@ -124,9 +182,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="inputPassword" class="col-sm-2 col-form-label mt-3">Mot de passe (temporaire) :</label>
+                            <label for="Mdp" class="col-sm-2 col-form-label mt-3">Mot de passe (temporaire) :</label>
                             <div class="col-sm-10 mt-4">
-                                <input type="password" class="form-control border-dark" id="inputPassword">
+                                <input name="Mdp" type="password" class="form-control border-dark" id="inputPassword">
                             </div>
                         </div>
                         <div class="form-group row">

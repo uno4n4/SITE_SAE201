@@ -6,18 +6,69 @@ $pass="";
 $db="utilisateur";
 $conn=new mysqli($host, $user, $pass, $db);
 
-if(isset($_POST['form-container'])){
-  $Nom_eleve=$_POST['Nom'];
-  $Prenom_eleve=$_POST['Prenom'];
-  $Date=$_POST['Anniv'];
-  $Adresse_email_eleve=$_POST['Email'];
-  $Num_eleve=$_POST['Tel'];
-  $Adresse_postale_eleve=$_POST['Adresse'];
-  $Num_etu=$_POST['Numetu'];
-  $Pseudo_eleve=$_POST['Pseudo'];
-  $Mdp_eleve=$_POST['Mdp'];
-  
+if ($conn->connect_error){
+  die("Echec de la connexon :" . $conn->connect_error);
 }
+
+//ETUDIANT : 
+
+if(isset($_POST['Nom']) && isset($_POST['Prenom'])){
+  $Nom=$_POST['Nom'];
+  $Prenom=$_POST['Prenom'];
+  $Anniv=$_POST['Anniv'];
+  $Email=$_POST['Email'];
+  $Tel=$_POST['Tel'];
+  $Adresse=$_POST['Adresse'];
+  $Numetu=$_POST['Numetu'];
+  $Formation =$_POST['Formations'];
+  $TD=$_POST['TD'];
+  $TP=$_POST['TP'];
+  $Pseudo=$_POST['Pseudo'];
+  $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
+
+  $sql = "INSERT INTO inscription_eleve (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, num_etudiant, formation, td, tp, pseudo, mdp, statut)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql);
+  $Statut = "en attente";
+  $stmt->bind_param("sssssssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut);
+
+  if($stmt->execute()){
+    echo "Inscription étudiant réussie !";
+  } else {
+    echo "Erreur : " . $stmt->error;
+  }
+  $stmt->close();
+}
+
+//PROF : 
+
+elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
+  $Nom=$_POST['Nomprof'];
+  $Prenom=$_POST['Prenomprof'];
+  $Anniv=$_POST['Annivprof'];
+  $Email=$_POST['Emailprof'];
+  $Tel=$_POST['Numprof'];
+  $Adresse=$_POST['Adresseprof'];
+  $Pseudo=$_POST['Pseudoprof'];
+  $Mdp = password_hash($_POST['Mdpprof'], PASSWORD_DEFAULT);
+
+  $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql);
+  $Statut = "en attente";
+  $stmt->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
+
+  if ($stmt->execute()){
+    echo "Inscription professeur réussie !";
+  } else {
+    echo "Erreur :" . $stmt->error;
+  }
+  $stmt->close();
+} else {
+  echo "Aucun formulaire valide soumis.";
+}
+
+$conn->close();
 
 ?>
 
