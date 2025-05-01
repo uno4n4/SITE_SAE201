@@ -3,7 +3,7 @@ function etape1() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
-    <form id="form-etudiant" class="form-style">
+    <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>1. Informations Personnelles</h3>
     <label>Nom :</label>
     <input type="text" placeholder="Ex : Domingues" required><br>
@@ -21,7 +21,7 @@ function etape2() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
-    <form id="form-etudiant" class="form-style">
+    <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
         <label>Adresse email universitaire :</label>
@@ -47,7 +47,7 @@ function etape3() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
-    <form id="form-etudiant" class="form-style">
+    <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>3. Informations académiques</h3>
     <label>Numéro étudiant : </label>
     <input type="text" placeholder="Ex : 210000" required><br>
@@ -82,7 +82,7 @@ function etape4() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
-    <form id="form-etudiant" class="form-style">
+    <form method="post" action="" id="form-etudiant" class="form-style">
     <h3>4. Informations du compte</h3>
     <label>Pseudo : </label>
     <input type="text" placeholder="Ex : noob1234" required><br>
@@ -105,7 +105,7 @@ function etape1prof() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
-    <form id="form-prof" class="form-style">
+    <form method="post" action="" id="form-prof" class="form-style">
     <h3>1. Informations Personnelles</h3>
     <label>Nom :</label>
     <input type="text" placeholder="Ex : Domingues" required><br>
@@ -124,7 +124,7 @@ function etape2prof() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
-    <form id="form-prof" class="form-style">
+    <form method="post" action="" id="form-prof" class="form-style">
     <h3>2. Informations de contact</h3>
     <div class="input-icon">
         <label>Adresse email universitaire :</label>
@@ -150,7 +150,7 @@ function etape3prof() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
-    <form id="form-prof" class="form-style">
+    <form method="post" action="" id="form-prof" class="form-style">
     <h3>3. Informations du compte</h3>
     <label>Pseudo : </label>
     <input type="text" placeholder="Ex : noob1234" required><br>
