@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&display=swap');
+
+body {
+    font-family: "Inter", sans-serif;
+}
+
+#roleicon {
+    /*always bg-warning so change here*/
+    width: 10px;
+    height: 10px;
+}
+
+.breadcrumb-item a {
+    color: #2F2A85;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.breadcrumb-item a:hover {
+    color: #2F2A85;
+    text-decoration: underline;
+}
+
+.breadcrumb-item.active {
+    text-decoration: underline;
+}
+
+.bg-warning {
+    background-color: #12A19A !important;
+}
+
+.bg-primary,
+.bg-info {
+    background-color: #2F2A85 !important;
+}
+
+.btn-outline-info {
+    color: #2F2A85;
+    border-color: #2F2A85;
+}
+
+.btn-outline-info:hover {
+    background-color: #2F2A85;
+    border-color: #2F2A85;
+    color: white;
+}
+
+.btn-info {
+    background-color: #2F2A85;
+    color: white;
+    border: none;
+}
+
+.btn-info:hover {
+    background-color: #363462;
+    color: white;
+    border: none;
+}
+
+.card {
+    width: 18rem;
+}
+
+.card a {
+    text-decoration: none;
+    color: black;
+}
+
+.disponibilite {
+    width: 10px;
+    height: 10px;
+}
+
+a {
+    text-decoration: none;
+}
+
+h2 {
+    /*gros titre*/
+    font-family: 'Pixelify Sans';
+    font-size: 90px;
+}
+
+h5 {
+    /*titre des cartes produit*/
+    font-family: 'Pixelify Sans';
+}
+
+.stepper-container {
+    position: relative;
+    height: 80px;
+}
+
+.stepper-line {
+    position: absolute;
+    top: 30%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #ccc;
+    z-index: 1;
+}
+
+.stepper-steps {
+    position: relative;
+    z-index: 2;
+}
+
+.step-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.formetape {
+    display: none;
+}
+
+canvas {
+    height: 150px;
+    border: 1px solid #000;
+}
+
+#erreur {
+    font-size: 40px;
+}

@@ -14,6 +14,7 @@
         rel="stylesheet">
     <script src="../JS/reserve.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
+    <link rel="stylesheet" type="text/css" href="../CSS/parcours-user.css">
     <title>Recherche</title>
 </head>
 
@@ -22,7 +23,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">
-                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut">
+                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut-head">
                 </a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -45,7 +46,7 @@
                         </li>
                     </ul>
 
-                    <a class="btn btn-primary ms-2" href="#" role="button">Se déconnecter</a>
+                    <a class="btn btn-primary ms-2 bouton-co" href="../index.html" role="button">Se déconnecter</a>
                 </div>
             </div>
         </nav>
@@ -93,7 +94,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -112,7 +113,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -131,7 +132,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
@@ -150,7 +151,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -171,7 +172,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -190,7 +191,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
@@ -209,7 +210,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-success disponibilite"></span>
@@ -228,7 +229,7 @@
         <div class="col-sm">
             <a href="../HTML/produit.html">
                 <div class="card position-relative">
-                    <img src="../images/P1018442.JPG" class="card-img-top" alt="drone">
+                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
                     <span
                         class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                         <span class="rounded-circle bg-danger disponibilite"></span>
@@ -246,28 +247,32 @@
 
     </div>
 
-    <footer class="container-fluid bg-info mt-5">
-        <div class="row ms-5">
-            <div class="col-sm-2 mt-5">
-                <a class="navbar-brand" href="#">
-                    <img src="../IMG/logo-iut.png" alt="logo iut" id="logo-iut-footer">
-                </a>
+    <footer class="container-fluid mt-5 text-white custom-bg">
+        <div class="my-3">
+            <img src="../IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left mt-3" alt="logo iut">
+        </div>
+
+        <div class="row px-5 mt-4">
+            <div class="col-12 d-flex flex-wrap gap-5">
+                <!-- Bloc Informations -->
+                <div>
+                    <div class="fw-bold mb-2">INFORMATIONS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                </div>
+
+                <!-- Bloc Contactez-nous -->
+                <div>
+                    <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                </div>
             </div>
         </div>
-        <div class="row ms-5">
-            <div class="col-sm-2 mt-5">
-                <div class="row">INFORMATIONS</div>
-                <div class="row"><a href="#">Mentions légales</a></div>
-            </div>
-            <div class="col-sm-2 mt-5">
-                <div class="row">CONTACTEZ-NOUS</div>
-                <div class="row"><a href="#">Contact</a></div>
-            </div>
-        </div>
-        <hr class="mt-5">
-        <div class="row ms-5">
-            <div class="col-sm mt-2 mb-5 text-center">
-                &copy Samoura Diaba et Gilet Amel | Tous droits réservés.
+
+        <hr class="mt-5 border-white opacity-50">
+
+        <div class="row px-5">
+            <div class="col-12 text-center text-white mb-3">
+                &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
             </div>
         </div>
     </footer>
