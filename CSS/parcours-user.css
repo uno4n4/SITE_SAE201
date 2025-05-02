@@ -61,11 +61,6 @@ body {
     width: 18rem;
 }
 
-.card a {
-    text-decoration: none;
-    color: black;
-}
-
 .disponibilite {
     width: 10px;
     height: 10px;
@@ -143,7 +138,7 @@ canvas {
     }
 }
 
-@media (max-width: 600px){
+@media (max-width: 700px){
     .card{
         font-size:14px;
         height:auto;
