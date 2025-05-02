@@ -1,11 +1,100 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <title>Gestion du matériel</title>
+
 </head>
-<body>
-    
+
+<body style="background-color: #d3d2d2; overflow-x: hidden;">
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+                <div
+                    class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
+                    <div class="me-auto mt-4">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4mOrNvQ_JLv_FKwDyYEn7HsfRVHEpgFCWnw&s"
+                            class="img-fluid float-left d-none d-md-block" id="logo-iut-head" alt="Logo IUT"
+                            style="height: 40px;">
+                    </div>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+
+                        <li class="nav-item">
+                            <a href="../HTML/admin.html" class="nav-link align-middle px-0 mt-2 text-dark">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
+                                    bord</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/reservation.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion
+                                    des réservations</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des
+                                    comptes</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/materiel.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
+                                    matériel</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/statistiques.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-chart-simple"></i><span
+                                    class="ms-1 d-none d-sm-inline">Statistiques</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/consignes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de
+                                    sécurité</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="mt-auto w-100">
+                        <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                            <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!--La section permettant d'ajouter l'arrière plan de la page-->
+            <section class="rounded-3 mt-2" style="background-color: rgba(254, 254, 254, 0.979);">
+                <div class="col-12">
+                    <div class="d-flex align-items-start flex-wrap">
+                        <div class="d-flex flex-column gap-2 align-items-start">
+                            <h2 class="mt-3">Gestion du matériel</h2>
+
+                        </div>
+                    </div>
+            </section>
+        </div>
 </body>
+
 </html>
