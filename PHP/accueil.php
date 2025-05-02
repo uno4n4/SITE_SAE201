@@ -19,7 +19,7 @@
 </head>
 
 <body>
-<section class="container-fluid">
+    <section class="container-fluid">
         <nav class="navbar navbar-expand">
             <div class="container-sm px-0 mx-2">
                 <a class="navbar-brand" href="#">
@@ -90,162 +90,162 @@
             </div>
     </section>
 
-    <div class="row mt-5 ms-5 me-5">
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-success disponibilite"></span>
-                        Disponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+    <section class="container-fluid ms-2">
+        <div class="row mt-5 gx-2">
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-success disponibilite"></span>
+                            Disponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-success disponibilite"></span>
+                            Disponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-danger disponibilite"></span>
+                            Indisponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-success disponibilite"></span>
+                            Disponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
 
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-success disponibilite"></span>
-                        Disponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+        <div class="row mt-5 gx-2">
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-success disponibilite"></span>
+                            Disponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
 
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-danger disponibilite"></span>
-                        Indisponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-danger disponibilite"></span>
+                            Indisponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </div>
 
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-success disponibilite"></span>
-                        Disponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-success disponibilite"></span>
+                            Disponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-    </div>
+                </a>
+            </div>
 
-    <div class="row mt-5 ms-5 me-5">
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-success disponibilite"></span>
-                        Disponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+            <div class="col-sm col-6">
+                <a href="../HTML/produit.html">
+                    <div class="card position-relative">
+                        <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
+                        <span
+                            class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle bg-danger disponibilite"></span>
+                            Indisponible
+                        </span>
+                        <div class="card-body">
+                            <h5 class="card-title">Drone</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                                the card's content.</p>
+                            <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
+                        </div>
                     </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-danger disponibilite"></span>
-                        Indisponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-success disponibilite"></span>
-                        Disponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="col-sm">
-            <a href="../HTML/produit.html">
-                <div class="card position-relative">
-                    <img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone">
-                    <span
-                        class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
-                        <span class="rounded-circle bg-danger disponibilite"></span>
-                        Indisponible
-                    </span>
-                    <div class="card-body">
-                        <h5 class="card-title">Drone</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <button href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</button>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-    </div>
+                </a>
+            </div>
+    </section>
 
     <footer class="container-fluid mt-5 text-white custom-bg">
         <div class="my-3">
