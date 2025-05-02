@@ -54,7 +54,7 @@
         <div class="container-fluid text-center mt-5">
             <div class="row">
                 <div class="col-sm-4"></div>
-                <div class="col-sm-1 dropdown me-4">
+                <div class="col-sm-1 dropdown me-5">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -83,7 +83,7 @@
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="../HTML/accueil.html">Recherche</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Recherche</a></li>
                             <li class="breadcrumb-item"><a href="../HTML/produit.html">Drone</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Réservation</li>
                         </ol>
@@ -174,7 +174,7 @@
                         </div>
                         <div class='col-sm-4'></div>
                         <div class='col-sm-4'>
-                            <button type='submit' name='valider' class='btn btn-primary'>Valider</button>
+                            <button type='submit' name='valider' class='btn btn-info'>Valider</button>
                         </div>
                     </div>
                 </form>
@@ -182,7 +182,7 @@
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                            <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-2'><img
+                            <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
                                     src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                         </div>
             <div class='clearfix'></div>

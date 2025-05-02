@@ -137,6 +137,10 @@ canvas {
     #deconnexion{
         font-size: 10px;
     }
+    #fildariane{
+        margin-top: 5%;
+        font-size:12px;
+    }
 }
 
 @media (max-width: 600px){
@@ -145,5 +149,12 @@ canvas {
         height:auto;
         width:auto;
         margin-bottom: 10%;
+    }
+}
+
+@media (max-width: 1110px){
+    h2 {
+        font-size: 40px;
+        margin-left:0%;
     }
 }

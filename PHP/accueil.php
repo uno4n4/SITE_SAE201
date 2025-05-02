@@ -54,7 +54,7 @@
         <div class="container-fluid text-center mt-5">
             <div class="row">
                 <div class="col-sm-4"></div>
-                <div class="col-sm-1 dropdown me-4">
+                <div class="col-sm-1 dropdown me-5">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
