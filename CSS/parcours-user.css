@@ -126,3 +126,15 @@ canvas {
 #erreur {
     font-size: 40px;
 }
+
+@media (max-width: 430px){
+    #logo-iut-head{
+        width:100px;
+    }
+    #navbar-nav .spantext{
+        display:none;
+    }
+    #deconnexion{
+        font-size: 10px;
+    }
+}
