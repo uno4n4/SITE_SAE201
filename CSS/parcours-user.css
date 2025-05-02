@@ -127,7 +127,7 @@ canvas {
     font-size: 40px;
 }
 
-@media (max-width: 430px){
+@media (max-width: 450px){
     #logo-iut-head{
         width:100px;
     }
@@ -136,5 +136,14 @@ canvas {
     }
     #deconnexion{
         font-size: 10px;
+    }
+}
+
+@media (max-width: 600px){
+    .card{
+        font-size:14px;
+        height:auto;
+        width:auto;
+        margin-bottom: 10%;
     }
 }
