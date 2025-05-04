@@ -1,3 +1,55 @@
+<?php
+
+include('config.php');
+session_start();
+
+if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
+  $Nom=$_POST['Nom'];
+  $Prenom=$_POST['Prenom'];
+  $Email=$_POST['Email'];
+  $Tel=$_POST["Tel"];
+  $Role=$_POST['Role'];
+
+  switch($Role){
+    case 'admin':
+      $table = 'inscription_admin';
+      break;
+    case 'agent':
+      $table = 'inscription_agent';
+      break;
+    case 'etudiant':
+      $table = 'inscription_eleve';
+      break;
+    case 'prof':
+      $table = 'inscription_prof';
+      break;
+    default:
+      die("Rôle invalide.");
+      
+  }
+
+  $sql = "UPDATE INTO $table (nom, prenom, adresse_email, tel)
+        VALUES (?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql);
+  if ($stmt === false){
+    die("Erreur préparation : " . $conn->error); 
+  }
+  $stmt->bind_param("ssss", $Nom, $Prenom, $Email, $Tel);
+
+  if($stmt->execute()){
+    echo "Inscription réussie !";
+  } else {
+    echo "Erreur : " . $stmt->error;
+  }
+  $stmt->close();
+  }
+
+  $conn->close();
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -73,7 +125,7 @@
   
       <!-- Main content -->
     <div class="col py-3 custom-bg d-flex justify-content-lg-start">
-        <form class="mx-auto">
+        <form class="mx-auto" method="post" action="modifier-compte.php">
             <h2>Modifier Le compte</h2>
             <div class="photo-container">
                 <label for="photoUpload">
@@ -87,30 +139,30 @@
             </div>
             <div class="form-grid">
                 <div>
-                    <label>Nom *</label>
-                    <input type="text" id="Nom">
+                    <label for="Nom">Nom *</label>
+                    <input type="text" id="Nom" name="Nom">
                 </div>
                 <div>
-                    <label>Prénom *</label>
-                    <input type="text" id="Prenom">
+                    <label for="Prenom">Prénom *</label>
+                    <input type="text" id="Prenom" name="Prenom">
                 </div>
                 <div>
-                    <label>Email *</label>
-                    <input type="text" id="Email">
+                    <label for="Email">Email *</label>
+                    <input type="text" id="Email" name="Email">
                 </div>
                 <div>
-                    <label>Numéro de téléphone *</label>
-                    <input type="text" id="Tel">
+                    <label for="Tel">Numéro de téléphone *</label>
+                    <input type="text" id="Tel" name="Tel">
                 </div>
                 <div>
                     <label for="Role" class="me-3">Rôle</label>
                 
                     <select class="border none">
                       <option selected>Profil</option>
-                      <option value="Etu">Étudiant</option>
-                      <option value="Prof">Professeur</option>
-                      <option value="Agent">Agent</option>
-                      <option value="Admin">Admin</option>
+                      <option value="Etu" name="Role">Étudiant</option>
+                      <option value="Prof" name="Role">Professeur</option>
+                      <option value="Agent" name="Role">Agent</option>
+                      <option value="Admin" name="Role">Admin</option>
                     </select>
             </div>
             <div class="button-container-1">

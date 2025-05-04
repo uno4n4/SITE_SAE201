@@ -1,14 +1,7 @@
 <?php
 
-$host="localhost";
-$user="root";
-$pass="";
-$db="utilisateur";
-$conn=new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error){
-  die("Echec de la connexon :" . $conn->connect_error);
-}
+include ('config.php');
+session_start();
 
 if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
   $Nom=$_POST['Nom'];

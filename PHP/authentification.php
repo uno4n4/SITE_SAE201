@@ -1,50 +1,50 @@
 <?php
+
+include('config.php');
 session_start();
 
-$host="localhost";
-$user="root";
-$pass="";
-$db="utilisateur";
-$conn=new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error){
-  die("Echec de la connexon :" . $conn->connect_error);
-}
-
-if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['Pseudo'], $_POST['Mdp'])){
+if($_SERVER["REQUEST_METHOD"] === "POST"){
   $Pseudo = $_POST['Pseudo'];
-  $Mdp = $_POST['Mdp'];
+  $Mdp = $_POST["Mdp"];
 
-  $utilisateurs = [
-    'inscription_admin' => 'admin.php',
-    'inscription_agent' => 'agent.html',
-    'inscription_prof' => 'accueil.php',
-    'inscription_eleve' => 'accueil.php',
-  ];
+  $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
+  $trouve = false;
 
-foreach($utilisateurs as $table => $redirect){
-  $sql = "SELECT * FROM $table WHERE (adresse_email = ? OR pseudo = ?)";
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("ss", $Pseudo, $Pseudo);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if($result && $result->num_rows > 0){
+  foreach($tables as $table){
+    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ?");
+    $stmt->bind_param("s", $Pseudo);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $user = $result->fetch_assoc();
-    if(password_verify($Mdp, $user['Mdp'])){
+
+    if($user && password_verify($Mdp, $user['Mdp'])){
       $_SESSION['user'] = $user;
-      header("Location: $redirect");
-      exit();
-    } else {
-      echo "Identifiants incorrects.";
-      exit();
+      $_SESSION['table'] = $table;
+      $trouve = true;
+      break;
     }
   }
+  if($trouve){
+    if($_SESSION['table'] === 'inscription_prof'){
+      header("Location: prof.html");
+    } elseif($_SESSION['table'] === 'inscription_eleve'){
+      header("Location: index.html");
+    } elseif($_SESSION['table'] === 'inscription_agent'){
+      header("Location: agent.html");
+    } else {
+      header("Location: admin.html");
+    }
+    exit();
+  } else {
+    echo "Pseudo ou mot de passe incorrect.";
+  }
 }
-}
-
 
 ?>
+
+
+
+
 
 
 
@@ -78,9 +78,9 @@ foreach($utilisateurs as $table => $redirect){
             <form class="form-inline form-style" action="authentification.php" method="post">
               <div class="form-group">
               <h2>Connexion : </h2>
-              <label for="Pseudo">Adresse email universitaire ou pseudo :</label>
+              <label for="Pseudo">Pseudo :</label>
               <div class="input-icon-e">
-                <input type="text" class="form-control" id="Pseudo" name="Pseudo" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr ou noob1234" required>
+                <input type="text" class="form-control" id="Pseudo" name="Pseudo" placeholder="Ex : noob1234" required>
                 <i class="fa-solid fa-envelope icon-inside"></i>
               </div>
               

@@ -1,3 +1,94 @@
+<?php
+include('config.php');
+session_start();
+
+// Assurez-vous que l'utilisateur est connecté avant d'afficher ou de modifier ses données
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+    $pseudo = $user['pseudo'];
+    $nom = $user['nom'];
+    $prenom = $user['prenom'];
+    $email = $user['adresse_email'];
+    $tel = $user['numero_tel'];
+    $userId = $user['id'];  // Assurez-vous que l'ID de l'utilisateur est dans la session
+
+} else {
+    // Redirection si l'utilisateur n'est pas connecté
+    header("Location: setting.php");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Récupérer les nouvelles valeurs du formulaire
+    $nom = $_POST['Nom'];
+    $prenom = $_POST['Prenom'];
+    $email = $_POST['Email'];
+    $tel = $_POST['Tel'];
+    $pseudo = $_POST['Pseudo'];
+
+    // Validation de l'email (optionnel mais recommandé)
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Email invalide.";
+        exit();
+    }
+
+    // Vérifier si le mot de passe a été changé
+    if (!empty($_POST['old']) && !empty($_POST['new']) && !empty($_POST['new1'])) {
+        $oldMdp = $_POST['old'];
+        $newMdp = $_POST['new'];
+        $newMdpConfirm = $_POST['new1'];
+
+        if ($newMdp === $newMdpConfirm) {
+            // Changer le mot de passe si l'ancien est correct
+            if (password_verify($oldMdp, $user['mdp'])) {
+                $Mdp = password_hash($newMdp, PASSWORD_DEFAULT);
+            } else {
+                echo "Ancien mot de passe incorrect.";
+                exit();
+            }
+        } else {
+            echo "Les nouveaux mots de passe ne correspondent pas.";
+            exit();
+        }
+    }
+
+    // Mettre à jour les informations dans la base de données
+    $sql = "UPDATE inscription_eleve SET nom = ?, prenom = ?, adresse_email = ?, numero_tel = ?, pseudo = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssi", $nom, $prenom, $email, $tel, $pseudo, $userId);
+
+    if ($stmt->execute()) {
+        echo "Profil mis à jour avec succès !";
+
+        // Actualiser la session si nécessaire
+        $_SESSION['user']['nom'] = $nom;
+        $_SESSION['user']['prenom'] = $prenom;
+        $_SESSION['user']['adresse_email'] = $email;
+        $_SESSION['user']['numero_tel'] = $tel;
+        $_SESSION['user']['pseudo'] = $pseudo;
+
+        // Mettre à jour le mot de passe en session si changé
+        if (isset($Mdp)) {
+            $_SESSION['user']['mdp'] = $Mdp;
+        }
+
+        // Rediriger après la mise à jour
+        header("Location: profil.php");
+        exit();
+    } else {
+        echo "Erreur : " . $stmt->error;
+    }
+
+    $stmt->close();
+  } else {
+    echo "Utilisateur non connecté.";
+}
+
+$conn->close();
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -79,9 +170,6 @@
             <div class="d-flex flex-column gap-2 align-items-start">
               <button type="button" id="reglage" class="btn">
                 <i class="fa-solid fa-user"></i> Réglages du profil
-              </button>
-              <button type="button" id="verif" class="btn">
-                <i class="fa-solid fa-check"></i> Vérification
               </button>
             </div>
           </div>

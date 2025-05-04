@@ -1,14 +1,10 @@
 <?php 
 
-include 'inscription.php';
-
-$sql_eleve = "SELECT * FROM inscription_eleve WHERE statut = 'en attente'";
-$result_eleve = $conn->query($sql_eleve);
-
-$sql_prof = "SELECT * FROM inscription_prof WHERE statut = 'en attente'";
-$result_prof = $conn->query($sql_prof);
+include 'config.php';
+session_start();
 
 
+$tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 ?>
 
 
@@ -221,26 +217,44 @@ $result_prof = $conn->query($sql_prof);
                     <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
                     <a href="#" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
                   </div>
-                <?php while ($row = $result->fetch_assoc()) { ?>
+                  <?php foreach($tables as $table): ?>
+                  <?php 
+                  $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
+                  while ($user = $result->fetch_assoc()):
+                  ?>
+                  <form method="post" action="admin.php">
                   <div class="d-flex justify-content-end">
                     <img src="../IMAGE/logo-iut.png" id="pp">
-                    <br><p id="Nom"><?= htmlspecialchars($row['Nom']) ?></p>
-                    <br><p id="Prenom"><?= htmlspecialchars($row['Prenom']) ?></p>
-                    <br><p id="Numetu"><?= htmlspecialchars($row['Numetu']) ?></p>
+                    <br><p id="Nom"> <?= htmlspecialchars($user['Nom']) ?></p>
+                    <br><p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                    <br><p id="Numetu"><?= htmlspecialchars($user['Num_etudiant']) ?></p>
                   </div>
-                  <div class="d-flex gap-3 justify-content-end">
-                    <form method="post" action="">
-                      <input type="hidden" name="id" value="<?= $row['ID'] ?>">
-                      <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1">
+                  <?php endwhile; ?>
+                  <?php endforeach; ?>
+                    <div class="d-flex gap-3 justify-content-end">
+                      <input type="hidden" name="Nom">
+                      <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
                         <i class="fa-solid fa-circle-check"></i>
                       </button>
+                      <?php 
+                      if (isset($_POST["accepter1"])){
+                      $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
+                      $stmt->bind_param("s", $Nom);
+                      $stmt->execute();
+                      }
+                      ?>
                       <button class="card-link text-light border-0 rounded btn-acces" id="refuser1" name="refuser1">
                         <i class="fa-solid fa-circle-xmark"></i>
                       </button>
-                    </form>
-                  </div>
-                <?php } ?>
-                </div>
+                      <?php 
+                      if (isset($_POST["refuser1"])){
+                      $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
+                      $stmt->bind_param("s", $Nom);
+                      $stmt->execute();
+                      }
+                      ?>
+                    </div>
+                  </form>
               </div>
             </div>
           </div>

@@ -1,14 +1,6 @@
 <?php 
 
-$host="localhost";
-$user="root";
-$pass="";
-$db="utilisateur";
-$conn=new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error){
-  die("Echec de la connexon :" . $conn->connect_error);
-}
+include('config.php');
 
 //ETUDIANT : 
 
@@ -94,7 +86,7 @@ $conn->close();
             <img src="../IMAGE/logo-iut.png" id="logo-iut-head" alt="Logo IUT">
           </div>
           <div class="d-flex flex-nowrap gap-2">
-            <a href="./authentification.html" class="btn border rounded text-white bouton-co"><i class="fa-solid fa-user me-2"></i>Connexion</a>
+            <a href="authentification.php" class="btn border rounded text-white bouton-co"><i class="fa-solid fa-user me-2"></i>Connexion</a>
           </div>
         </div>
     </header> 

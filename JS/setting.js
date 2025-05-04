@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function reglagesContent() {
         container.style.display = "block";
         container.innerHTML = 
-        `<form id="setting" class="form-style">
+        `<form id="setting" class="form-style" method="post" action="../PHP/setting.php">
             <h2>Modifier son profil</h2>
             <div class="photo-container">
                 <label for="photoUpload">
@@ -39,20 +39,24 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
             <div class="form-grid">
                 <div>
-                    <label>Nom *</label>
-                    <input type="text" id="Nom">
+                    <label for="Nom">Nom *</label>
+                    <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom); ?>">
                 </div>
                 <div>
-                    <label>Prénom *</label>
-                    <input type="text" id="Prenom">
+                    <label for="Prenom">Prénom *</label>
+                    <input type="text" id="Prenom" name="Prenom" value="<?php echo htmlspecialchars($prenom); ?>">
                 </div>
                 <div>
-                    <label>Email *</label>
-                    <input type="text" id="Email">
+                    <label for="Email">Email *</label>
+                    <input type="text" id="Email" name="Email" value="<?php echo htmlspecialchars($email); ?>">
                 </div>
                 <div>
-                    <label>Numéro de téléphone *</label>
-                    <input type="text" id="Tel">
+                    <label for="Tel">Numéro de téléphone *</label>
+                    <input type="text" id="Tel" name="Tel" value="<?php echo htmlspecialchars($tel); ?>">
+                </div>
+                <div>
+                    <label for="Pseudo">Pseudo *</label>
+                    <input type="text" id="Pseudo" name="Pseudo" value="<?php echo htmlspecialchars($pseudo); ?>">
                 </div>
             </div>
             <div class="button-container-1">
@@ -83,19 +87,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         activateButton(settingButton, reglagesContent);
 
-    };
-
-    document.getElementById("verif").onclick = verifContent
-    function verifContent() {
-    container.style.display = "block";
-    container.innerHTML = 
-    `
-    <form id="setting" class="form-style">
-    <h2>Votre compte est en cours de vérification</h2>
-    <img src="../IMAGE/sablier.gif" id="gif">
-    </form>
-    `;
-    activateButton(verifButton, verifContent);
     };
 });
 
