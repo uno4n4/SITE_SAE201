@@ -1,11 +1,173 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <title>Gestion du matériel</title>
+
 </head>
-<body>
-    
+
+<body style="background-color: #d3d2d2; overflow-x: hidden;">
+
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <!-- Sidebar -->
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+                <div
+                    class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
+                    <div class="me-auto mt-4">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4mOrNvQ_JLv_FKwDyYEn7HsfRVHEpgFCWnw&s"
+                            class="img-fluid float-left d-none d-md-block" id="logo-iut-head" alt="Logo IUT"
+                            style="height: 40px;">
+                    </div>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+
+                        <li class="nav-item">
+                            <a href="../HTML/admin.html" class="nav-link align-middle px-0 mt-2 text-dark">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
+                                    bord</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/reservation.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion
+                                    des réservations</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des
+                                    comptes</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/materiel.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
+                                    matériel</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/statistiques.html" data-bs-toggle="collapse"
+                                class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-chart-simple"></i><span
+                                    class="ms-1 d-none d-sm-inline">Statistiques</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="../HTML/consignes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                                <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de
+                                    sécurité</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="mt-auto w-100">
+                        <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                            <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!--La section permettant d'ajouter l'arrière plan de la page-->
+            <section class="rounded-3 mt-2" style="background-color: rgba(254, 254, 254, 0.979);">
+                <div class="col-12 col-sm-12 col-md-9">
+                    <div class="d-flex align-items-center flex-wrap">
+                        <h2 class="mt-3">Gestion du matériel</h2>
+                        <h5 class="ms-auto mt-3 d-flex align-items-center">
+                            <i class="bi bi-circle-fill text-primary mx-2"></i>Nom Prénom de admin
+                        </h5>
+                        <img src="data:image/jpeg;base64,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"
+                            class="rounded-circle mx-3" style="width: 35px; height: 35px;">
+                    </div>
+
+                    <div class="d-flex float-end">
+                        <div class="bg-light col-6 p-3 pb-1 m-2">
+                            <div class="d-flex justify-content-between align-items-baseline flex-wrap">
+                                <i class="fa-solid fa-display fa-2xl p-2"></i>
+                                <h4>35</h4>
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </div>
+                            <p>Réservations effectuées</p>
+                        </div>
+                        <div class="bg-light col-6 p-3 pb-1 m-2">
+                            <div class="d-flex justify-content-between align-items-baseline flex-wrap">
+                                <i class="fa-solid fa-calendar-minus fa-2xl p-2"></i>
+                                <h4>5</h4>
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </div>
+                            <p class="pt-2">Réservations annulées</p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <table class="overflow-hidden rounded-3 border border-dark table my-3 bg-dark">
+                        <thead>
+                            <th>Produit</th>
+                            <th>Catégorie</th>
+                            <th>Avis</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="d-flex gap-3">
+                                    <img src="../IMG/images/20230505_105442.jpg" alt="casque" style="height:100px;">
+                                    <div>
+                                        <p>Caméra blabla</p>
+                                        <p>Date d'achat: </p>
+                                        <p>Prix: </p>
+                                    </div>
+                                </td>
+                                <td class="mt-4">
+                                    <p class="p-2 mt-2 rounded texte">
+                                        <i class="me-2 fa-solid fa-camera"></i>Caméra
+                                    </p>
+                                </td>
+                                <td>
+                                    <p class="mt-3">stars</p>
+                                </td>
+                                <td>
+                                    <p class="mt-3"><i class="fa-solid fa-pen-to-square"></i></p>
+                                </td>
+                                <td>
+                                    <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- Bouton  -->
+                    <div class="row">
+                        <div class="d-flex  align-items-center mt-3">
+                            <a href="#" class="btn btn-light me-2 boutongris"
+                                style="background-color: #d9d9d9; border: 1px solid black;">
+                                <i class="fa-solid fa-arrow-left"></i> Précédent
+                            </a>
+                            <p id="nb-pages" class="me-2"></p>
+                            <a href="#" class="btn btn-light boutongris"
+                                style="background-color: #d9d9d9; border: 1px solid black;">
+                                Suivant <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 </body>
+
 </html>
