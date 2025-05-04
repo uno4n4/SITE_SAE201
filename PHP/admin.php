@@ -225,11 +225,17 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   <form method="post" action="admin.php">
                   <div class="d-flex align-items-center gap-2">
                     <img src="../IMAGE/logo-iut.png" id="pp">
+<<<<<<< HEAD
                     <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
                     <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
                     <p id="Numetu">
                     <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
                     </p>
+=======
+                    <p id="Nom" class="text-uppercase"> <?= htmlspecialchars($user['Nom']) ?></p>
+                    <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                    <p id="Numetu"><?= htmlspecialchars($user['Num_etudiant']) ?></p>
+>>>>>>> 6646b799face693a97898b939a6cf4bff64a9631
                   </div>
                   <div class="d-flex gap-3 justify-content-end">
                       <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
