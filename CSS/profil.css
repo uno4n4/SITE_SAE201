@@ -206,7 +206,8 @@ input[type="text"] {
     padding-bottom: 10px;
 }
 
-/* ADMIN */  
+/* ADMIN */ 
+ 
 .custom-select {
     border: none;
     margin-left: 50px;
@@ -433,13 +434,6 @@ input[type="text"] {
         font-size: 1.2rem;
         text-align: center;
     }
-
-    h5#nb-comptes {
-        font-size: 1rem;
-        text-align: center;
-        margin-top: 0.5rem;
-    }
-
     /* Le logo de l'IUT dans l'en-tête sera plus petit */
     #logo-iut-head {
         width: 60px;
