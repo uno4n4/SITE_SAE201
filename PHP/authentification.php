@@ -5,9 +5,9 @@ session_start();
 
 if($_SERVER["REQUEST_METHOD"] === "POST"){
   $Pseudo = $_POST['Pseudo'];
-  $Mdp = $_POST["Mdp"];
-
+  $Mdp = $_POST['Mdp'];
   $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
+
   $trouve = false;
 
   foreach($tables as $table){
@@ -17,26 +17,30 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
-    if($user && password_verify($Mdp, $user['Mdp'])){
-      $_SESSION['user'] = $user;
-      $_SESSION['table'] = $table;
+    if($user){
       $trouve = true;
-      break;
+      if($user["Statut"] === "refusé"){
+        echo "Votre demande a été refusée.";
+      } elseif($user["Statut"] === "en attente"){
+        echo "Votre demande est en attente.";
+      } elseif (!password_verify($Mdp, $user["Mdp"])){
+        echo "Mot de passe incorrect.";
+      } else {
+        $_SESSION["utilisateur"] = $user;
+        $_SESSION["table"] = $table;
+        if($table === "incription_prof"){
+          header("Location: admin.php");
+        } elseif($table === "inscription_eleve"){
+          header("Location: admin.php");
+        } elseif($table === "incription_agent"){
+          header("Location: agent.php");
+        } else{
+          header("Location: admin.php");
+        } 
+        exit();
+      }
     }
-  }
-  if($trouve){
-    if($_SESSION['table'] === 'inscription_prof'){
-      header("Location: prof.html");
-    } elseif($_SESSION['table'] === 'inscription_eleve'){
-      header("Location: index.html");
-    } elseif($_SESSION['table'] === 'inscription_agent'){
-      header("Location: agent.html");
-    } else {
-      header("Location: admin.html");
-    }
-    exit();
-  } else {
-    echo "Pseudo ou mot de passe incorrect.";
+    break;
   }
 }
 

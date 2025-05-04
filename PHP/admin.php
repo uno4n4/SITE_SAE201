@@ -215,7 +215,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                 <div class="col-12 col-lg-6 d-flex flex-column justify-content-between">
                   <div class="materiel d-flex align-items-center justify-content-between mb-4">
                     <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
-                    <a href="#" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
+                    <a href="gest-comptes.php" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
                   </div>
                   <?php foreach($tables as $table): ?>
                   <?php 
@@ -223,21 +223,22 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   while ($user = $result->fetch_assoc()):
                   ?>
                   <form method="post" action="admin.php">
-                  <div class="d-flex justify-content-end">
+                  <div class="d-flex align-items-center gap-2">
                     <img src="../IMAGE/logo-iut.png" id="pp">
-                    <br><p id="Nom"> <?= htmlspecialchars($user['Nom']) ?></p>
-                    <br><p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
-                    <br><p id="Numetu"><?= htmlspecialchars($user['Num_etudiant']) ?></p>
+                    <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
+                    <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                    <p id="Numetu">
+                    <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
+                    </p>
                   </div>
-                  <?php endwhile; ?>
-                  <?php endforeach; ?>
-                    <div class="d-flex gap-3 justify-content-end">
-                      <input type="hidden" name="Nom">
+                  <div class="d-flex gap-3 justify-content-end">
+                      <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
                       <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
                         <i class="fa-solid fa-circle-check"></i>
                       </button>
                       <?php 
                       if (isset($_POST["accepter1"])){
+                      $Nom = $_POST["Nom"];
                       $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
                       $stmt->bind_param("s", $Nom);
                       $stmt->execute();
@@ -248,6 +249,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       </button>
                       <?php 
                       if (isset($_POST["refuser1"])){
+                      $Nom = $_POST["Nom"];
                       $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
                       $stmt->bind_param("s", $Nom);
                       $stmt->execute();
@@ -255,6 +257,8 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       ?>
                     </div>
                   </form>
+                  <?php endwhile; ?>
+                  <?php endforeach; ?>
               </div>
             </div>
           </div>
