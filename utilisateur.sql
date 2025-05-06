@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 06 mai 2025 à 09:41
+-- Généré le : mar. 06 mai 2025 à 11:20
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -93,10 +93,7 @@ CREATE TABLE `inscription_eleve` (
 --
 
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('Mathus', 'samantha', '2025-05-30', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD1', 'TPA', '1234', '$2y$10$RKBF7/C2NsKduB4AMikDtOEUJ4c7t4zwcSsfE9xp7g52bfpQPTJBq', 'accepté'),
-('blabla', 'Amel', '2025-05-24', 'mathus.samantha@gmail.com', '0698473775', '58 Rue René Leblond', '982132', 'MMI1', 'TD2', 'TPA', 'test', '$2y$10$DyZT0HJA8fqW2oN7al5xgur1a.rt7AazUN/yrYkCfztSqbzQtlnou', 'accepté'),
-('samoura', 'diaba', '2025-05-30', 'Aamel2432@gmail.com', '0660610636', '58 Rue René Leblond', '982132', 'MMI1', 'TD1', 'TPF', '1234', '$2y$10$f8.rtUUXWdt.PdJk5ytMAesPwlLDHH0xuzH4BhkdcIXDXjGqnmQ7m', 'accepté'),
-('samoura', 'diaba', '2025-05-16', 'mathus.samantha@gmail.com', '0698473775', '58 Rue René Leblond', '982132', 'MMI3', 'TD1', 'TPA', '1234', '$2y$10$H4h0RLJwK.9ARPsw0xeEJuOZRZeUWy2o/FI.pJLCDxFnWg3qdVPCC', 'accepté');
+('Mathus', 'diaba', '0000-00-00', 'mathus.diaba@gmail.com', '', '', '', '', '', '', '', '$2y$10$yYu7BL8NL4zIhNcIXOvo9ek8zYtT/z8g0zY.KiANKms5JNQ1te1Y6', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -122,6 +119,35 @@ CREATE TABLE `inscription_prof` (
 
 INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
 ('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `inscription_admin`
+--
+ALTER TABLE `inscription_admin`
+  ADD PRIMARY KEY (`Pseudo`),
+  ADD UNIQUE KEY `unique_email` (`Adresse_email`);
+
+--
+-- Index pour la table `inscription_agent`
+--
+ALTER TABLE `inscription_agent`
+  ADD PRIMARY KEY (`Pseudo`);
+
+--
+-- Index pour la table `inscription_eleve`
+--
+ALTER TABLE `inscription_eleve`
+  ADD PRIMARY KEY (`Pseudo`);
+
+--
+-- Index pour la table `inscription_prof`
+--
+ALTER TABLE `inscription_prof`
+  ADD PRIMARY KEY (`Pseudo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
