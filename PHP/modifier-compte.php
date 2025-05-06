@@ -67,7 +67,7 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
   <header class="container-fluid px-0">
     <div class="d-flex align-items-center flex-nowrap px-3 py-2">
       <div class="me-auto">
-        <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
     </div>
   </header> 
