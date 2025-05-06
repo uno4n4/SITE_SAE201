@@ -230,7 +230,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     <p id="Numetu">
                     <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
                     </p>
-                  </div>
                   <div class="d-flex gap-3 justify-content-end">
                       <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
                       <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
