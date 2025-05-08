@@ -93,7 +93,7 @@
     <section class="container-fluid ms-2">
         <div class="row mt-5 gx-2">
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -110,7 +110,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -127,7 +127,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -144,7 +144,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -163,7 +163,7 @@
 
         <div class="row mt-5 gx-2">
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -180,7 +180,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -197,7 +197,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
@@ -214,7 +214,7 @@
             </div>
 
             <div class="col-sm col-6">
-                    <div class="card position-relative">
+                    <div class="card card-produit position-relative">
                     <a href="../HTML/produit.html"><img src="../IMG/images/P1018442.JPG" class="card-img-top" alt="drone"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
