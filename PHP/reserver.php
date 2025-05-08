@@ -18,15 +18,15 @@
     <title>Réserver</title>
 </head>
 
-<body>
-<section class="container-fluid">
+<body class="overflow-x-hidden">
+    <section class="container-fluid px-0">
         <nav class="navbar navbar-expand">
-            <div class="container-sm px-0 mx-2">
+            <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="#">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
 
-                <div class="justify-content-end collapse navbar-collapse gap-2" id="navbar-nav">
+                <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
                             <a class="icon-link link-dark" href="#">
@@ -52,8 +52,7 @@
         </nav>
 
         <div class="container-fluid text-center mt-5">
-            <div class="row">
-                <div class="col-sm-4"></div>
+            <div class="d-flex justify-content-center">
                 <div class="col-sm-1 dropdown me-5">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -70,16 +69,16 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-6 ms-1">
+                
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-info" type="submit">Search</button>
                     </form>
-                </div>
+                
             </div>
 
             <div class="row">
-                <div class="col-sm ms-5">
+                <div class="col-sm ms-md-5">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -91,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div class="row ms-5">
+        <div class="row ms-2 ms-md-5">
             <h2>MA RESERVATION</h2>
         </div>
     </section>
