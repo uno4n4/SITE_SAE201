@@ -20,7 +20,7 @@
 
 <body class="overflow-x-hidden">
     <section class="container-fluid px-0">
-    <nav class="navbar navbar-expand">
+        <nav class="navbar navbar-expand">
             <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="accueil.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
@@ -69,12 +69,12 @@
                         </ul>
                     </div>
                 </div>
-                
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-info" type="submit">Search</button>
-                    </form>
-                
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-info" type="submit">Search</button>
+                </form>
+
             </div>
 
             <div class="row">
@@ -140,7 +140,108 @@
         $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
         $signature = htmlspecialchars($_POST['signature']) ?? '';
 
-        if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
+        if ($role == "etudiant") {
+            //Requete SQL d'insertion
+            $sql = "INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participant_un, participant_deux, participant_trois, participant_quatre, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            //Preparer la requete
+            $stmt = $conn->prepare($sql);
+            //Verifier si la preparation a echoue
+            if ($stmt === false) {
+                die("Erreur de preparation de la requete: " . $conn->error);
+            }
+
+            //Lier les paramètres a la requete
+            $stmt->bind_param("ssssss", $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $materiel, $quantite, $signature);
+
+            //Executer la requete
+            if ($stmt->execute()) {
+                echo "Patient ajouté avec succès. ";
+            } else {
+                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
+            }
+
+            //Fermer la declaration et la connexion
+            $stmt->close();
+            $conn->close();
+
+            if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
+                $produit = $_POST['produit'];
+                $quantite = $_POST['quantite'];
+                // formulaire de reçu redirigé vers page accueil à la validation
+                echo "<section id='3'>
+                    <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
+                        <h5 class='mb-4 ms-4'>Votre Réservation</h5>
+                        <div>Nom : {$nom}</div>
+                        <div class='mb-4'>Prénom : {$prenom}</div>
+                        <div>Numéro étudiant : {$numcarteetud}</div>
+                        <div>Adresse email universitaire : {$email}</div>
+                        <div class='mb-4'>Date de réservation : {$date}</div>
+                        <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
+                        <div class='mb-4'>Nom du projet : {$nomProjet}</div>
+                        <div>Etudiants participants : {$participants}</div> 
+                        <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
+                        <p>Matériel : {$produit} x{$quantite}</p>
+                        <p>Signature : A TROUVER</p>
+                        <div class='col-4 ms-auto mb-3 mb-lg-0'>
+                            <div class='me-5 mt-3'>
+                                <a class='icon-link link-dark' href='#'>
+                                    Télécharger le PDF
+                                    <img src='../IMG/google-docs.png' alt='google-docs'>
+                                </a>
+                            </div>
+                        </div>
+                        <div class='row mt-5'>
+                            <div class='col-sm-4'>
+                                <button type='button' class='btn btn-info' onclick='previousForm(event)'><img
+                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour</button>
+                            </div>
+                            <div class='col-sm-4'></div>
+                            <div class='col-sm-4'>
+                                <button type='submit' name='valider' class='btn btn-info'>Valider</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>";
+            } else {
+                echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
+                echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
+                                <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
+                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
+                            </div>
+                <div class='clearfix'></div>
+                <div class='w-100'></div>";
+            }
+
+        } else if ($role == "enseignant") {
+            //Requete SQL d'insertion
+            $sql = "INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+            //Preparer la requete
+            $stmt = $conn->prepare($sql);
+            //Verifier si la preparation a echoue
+            if ($stmt === false) {
+                die("Erreur de preparation de la requete: " . $conn->error);
+            }
+
+            //Lier les paramètres a la requete
+            $stmt->bind_param("ssssss", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $materiel, $quantite, $signature);
+
+            //Executer la requete
+            if ($stmt->execute()) {
+                echo "Patient ajouté avec succès. ";
+            } else {
+                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
+            }
+
+            //Fermer la declaration et la connexion
+            $stmt->close();
+            $conn->close();
+        }
+
+        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
             $produit = $_POST['produit'];
             $quantite = $_POST['quantite'];
             // formulaire de reçu redirigé vers page accueil à la validation
@@ -149,13 +250,9 @@
                     <h5 class='mb-4 ms-4'>Votre Réservation</h5>
                     <div>Nom : {$nom}</div>
                     <div class='mb-4'>Prénom : {$prenom}</div>
-                    <div>Numéro étudiant : {$numcarteetud}</div>
                     <div>Adresse email universitaire : {$email}</div>
                     <div class='mb-4'>Date de réservation : {$date}</div>
                     <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
-                    <div class='mb-4'>Nom du projet : {$nomProjet}</div>
-                    <div>Etudiants participants : {$participants}</div> 
-                    <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
                     <p>Matériel : {$produit} x{$quantite}</p>
                     <p>Signature : A TROUVER</p>
                     <div class='col-4 ms-auto mb-3 mb-lg-0'>
