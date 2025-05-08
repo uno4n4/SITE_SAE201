@@ -20,7 +20,7 @@
 
 <body class="overflow-x-hidden">
     <section class="container-fluid px-0">
-        <nav class="navbar navbar-expand">
+    <nav class="navbar navbar-expand">
             <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="#">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
@@ -29,13 +29,13 @@
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext">Diaba Samoura</span>
                             </a>
@@ -240,13 +240,13 @@
                 <!-- Bloc Informations -->
                 <div>
                     <div class="fw-bold mb-2">INFORMATIONS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                    <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
                 </div>
 
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>
