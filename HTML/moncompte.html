@@ -11,6 +11,7 @@
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <script src="../JS/profile.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <title>Mon compte</title>
 
@@ -76,30 +77,82 @@
 
                     <div class="row ms-md-5 my-5">
                         <div class="col-md-2">
-                        <img src="data:image/jpeg;base64,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"
-                            class="rounded mx-3 img-fluid" style="max-width:150px; max-height: 150px;">
+                            <img src="data:image/jpeg;base64,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"
+                                class="rounded mx-3 img-fluid" style="max-width:150px; max-height: 150px;">
                         </div>
                         <div class="col-md-8">
-                                <h2 class="mt-3 text-start">Nom Prénom</h2>
-                                <span class="badge d-flex align-items-baseline gap-2 text-dark">
-                                    <i class="bi bi-circle-fill text-info mx-2"></i>
-                                    <h6 class="spantext">Etudiant(e)</h5>
+                            <h2 class="mt-3 text-start">Nom Prénom</h2>
+                            <span class="badge d-flex align-items-baseline gap-2 text-dark">
+                                <i class="bi bi-circle-fill text-info mx-2"></i>
+                                <h6 class="spantext">Etudiant(e)</h5>
                                     <h6 class="spantext">TD3 MMI1</h5>
+                            </span>
+                            <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25"
+                                aria-valuemin="0" aria-valuemax="100" style="height: 10px">
+                                <div class="progress-bar w-25"></div>
+                            </div>
+                            <div class="mt-3 d-flex justify-content-start">
+                                <span class="badge d-flex align-items-baseline gap-2 text-dark">
+                                    <span class="spantext">2</span>
+                                    <span class="spantext">Réservations</span>
                                 </span>
-                                <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 10px">
-                                    <div class="progress-bar w-25"></div>
-                                  </div>
-                                  <div class="mt-3 d-flex justify-content-start">
-                                    <span class="badge d-flex align-items-baseline gap-2 text-dark">
-                                        <span class="spantext">2</span>
-                                        <span class="spantext">Réservations</span>
-                                    </span>
-                                    <span class="badge d-flex align-items-baseline gap-2 text-dark">
-                                        <i class="fa-regular fa-comment"></i>
-                                        <span class="spantext">1</span>
-                                        <span class="spantext">Commentaires</span>
-                                    </span>
-                                  </div>
+                                <span class="badge d-flex align-items-baseline gap-2 text-dark">
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span class="spantext">1</span>
+                                    <span class="spantext">Commentaires</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- CALENDRIER -->
+                        <div class="col-12 col-lg-8">
+                            <div class="rounded bg-light border text-center p-3 m-2">
+                                <div class="d-flex justify-content-baseline"><i></i>Vous avez effectué une réservation
+                                    pour le <span class="text-black ms-1">Mardi 9 Mai
+                                        2025</span></div>
+                                <div class="d-flex justify-content-between">
+                                    <div>Caméra</div>
+                                    <a class='icon-link link-dark' href='#'>
+                                        Télécharger le PDF
+                                        <img src='../IMG/google-docs.png' alt='google-docs'>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="rounded bg-light border text-center p-3 m-2">
+                                <div class="d-flex justify-content-baseline"><i></i>Vous avez commenté un matériel le <span class="text-black ms-1">Jeudi 5 Mai
+                                        2025</span></div>
+                                <div class="d-flex justify-content-between">
+                                    <div>Caméra</div>
+                                    <a class='icon-link link-dark' href='#'>
+                                        Voir le commentaire
+                                    </a>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="col-12 col-lg-4 d-flex flex-co">
+                            <div id="container-calendrier">
+                                <div class="calendar-header d-flex justify-content-between align-items-center">
+                                    <button class="prev-month border-0 fs-4 bgcustom"><i
+                                            class="fa-solid fa-arrow-left"></i></button>
+                                    <h2 id="month-year">Avril 2025</h2>
+                                    <button class="after-month border-0 fs-4 bgcustom"><i
+                                            class="fa-solid fa-arrow-right"></i></button>
+                                </div>
+                                <table class="calendar ms-auto text-end w-100">
+                                    <thead>
+                                        <tr>
+                                            <th>Lun</th>
+                                            <th>Mar</th>
+                                            <th>Mer</th>
+                                            <th>Jeu</th>
+                                            <th>Ven</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="calendar-days"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 </body>
