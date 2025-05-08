@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 08 mai 2025 à 18:03
+-- Généré le : jeu. 08 mai 2025 à 18:57
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -175,11 +175,6 @@ CREATE TABLE `reservation_prof` (
   `Date_reservation` date DEFAULT NULL,
   `heure_debut` time DEFAULT NULL,
   `heure_fin` time DEFAULT NULL,
-  `nom_projet` varchar(50) DEFAULT NULL,
-  `participant_un` varchar(110) DEFAULT NULL,
-  `participant_deux` varchar(110) DEFAULT NULL,
-  `participant_trois` varchar(110) DEFAULT NULL,
-  `participant_quatre` varchar(110) DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
   `signature` varchar(19) DEFAULT NULL
