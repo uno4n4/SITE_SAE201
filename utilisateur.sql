@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 06 mai 2025 à 11:20
+-- Généré le : jeu. 08 mai 2025 à 18:03
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
-CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `utilisateur`;
 
 -- --------------------------------------------------------
 
@@ -120,6 +118,73 @@ CREATE TABLE `inscription_prof` (
 INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
 ('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé');
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `materiel`
+--
+
+CREATE TABLE `materiel` (
+  `Nom` varchar(50) NOT NULL,
+  `Description` varchar(500) DEFAULT NULL,
+  `Image_un` varchar(19) DEFAULT NULL,
+  `Image_deux` varchar(19) DEFAULT NULL,
+  `Image_trois` varchar(19) DEFAULT NULL,
+  `quantite` int(11) DEFAULT NULL,
+  `disponibilite` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `reservation_etudiant`
+--
+
+CREATE TABLE `reservation_etudiant` (
+  `Id` int(11) NOT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `Nom` varchar(50) DEFAULT NULL,
+  `Prenom` varchar(50) DEFAULT NULL,
+  `Num_etudiant` varchar(10) DEFAULT NULL,
+  `Adresse_email` varchar(100) DEFAULT NULL,
+  `Date_reservation` date DEFAULT NULL,
+  `heure_debut` time DEFAULT NULL,
+  `heure_fin` time DEFAULT NULL,
+  `nom_projet` varchar(50) DEFAULT NULL,
+  `participant_un` varchar(110) DEFAULT NULL,
+  `participant_deux` varchar(110) DEFAULT NULL,
+  `participant_trois` varchar(110) DEFAULT NULL,
+  `participant_quatre` varchar(110) DEFAULT NULL,
+  `materiel` varchar(50) DEFAULT NULL,
+  `quantite` int(11) DEFAULT NULL,
+  `signature` varchar(19) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `reservation_prof`
+--
+
+CREATE TABLE `reservation_prof` (
+  `Id` int(11) NOT NULL,
+  `Nom` varchar(50) DEFAULT NULL,
+  `Prenom` varchar(50) DEFAULT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `Adresse_email` varchar(100) DEFAULT NULL,
+  `Date_reservation` date DEFAULT NULL,
+  `heure_debut` time DEFAULT NULL,
+  `heure_fin` time DEFAULT NULL,
+  `nom_projet` varchar(50) DEFAULT NULL,
+  `participant_un` varchar(110) DEFAULT NULL,
+  `participant_deux` varchar(110) DEFAULT NULL,
+  `participant_trois` varchar(110) DEFAULT NULL,
+  `participant_quatre` varchar(110) DEFAULT NULL,
+  `materiel` varchar(50) DEFAULT NULL,
+  `quantite` int(11) DEFAULT NULL,
+  `signature` varchar(19) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Index pour les tables déchargées
 --
@@ -148,6 +213,46 @@ ALTER TABLE `inscription_eleve`
 --
 ALTER TABLE `inscription_prof`
   ADD PRIMARY KEY (`Pseudo`);
+
+--
+-- Index pour la table `materiel`
+--
+ALTER TABLE `materiel`
+  ADD PRIMARY KEY (`Nom`);
+
+--
+-- Index pour la table `reservation_etudiant`
+--
+ALTER TABLE `reservation_etudiant`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Pseudo` (`Pseudo`),
+  ADD KEY `materiel` (`materiel`);
+
+--
+-- Index pour la table `reservation_prof`
+--
+ALTER TABLE `reservation_prof`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Pseudo` (`Pseudo`),
+  ADD KEY `materiel` (`materiel`);
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `reservation_etudiant`
+--
+ALTER TABLE `reservation_etudiant`
+  ADD CONSTRAINT `reservation_etudiant_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_eleve` (`Pseudo`),
+  ADD CONSTRAINT `reservation_etudiant_ibfk_2` FOREIGN KEY (`materiel`) REFERENCES `materiel` (`Nom`);
+
+--
+-- Contraintes pour la table `reservation_prof`
+--
+ALTER TABLE `reservation_prof`
+  ADD CONSTRAINT `reservation_prof_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_prof` (`Pseudo`),
+  ADD CONSTRAINT `reservation_prof_ibfk_2` FOREIGN KEY (`materiel`) REFERENCES `materiel` (`Nom`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
