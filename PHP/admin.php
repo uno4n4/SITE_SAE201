@@ -29,15 +29,21 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 <body>
 
   <header class="container-fluid px-0">
+
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
-      <div class="d-flex align-items-center ms-auto gap-2">
+      <div class="d-flex align-items-center ms-auto">
         <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
         </h6>
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+
+    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+      <div class="me-auto">
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+
       </div>
     </div>
   </header> 
@@ -237,14 +243,14 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   <form method="post" action="admin.php">
                   <div class="d-flex align-items-center gap-2">
                     <img src="../IMAGE/logo-iut.png" id="pp">
-                    <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
-                    <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
-                    <p id="Numetu">
-                    <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
-                    </p>
+                    <br><p id="Nom"> <?= htmlspecialchars($user['Nom']) ?></p>
+                    <br><p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                    <br><p id="Numetu"><?= htmlspecialchars($user['Num_etudiant']) ?></p>
                   </div>
-                  <div class="d-flex gap-3 justify-content-end">
-                      <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
+                  <?php endwhile; ?>
+                  <?php endforeach; ?>
+                    <div class="d-flex gap-3 justify-content-end">
+                      <input type="hidden" name="Nom">
                       <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
                         <i class="fa-solid fa-circle-check"></i>
                       </button>

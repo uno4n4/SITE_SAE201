@@ -6,17 +6,22 @@ session_start();
 if($_SERVER["REQUEST_METHOD"] === "POST"){
   $Pseudo = $_POST['Pseudo'];
   $Mdp = $_POST['Mdp'];
+  $Mdp = $_POST['Mdp'];
   $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
+
 
   $trouve = false;
 
   foreach($tables as $table){
     $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ? OR adresse_email = ?");
     $stmt->bind_param("ss", $Pseudo, $Pseudo);
+    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ? OR adresse_email = ?");
+    $stmt->bind_param("ss", $Pseudo, $Pseudo);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
+    if($user){
     if($user){
       $trouve = true;
       if($user["Statut"] === "refusé"){

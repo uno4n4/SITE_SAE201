@@ -64,6 +64,10 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
