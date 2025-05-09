@@ -21,6 +21,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
       $trouve = true;
       if($user["Statut"] === "refusé"){
         echo "Votre demande a été refusée.";
+<<<<<<< HEAD
         break;
       } elseif($user["Statut"] === "en attente"){
         echo "Votre demande est en attente.";
@@ -36,6 +37,20 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         } elseif($table === "inscription_eleve"){
           header("Location: admin.php");
         } elseif($table === "inscription_agent"){
+=======
+      } elseif($user["Statut"] === "en attente"){
+        echo "Votre demande est en attente.";
+      } elseif (!password_verify($Mdp, $user["Mdp"])){
+        echo "Mot de passe incorrect.";
+      } else {
+        $_SESSION["utilisateur"] = $user;
+        $_SESSION["table"] = $table;
+        if($table === "incription_prof"){
+          header("Location: admin.php");
+        } elseif($table === "inscription_eleve"){
+          header("Location: admin.php");
+        } elseif($table === "incription_agent"){
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
           header("Location: agent.php");
         } else{
           header("Location: admin.php");

@@ -64,6 +64,7 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
 </head>
 <body>
 
+<<<<<<< HEAD
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
@@ -74,6 +75,12 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
           <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
         </h6>
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+=======
+  <header class="container-fluid px-0">
+    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+      <div class="me-auto">
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
       </div>
     </div>
   </header> 

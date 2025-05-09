@@ -62,6 +62,7 @@ $conn->close();
 </head>
 <body>
 
+<<<<<<< HEAD
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
@@ -75,6 +76,15 @@ $conn->close();
       </div>
     </div>
   </header> 
+=======
+    <header class="container-fluid px-0">
+        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+          <div class="me-auto">
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+          </div>
+        </div>
+      </header> 
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
     
       <div class="container-fluid">
         <div class="row flex-nowrap">

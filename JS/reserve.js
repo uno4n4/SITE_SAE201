@@ -1,4 +1,4 @@
-
+//ajouter la version display en fonction des sroles
 function nextForm(e) {
     let etapes = document.getElementById("steps").children;
     let form = e.target.closest("section");

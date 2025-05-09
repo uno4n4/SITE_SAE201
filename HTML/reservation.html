@@ -18,24 +18,24 @@
     <title>Réserver</title>
 </head>
 
-<body>
-    <section class="container-fluid">
+<body class="overflow-x-hidden">
+    <section class="container-fluid px-0">
         <nav class="navbar navbar-expand">
-            <div class="container-sm px-0 mx-2">
-                <a class="navbar-brand" href="#">
+            <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="../PHP/accueil.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
 
-                <div class="justify-content-end collapse navbar-collapse gap-2" id="navbar-nav">
+                <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext">Diaba Samoura</span>
                             </a>
@@ -52,8 +52,7 @@
         </nav>
 
         <div class="container-fluid text-center mt-5">
-            <div class="row">
-                <div class="col-sm-4"></div>
+            <div class="d-flex justify-content-center">
                 <div class="col-sm-1 dropdown me-5">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -70,14 +69,13 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-6 ms-1">
+                
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-info" type="submit">Search</button>
                     </form>
-                </div>
+                
             </div>
-
             <div class="row">
                 <div class="col-sm ms-5">
                     <nav id="fildariane" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -91,12 +89,12 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid mt-5 ms-5">
+        <div class="container-fluid mt-5 ms-2 ms-md-5">
             <h2>MA RESERVATION</h2>
         </div>
     </section>
 
-    <div class="container-fluid mt-5">
+    <div class="container-sm mt-5">
         <div class="stepper-container">
             <div class="stepper-line"></div>
 
@@ -124,7 +122,7 @@
         </div>
     </div>
 
-    <div id="formulaires" class="container-fluid gx-3 my-5">
+    <div id="formulaires-etudiant" class="container-fluid gx-3 my-5">
         <!-- Formulaire informations personnelles -->
         <form action="../PHP/reserver.php" method="post"
             class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
@@ -165,10 +163,7 @@
                     </div>
 
                     <div class="row mt-5">
-                        <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
-                        </div>
+                        <div class="col-sm-4"></div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
                             <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
@@ -276,6 +271,122 @@
         </form>
     </div>
 
+
+    <div id="formulaires-prof" class="container-fluid gx-3 my-5">
+        <!-- Formulaire informations personnelles -->
+        <form action="../PHP/reserver.php" method="post"
+            class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
+            <ol>
+                <section id="0">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Informations Personnelles</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
+                        <div class="col-sm-10">
+                            <input name="nom" type="text" class="form-control" id="nom" placeholder="Ex: Domingues">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
+                        <div class="col-sm-10">
+                            <input name="prenom" type="text" class="form-control" id="prenom" placeholder="Ex: Clara">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
+                        <div class="col-sm-10">
+                            <input name="email" type="email" class="form-control" id="email"
+                                placeholder="Ex: clara.domingues@edu.univ-eiffel.fr">
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formulaire période de réservation -->
+                <section id="1" class="formetape">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Période de réservation</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="date" class="col-sm-12 offset-sm-1 col-form-label">Date de réservation :</label>
+                        <div class="col-sm-12">
+                            <input name="date" type="date" class="form-control" id="date">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
+                            :</label>
+                        <div class="col-sm-12">
+                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="heureRetour" class="col-sm-12 offset-sm-1 col-form-label">Heure de retour du
+                            matériel
+                            :</label>
+                        <div class="col-sm-12">
+                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
+                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Formulaire projet en cours -->
+                <section id="2" class="formetape">
+                    <li class="ms-4">
+                        <h5 class="mb-4">Signature</h5>
+                    </li>
+
+                    <div class="mb-3 row">
+                        <label for="signature" class="col-sm-2 col-form-label">Signature :</label>
+                        <div class="col-sm-10">
+                            <canvas id="signature" class="col-sm-8 rounded"></canvas>
+                            <button type="button" id="clear" class="btn btn-secondary col-sm-3 mx-2">Effacer</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
+                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                        </div>
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4">
+                            <button type="submit" name="submit" class="btn btn-info">Suivant<img
+                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                        </div>
+                    </div>
+                </section>
+            </ol>
+        </form>
+    </div>
+
     <div class="clearfix"></div>
     <div class="w-100"></div>
 
@@ -289,13 +400,13 @@
                 <!-- Bloc Informations -->
                 <div>
                     <div class="fw-bold mb-2">INFORMATIONS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                    <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
                 </div>
 
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

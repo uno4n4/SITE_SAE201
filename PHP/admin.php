@@ -29,6 +29,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 <body>
 
   <header class="container-fluid px-0">
+<<<<<<< HEAD
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
@@ -38,6 +39,11 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
           <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
         </h6>
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+=======
+    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+      <div class="me-auto">
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
       </div>
     </div>
   </header> 
@@ -242,7 +248,10 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     <p id="Numetu">
                     <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
                     </p>
+<<<<<<< HEAD
                   </div>
+=======
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
                   <div class="d-flex gap-3 justify-content-end">
                       <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
                       <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
