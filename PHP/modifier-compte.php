@@ -64,10 +64,16 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
 </head>
 <body>
 
-  <header class="container-fluid px-0">
-    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-      <div class="me-auto">
-        <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
   </header> 
@@ -140,19 +146,19 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
             <div class="form-grid">
                 <div>
                     <label for="Nom">Nom *</label>
-                    <input type="text" id="Nom" name="Nom">
+                    <input type="text" id="Nom" name="Nom" placeholder="<?= isset($_SESSION['utilisateur']) ? 'Nom : ' . htmlspecialchars($_SESSION['utilisateur']['Nom']) : 'Nom' ?>">
                 </div>
                 <div>
                     <label for="Prenom">Prénom *</label>
-                    <input type="text" id="Prenom" name="Prenom">
+                    <input type="text" id="Prenom" name="Prenom"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Prénom : ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Prenom' ?>">
                 </div>
                 <div>
                     <label for="Email">Email *</label>
-                    <input type="text" id="Email" name="Email">
+                    <input type="text" id="Email" name="Email"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Email : ' . htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) : 'Adresse email' ?>">
                 </div>
                 <div>
                     <label for="Tel">Numéro de téléphone *</label>
-                    <input type="text" id="Tel" name="Tel">
+                    <input type="text" id="Tel" name="Tel"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Téléphone : ' . htmlspecialchars($_SESSION['utilisateur']['Numero_tel']) : 'Telephone' ?>">
                 </div>
                 <div>
                     <label for="Role" class="me-3">Rôle</label>

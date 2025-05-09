@@ -155,6 +155,31 @@ footer{
     max-height: 50px;
 }
 
+/* MENTIONS_LEGALES */
+
+.img-modif {
+    width: 50px;
+}
+
+.container-style {
+    background-color: #141139;
+    transition: transorm 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container-style:hover{
+    transform: translateY(-10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0 0.1);
+}
+
+.border-style {
+    transition: border-width 0.3s ease, box-shadow 0.3s ease;
+}
+
+.border-style:hover {
+    border-width: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
 
 
   

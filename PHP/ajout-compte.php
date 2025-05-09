@@ -62,13 +62,19 @@ $conn->close();
 </head>
 <body>
 
-    <header class="container-fluid px-0">
-        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-          <div class="me-auto">
-            <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
-          </div>
-        </div>
-      </header> 
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+      </div>
+    </div>
+  </header> 
     
       <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -126,7 +132,7 @@ $conn->close();
                 <div class="d-flex flex-column gap-2 align-items-start">
                   <div class="d-flex justify-content-between align-items-center gap-5">
                     <h2>Ajout d'un compte :</h2>
-                    <a href="./gest-comptes.html" class="btn btn-retour">Retour en arrière</a>
+                    <a href="gest-comptes.php" class="btn btn-retour">Retour en arrière</a>
                   </div>
                   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
                     <form method="post" action="ajout-compte.php">

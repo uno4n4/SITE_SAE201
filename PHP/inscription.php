@@ -83,7 +83,7 @@ $conn->close();
     <header class="container-fluid px-0">
         <div class="d-flex align-items-center justify-content-between flex-nowrap px-3 py-2">
           <div class="me-auto">
-            <img src="../IMAGE/logo-iut.png" id="logo-iut-head" alt="Logo IUT">
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
           </div>
           <div class="d-flex flex-nowrap gap-2">
             <a href="authentification.php" class="btn border rounded text-white bouton-co"><i class="fa-solid fa-user me-2"></i>Connexion</a>
