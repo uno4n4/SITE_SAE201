@@ -8,6 +8,7 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
   $Prenom=$_POST['Prenom'];
   $Email=$_POST['Email'];
   $Role=$_POST['Role'];
+  $Pseudo = strtolower($Nom . '.' . $Prenom);
   $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
   $Statut = 'accepté';
 
@@ -29,13 +30,13 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
       
   }
 
-  $sql = "INSERT INTO $table (nom, prenom, adresse_email, mdp, statut)
-        VALUES (?, ?, ?, ?, ?)";
+  $sql = "INSERT INTO $table (nom, prenom, adresse_email, pseudo, mdp, statut)
+        VALUES (?, ?, ?, ?, ?, ?)";
   $stmt = $conn->prepare($sql);
   if ($stmt === false){
     die("Erreur préparation : " . $conn->error); 
   }
-  $stmt->bind_param("sssss", $Nom, $Prenom, $Email, $Mdp, $Statut);
+  $stmt->bind_param("ssssss", $Nom, $Prenom, $Email, $Pseudo, $Mdp, $Statut);
 
   if($stmt->execute()){
     echo "Inscription réussie !";
@@ -44,9 +45,6 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
   }
   $stmt->close();
 }
-
-$conn->close();
-
 ?>
 
 <!DOCTYPE html>
@@ -62,13 +60,19 @@ $conn->close();
 </head>
 <body>
 
-    <header class="container-fluid px-0">
-        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-          <div class="me-auto">
-            <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
-          </div>
-        </div>
-      </header> 
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+      </div>
+    </div>
+  </header> 
     
       <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -126,7 +130,7 @@ $conn->close();
                 <div class="d-flex flex-column gap-2 align-items-start">
                   <div class="d-flex justify-content-between align-items-center gap-5">
                     <h2>Ajout d'un compte :</h2>
-                    <a href="./gest-comptes.html" class="btn btn-retour">Retour en arrière</a>
+                    <a href="gest-comptes.php" class="btn btn-retour">Retour en arrière</a>
                   </div>
                   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
                     <form method="post" action="ajout-compte.php">
@@ -180,6 +184,7 @@ $conn->close();
                                 <input name="Mdp" type="password" class="form-control border-dark" id="inputPassword">
                             </div>
                         </div>
+                        <p> Le pseudo sera : Nom.Prénom </p>
                         <div class="form-group row">
                             <div class="col-sm-10 mt-5">
                                 <button type="submit" class="btn btn-custom mx-5">Créer le compte</button>

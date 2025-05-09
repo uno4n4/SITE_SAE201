@@ -2,86 +2,78 @@
 include('config.php');
 session_start();
 
-// Assurez-vous que l'utilisateur est connecté avant d'afficher ou de modifier ses données
-if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
-    $pseudo = $user['pseudo'];
-    $nom = $user['nom'];
-    $prenom = $user['prenom'];
-    $email = $user['adresse_email'];
-    $tel = $user['numero_tel'];
-    $userId = $user['id'];  // Assurez-vous que l'ID de l'utilisateur est dans la session
-
-} else {
-    // Redirection si l'utilisateur n'est pas connecté
-    header("Location: setting.php");
-    exit();
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Récupérer les nouvelles valeurs du formulaire
-    $nom = $_POST['Nom'];
-    $prenom = $_POST['Prenom'];
-    $email = $_POST['Email'];
-    $tel = $_POST['Tel'];
-    $pseudo = $_POST['Pseudo'];
+$pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
+$ancienPass = $_SESSION['utilisateur']['Mdp'];
 
-    // Validation de l'email (optionnel mais recommandé)
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "Email invalide.";
-        exit();
-    }
+if($_SERVER["REQUEST_METHOD"] === "POST"){
+  if(isset($_POST['update_pseudo'])){
+    $nouveauPseudo = trim($_POST['Pseudo']);
 
-    // Vérifier si le mot de passe a été changé
-    if (!empty($_POST['old']) && !empty($_POST['new']) && !empty($_POST['new1'])) {
-        $oldMdp = $_POST['old'];
-        $newMdp = $_POST['new'];
-        $newMdpConfirm = $_POST['new1'];
-
-        if ($newMdp === $newMdpConfirm) {
-            // Changer le mot de passe si l'ancien est correct
-            if (password_verify($oldMdp, $user['mdp'])) {
-                $Mdp = password_hash($newMdp, PASSWORD_DEFAULT);
-            } else {
-                echo "Ancien mot de passe incorrect.";
-                exit();
-            }
-        } else {
-            echo "Les nouveaux mots de passe ne correspondent pas.";
-            exit();
-        }
-    }
-
-    // Mettre à jour les informations dans la base de données
-    $sql = "UPDATE inscription_eleve SET nom = ?, prenom = ?, adresse_email = ?, numero_tel = ?, pseudo = ? WHERE id = ?";
+    $sql = "UPDATE inscription_eleve SET Pseudo = ? WHERE Pseudo = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $nom, $prenom, $email, $tel, $pseudo, $userId);
 
-    if ($stmt->execute()) {
-        echo "Profil mis à jour avec succès !";
-
-        // Actualiser la session si nécessaire
-        $_SESSION['user']['nom'] = $nom;
-        $_SESSION['user']['prenom'] = $prenom;
-        $_SESSION['user']['adresse_email'] = $email;
-        $_SESSION['user']['numero_tel'] = $tel;
-        $_SESSION['user']['pseudo'] = $pseudo;
-
-        // Mettre à jour le mot de passe en session si changé
-        if (isset($Mdp)) {
-            $_SESSION['user']['mdp'] = $Mdp;
-        }
-
-        // Rediriger après la mise à jour
-        header("Location: profil.php");
-        exit();
-    } else {
-        echo "Erreur : " . $stmt->error;
+    if(!$stmt){
+      die("Erreur de préparation : " . $conn->error);
     }
 
+    $stmt->bind_param("ss", $nouveauPseudo, $pseudoActuel);
+
+    if($stmt->execute()){
+      $_SESSION['utilisateur']['Pseudo'] = $nouveauPseudo;
+      header("Location: admin.php");
+      exit();
+    } else {
+      echo "Erreur lors de la mise à jour : " . $stmt->error;
+    }
     $stmt->close();
-  } else {
-    echo "Utilisateur non connecté.";
+  }
+}
+
+if($_SERVER["REQUEST_METHOD"] === "POST"){
+  if(isset($_POST['update_pass'])){
+    $ancienPass = trim($_POST['old']);
+    $nouveauPass = trim($_POST['new']);
+    $confirmPass = trim($_POST['new1']);
+
+    if($nouveauPass !== $confirmPass){
+      echo "Les mots de passe ne correspondent pas.";
+      exit();
+    }
+
+    $pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
+
+    $sql = "SELECT Mdp FROM inscription_eleve WHERE Pseudo = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $pseudoActuel);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $utlisateur = $result->fetch_assoc();
+
+    if(!$utlisateur || !password_verify($ancienPass, $utlisateur['Mdp'])){
+      echo "Ancien mot de passe incorrect";
+      exit();
+    }
+
+    $nouveauHash = password_hash($nouveauPass, PASSWORD_DEFAULT);
+
+    $sqlUpdate = "UPDATE inscription_eleve SET Mdp = ? WHERE Pseudo = ?";
+    $stmt = $conn->prepare($sqlUpdate);
+    $stmt->bind_param("ss", $nouveauHash, $pseudoActuel);
+
+    if($stmt->execute()){
+      $_SESSION['utilisateur']['Mdp'] = $nouveauHash;
+      header("Location: setting.php");
+      exit();
+    } else {
+      echo "Erreur lors de la mise à jour : " . $stmt->errror;
+    }
+    $stmt->close();
+  }
 }
 
 $conn->close();
@@ -103,10 +95,16 @@ $conn->close();
 </head>
 <body>
 
-  <header class="container-fluid px-0">
-    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-      <div class="me-auto">
-        <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
   </header> 
@@ -174,7 +172,7 @@ $conn->close();
             </div>
           </div>
         </div>
-        <div id="form-container" class="mt-5"></div>
+        <div id="form-container" class="mt-5" data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
       </div>   
     </div>
   </div>

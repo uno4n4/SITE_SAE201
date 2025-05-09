@@ -4,9 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const verifButton = document.getElementById("verif");
     const reglages = document.getElementById("form-reglages");
     const container = document.getElementById("form-container");
-    const notif = document.getElementById("notif");
-    const calendrier = document.getElementById("container-calendrier");
-    const materiel = document.getElementById("mat");
+    var pseudo = document.getElementById('form-container').getAttribute('data-pseudo');
     function activateButton(buttonToActivate, contentToDisplay) {
 
         settingButton.classList.remove('active-btn');
@@ -39,48 +37,32 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
             <div class="form-grid">
                 <div>
-                    <label for="Nom">Nom *</label>
-                    <input type="text" id="Nom" name="Nom" value="<?php echo htmlspecialchars($nom); ?>">
-                </div>
-                <div>
-                    <label for="Prenom">Prénom *</label>
-                    <input type="text" id="Prenom" name="Prenom" value="<?php echo htmlspecialchars($prenom); ?>">
-                </div>
-                <div>
-                    <label for="Email">Email *</label>
-                    <input type="text" id="Email" name="Email" value="<?php echo htmlspecialchars($email); ?>">
-                </div>
-                <div>
-                    <label for="Tel">Numéro de téléphone *</label>
-                    <input type="text" id="Tel" name="Tel" value="<?php echo htmlspecialchars($tel); ?>">
-                </div>
-                <div>
                     <label for="Pseudo">Pseudo *</label>
-                    <input type="text" id="Pseudo" name="Pseudo" value="<?php echo htmlspecialchars($pseudo); ?>">
+                    <input type="text" id="Pseudo" name="Pseudo" placeholder = "${pseudo}">
                 </div>
             </div>
             <div class="button-container-1">
-                <button type="submit" id="submit">Enregistrer les changements</button>
-                <button onclick="../HTML/reglages.html" id="submit2">Annuler</button>
+                <button type="submit" id="submit" name="update_pseudo">Enregistrer les changements</button>
+                <button onclick="../PHP/admin.php" id="submit2">Annuler</button>
             </div>
             <hr>
             <h2>Changer son mot de passe</h2>
             <div class="form-grid1">
                 <div>
                     <br><label>Ancien mot de passe</label>
-                    <input type="password" id="old"><br>
+                    <input type="password" name="old"><br>
                 </div>
                 <div>
                     <label>Nouveau mot de passe</label>
-                    <input type="password" id="new"><br>
+                    <input type="password" name="new"><br>
                 </div>
                 <div>
                     <label>Confirmer le mot de passe</label>
-                    <input type="password" id="new1"><br>
+                    <input type="password" name="new1"><br>
                 </div>
             </div>
             <div class="button-container-2">
-                <button type="submit" id="confirmer">Confirmer</button>
+                <button type="submit" id="confirmer" name="update_pass">Confirmer</button>
             </div>
 
         </form>`;

@@ -3,6 +3,12 @@
 include 'config.php';
 session_start();
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
+
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 ?>
@@ -23,9 +29,15 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 <body>
 
   <header class="container-fluid px-0">
-    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-      <div class="me-auto">
-        <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
   </header> 
@@ -38,7 +50,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
   
             <li class="nav-item">
-              <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+              <a href="#" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
@@ -50,7 +62,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </li>
   
             <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+              <a href="gest-comptes.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
               </a>
             </li>
@@ -74,7 +86,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </li>
           </ul>
           <div class="mt-auto w-100">
-            <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+            <a href="setting.php" class="nav-link align-middle px-0">
               <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
             </a>
           </div>
@@ -87,9 +99,9 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             <form>
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" id="notif">
                 <div class="w-100 w-md-auto mb-3 mb-md-0 d-md-flex align-items-center justify-content-start">
-                  <div class="d-flex justify-content-between w-100">
-                  <label for="filtre" class="me-3">Filtrer par :</label>
-                    <div class="filters-container d-flex flex-column flex-md-row text-end align-items-md-center ms-auto">
+                  <div class="d-flex flex-column flex-md-row w-100">
+                    <label for="filtre" class="me-3 mb-2 mb-md-0 align-self-start">Filtrer par :</label>
+                    <div class="filters-container d-flex flex-column flex-md-row align-items-md-center">
                       <select class="custom-select mb-2 mb-md-0 me-md-2">
                         <option selected>Mois</option>
                         <option value="Jan">Janvier</option>
@@ -215,7 +227,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                 <div class="col-12 col-lg-6 d-flex flex-column justify-content-between">
                   <div class="materiel d-flex align-items-center justify-content-between mb-4">
                     <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
-                    <a href="#" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
+                    <a href="gest-comptes.php" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
                   </div>
                   <?php foreach($tables as $table): ?>
                   <?php 
@@ -223,21 +235,22 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   while ($user = $result->fetch_assoc()):
                   ?>
                   <form method="post" action="admin.php">
-                  <div class="d-flex justify-content-end">
+                  <div class="d-flex align-items-center gap-2">
                     <img src="../IMAGE/logo-iut.png" id="pp">
-                    <br><p id="Nom"> <?= htmlspecialchars($user['Nom']) ?></p>
-                    <br><p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
-                    <br><p id="Numetu"><?= htmlspecialchars($user['Num_etudiant']) ?></p>
+                    <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
+                    <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                    <p id="Numetu">
+                    <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
+                    </p>
                   </div>
-                  <?php endwhile; ?>
-                  <?php endforeach; ?>
-                    <div class="d-flex gap-3 justify-content-end">
-                      <input type="hidden" name="Nom">
+                  <div class="d-flex gap-3 justify-content-end">
+                      <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
                       <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1" >
                         <i class="fa-solid fa-circle-check"></i>
                       </button>
                       <?php 
                       if (isset($_POST["accepter1"])){
+                      $Nom = $_POST["Nom"];
                       $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
                       $stmt->bind_param("s", $Nom);
                       $stmt->execute();
@@ -248,6 +261,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       </button>
                       <?php 
                       if (isset($_POST["refuser1"])){
+                      $Nom = $_POST["Nom"];
                       $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
                       $stmt->bind_param("s", $Nom);
                       $stmt->execute();
@@ -255,6 +269,8 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       ?>
                     </div>
                   </form>
+                  <?php endwhile; ?>
+                  <?php endforeach; ?>
               </div>
             </div>
           </div>
