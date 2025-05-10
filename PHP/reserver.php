@@ -1,3 +1,15 @@
+<?php
+
+include 'config.php';
+session_start();
+
+if (!isset($_SESSION['utilisateur'])) {
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +49,7 @@
                         <li class="nav-item mt-3 d-flex flex-column">
                             <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext">Diaba Samoura</span>
+                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
@@ -46,7 +58,7 @@
                         </li>
                     </ul>
 
-                    <a class="btn btn-primary bouton-co" id="deconnexion" href="../index.html" role="button">Se déconnecter</a>
+                    <a class="btn btn-primary bouton-co" id="deconnexion" href="../PHP/logout.php" role="button">Se déconnecter</a>
                 </div>
             </div>
         </nav>
@@ -127,7 +139,7 @@
     <div class="w-100"></div>
 
     <?php
-    if (isset($_POST["submit"])) {
+    if (isset($_POST["submit-etud"])) {
         $nom = htmlspecialchars($_POST['nom']) ?? '';
         $prenom = htmlspecialchars($_POST['prenom']) ?? '';
         $numcarteetud = htmlspecialchars($_POST['numcarteetud']) ?? '';
@@ -140,37 +152,29 @@
         $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
         $signature = htmlspecialchars($_POST['signature']) ?? '';
 
-        if ($role == "etudiant") {
-            //Requete SQL d'insertion
-            $sql = "INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participant_un, participant_deux, participant_trois, participant_quatre, materiel, quantite, signature)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
+        if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
             //Preparer la requete
-            $stmt = $conn->prepare($sql);
+            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participant_un, participant_deux, participant_trois, participant_quatre, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
             //Verifier si la preparation a echoue
             if ($stmt === false) {
                 die("Erreur de preparation de la requete: " . $conn->error);
             }
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("ssssss", $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $materiel, $quantite, $signature);
+            $stmt->bind_param("isssssssssssis", $id, $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $materiel, $quantite, $signature);
 
             //Executer la requete
-            if ($stmt->execute()) {
-                echo "Patient ajouté avec succès. ";
-            } else {
-                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
-            }
+            $stmt->execute();
 
             //Fermer la declaration et la connexion
             $stmt->close();
             $conn->close();
 
-            if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
-                $produit = $_POST['produit'];
-                $quantite = $_POST['quantite'];
-                // formulaire de reçu redirigé vers page accueil à la validation
-                echo "<section id='3'>
+            $produit = $_POST['produit'];
+            $quantite = $_POST['quantite'];
+            // formulaire de reçu redirigé vers page accueil à la validation
+            echo "<section id='3'>
                     <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
                         <h5 class='mb-4 ms-4'>Votre Réservation</h5>
                         <div>Nom : {$nom}</div>
@@ -204,44 +208,41 @@
                         </div>
                     </form>
                 </section>";
-            } else {
-                echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
-                echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
+        } else {
+            echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
+            echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
                                 <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
                                         src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                             </div>
                 <div class='clearfix'></div>
                 <div class='w-100'></div>";
-            }
+        }
+    }
 
-        } else if ($role == "enseignant") {
-            //Requete SQL d'insertion
-            $sql = "INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, signature)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 
-            //Preparer la requete
-            $stmt = $conn->prepare($sql);
-            //Verifier si la preparation a echoue
-            if ($stmt === false) {
-                die("Erreur de preparation de la requete: " . $conn->error);
-            }
+
+    if (isset($_POST["submit-prof"])) {
+        $nom = htmlspecialchars($_POST['nom']) ?? '';
+        $prenom = htmlspecialchars($_POST['prenom']) ?? '';
+        $email = htmlspecialchars($_POST['email']) ?? '';
+        $date = htmlspecialchars($_POST['date']) ?? '';
+        $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
+        $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
+        $signature = htmlspecialchars($_POST['signature']) ?? '';
+
+        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
+            $stmt = $conn->prepare("INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("ssssss", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $materiel, $quantite, $signature);
+            $stmt->bind_param("issssssssis", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $materiel, $quantite, $signature);
 
-            //Executer la requete
-            if ($stmt->execute()) {
-                echo "Patient ajouté avec succès. ";
-            } else {
-                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
-            }
+            $stmt->execute();
 
             //Fermer la declaration et la connexion
             $stmt->close();
             $conn->close();
-        }
 
-        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
             $produit = $_POST['produit'];
             $quantite = $_POST['quantite'];
             // formulaire de reçu redirigé vers page accueil à la validation
