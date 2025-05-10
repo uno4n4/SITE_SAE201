@@ -3,7 +3,26 @@
 include('config.php');
 session_start();
 
-if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
+$tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
+
+if(isset($_GET['Pseudo'])){
+  $Pseudo = $_GET['Pseudo'];
+
+  foreach($tables as $table){
+    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ?");
+    $stmt->bind_param("s", $Pseudo);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $utilisateur = $result->fetch_assoc();
+
+    if($utilisateur){
+      break;
+    }
+  }
+}
+
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
+  $Pseudo = $_POST['Pseudo'];
   $Nom=$_POST['Nom'];
   $Prenom=$_POST['Prenom'];
   $Email=$_POST['Email'];
@@ -28,13 +47,12 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
       
   }
 
-  $sql = "UPDATE INTO $table (nom, prenom, adresse_email, tel)
-        VALUES (?, ?, ?, ?)";
+  $sql = "UPDATE $table SET nom = ?, prenom = ?, adresse_email = ?, tel = ? WHERE Pseudo = ?";
   $stmt = $conn->prepare($sql);
   if ($stmt === false){
     die("Erreur préparation : " . $conn->error); 
   }
-  $stmt->bind_param("ssss", $Nom, $Prenom, $Email, $Tel);
+  $stmt->bind_param("sssss", $Nom, $Prenom, $Email, $Tel, $Pseudo);
 
   if($stmt->execute()){
     echo "Inscription réussie !";
@@ -64,10 +82,16 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
 </head>
 <body>
 
-  <header class="container-fluid px-0">
-    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-      <div class="me-auto">
-        <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
   </header> 
@@ -126,6 +150,7 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
       <!-- Main content -->
     <div class="col py-3 custom-bg d-flex justify-content-lg-start">
         <form class="mx-auto" method="post" action="modifier-compte.php">
+          <input type="hidden" name="Pseudo" value="<?= $utilisateur['Pseudo'] ?>">
             <h2>Modifier Le compte</h2>
             <div class="photo-container">
                 <label for="photoUpload">
@@ -140,29 +165,29 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
             <div class="form-grid">
                 <div>
                     <label for="Nom">Nom *</label>
-                    <input type="text" id="Nom" name="Nom">
+                    <input type="text" name="Nom" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Nom']) : '' ?>">
                 </div>
                 <div>
                     <label for="Prenom">Prénom *</label>
-                    <input type="text" id="Prenom" name="Prenom">
+                    <input type="text" id="Prenom" name="Prenom"  placeholder="<?= htmlspecialchars($utilisateur['Prenom']) ?>">
                 </div>
                 <div>
                     <label for="Email">Email *</label>
-                    <input type="text" id="Email" name="Email">
+                    <input type="text" id="Email" name="Email"  placeholder="<?= htmlspecialchars($utilisateur['Adresse_email']) ?>">
                 </div>
                 <div>
                     <label for="Tel">Numéro de téléphone *</label>
-                    <input type="text" id="Tel" name="Tel">
+                    <input type="text" id="Tel" name="Tel"  placeholder="<?= htmlspecialchars($utilisateur['Numero_tel']) ?>">
                 </div>
                 <div>
                     <label for="Role" class="me-3">Rôle</label>
                 
-                    <select class="border none">
+                    <select class="border none" name="Role">
                       <option selected>Profil</option>
-                      <option value="Etu" name="Role">Étudiant</option>
-                      <option value="Prof" name="Role">Professeur</option>
-                      <option value="Agent" name="Role">Agent</option>
-                      <option value="Admin" name="Role">Admin</option>
+                      <option value="etudiant" name="Role">Étudiant</option>
+                      <option value="prof" name="Role">Professeur</option>
+                      <option value="agent" name="Role">Agent</option>
+                      <option value="admin" name="Role">Admin</option>
                     </select>
             </div>
             <div class="button-container-1">

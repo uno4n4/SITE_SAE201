@@ -1,12 +1,8 @@
 body {
     background-color: #D3D2D2;
-    margin: 0;
+    overflow-x: hidden;
 }
-
-#logo-iut-head {
-    max-height: 40px; 
-}
-
+  
 /* SETTING */
 
 .nav-link {
@@ -206,7 +202,8 @@ input[type="text"] {
     padding-bottom: 10px;
 }
 
-/* ADMIN */  
+/* ADMIN */ 
+ 
 .custom-select {
     border: none;
     margin-left: 50px;
@@ -219,14 +216,11 @@ input[type="text"] {
 
 .custom-card {
     width: 100%; /* Réduit la largeur de la carte */
-    max-width: 600px;
+    max-width: 500px;
+    max-height: 500px;
     box-sizing: border-box;
     margin-bottom: 20px; /* Ajoute un peu d'espace en dessous de la carte */
     margin-right: auto; /* Centre l'élément horizontalement */
-}
-
-.card.custom-card {
-    padding-left: 10px;
 }
 
 .card-body {
@@ -273,6 +267,13 @@ input[type="text"] {
 
 #refuser1 {
     background-color: red;
+}
+
+.card-text{
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #pp {
@@ -332,6 +333,42 @@ input[type="text"] {
       margin: 0 auto;
     }
 }
+.kebab-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: none;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.kebab-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kebab-menu li {
+  padding: 8px 12px;
+}
+
+.kebab-menu li button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.kebab-icon {
+  cursor: pointer;
+}
+
 
 .img-card {
     display: block;
@@ -352,6 +389,7 @@ input[type="text"] {
     border-radius: 10px;
     margin: 5px;
 }
+  
 
 #derniere-reservation {
     font-size: 10px;
@@ -376,7 +414,6 @@ input[type="text"] {
 
     /* Évite que le contenu dépasse */
     .custom-bg1 {
-        overflow-x: hidden;
         padding: 1rem;
         margin-right: 0;
     }
@@ -392,11 +429,11 @@ input[type="text"] {
         height: 40px;
     }
 
-    /* Centrer les titres et ajuster l'espacement */
-    #nom-prenom, #classe {
-        font-size: 1rem;  /* Taille de texte plus petite */
-        text-align: center;
-        margin: 0;
+    .card-wrapper {
+        display: flex;
+        justify-content: center;
+        flex: 1 1 300px; 
+        max-width: 100%;
     }
 
     /* Alignement des éléments de filtre et de boutons */
@@ -433,13 +470,6 @@ input[type="text"] {
         font-size: 1.2rem;
         text-align: center;
     }
-
-    h5#nb-comptes {
-        font-size: 1rem;
-        text-align: center;
-        margin-top: 0.5rem;
-    }
-
     /* Le logo de l'IUT dans l'en-tête sera plus petit */
     #logo-iut-head {
         width: 60px;
