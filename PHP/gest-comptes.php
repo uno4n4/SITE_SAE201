@@ -23,11 +23,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 </head>
 <body>
 
-<<<<<<< HEAD
   <header class="container-fluid px-0">
-=======
-<header class="container-fluid px-0">
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
@@ -39,13 +35,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
-<<<<<<< HEAD
   </header>  
-=======
-</header>
-
-
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     
       <div class="container-fluid">
         <div class="row flex-nowrap">

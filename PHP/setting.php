@@ -172,16 +172,12 @@ $conn->close();
             </div>
           </div>
         </div>
-<<<<<<< HEAD
         <div id="form-container" class="mt-5" 
                                             data-nom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>"
                                             data-prenom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>"
                                             data-email ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Adresse_email'])) ?>"
                                             data-numetu ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Num_etudiant'])) ?>"
                                             data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
-=======
-        <div id="form-container" class="mt-5" data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
       </div>   
     </div>
   </div>
