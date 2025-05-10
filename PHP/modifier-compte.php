@@ -82,6 +82,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
 </head>
 <body>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
@@ -165,6 +172,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
             <div class="form-grid">
                 <div>
                     <label for="Nom">Nom *</label>
+<<<<<<< HEAD
                     <input type="text" name="Nom" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Nom']) : '' ?>">
                 </div>
                 <div>
@@ -178,6 +186,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
                 <div>
                     <label for="Tel">Numéro de téléphone *</label>
                     <input type="text" id="Tel" name="Tel"  placeholder="<?= htmlspecialchars($utilisateur['Numero_tel']) ?>">
+=======
+                    <input type="text" id="Nom" name="Nom" placeholder="<?= isset($_SESSION['utilisateur']) ? 'Nom : ' . htmlspecialchars($_SESSION['utilisateur']['Nom']) : 'Nom' ?>">
+                </div>
+                <div>
+                    <label for="Prenom">Prénom *</label>
+                    <input type="text" id="Prenom" name="Prenom"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Prénom : ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Prenom' ?>">
+                </div>
+                <div>
+                    <label for="Email">Email *</label>
+                    <input type="text" id="Email" name="Email"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Email : ' . htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) : 'Adresse email' ?>">
+                </div>
+                <div>
+                    <label for="Tel">Numéro de téléphone *</label>
+                    <input type="text" id="Tel" name="Tel"  placeholder="<?= isset($_SESSION['utilisateur']) ? 'Téléphone : ' . htmlspecialchars($_SESSION['utilisateur']['Numero_tel']) : 'Telephone' ?>">
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                 </div>
                 <div>
                     <label for="Role" class="me-3">Rôle</label>

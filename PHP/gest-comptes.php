@@ -23,7 +23,11 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 </head>
 <body>
 
+<<<<<<< HEAD
   <header class="container-fluid px-0">
+=======
+<header class="container-fluid px-0">
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
@@ -35,7 +39,13 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
+<<<<<<< HEAD
   </header>  
+=======
+</header>
+
+
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     
       <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -108,6 +118,18 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       }
                       echo $total . " compte(s) en attente";
                       ?>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+                      </h6>
+<<<<<<< HEAD
+                      <h6 id="nom-prenom"> <?= htmlspecialchars($_SESSION['nom']) . ' ' . htmlspecialchars($_SESSION['prenom']) ?><h6>
+                      <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+=======
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                     </div>
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
                       <!-- Partie gauche : Filtrer par -->
@@ -145,6 +167,13 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   
                   <div class="d-flex flex-wrap justify-content-center gap-4">
                       <!-- Carte 1 -->
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                     <?php foreach($tables as $table): ?>
                       <?php 
                         $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
@@ -194,6 +223,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                     }
                                   ?>
                                 </div>
+<<<<<<< HEAD
                               </div>
                             </div>
                           </form>
@@ -208,6 +238,105 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
                   </div>
 
+=======
+<<<<<<< HEAD
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      <?php endwhile; ?>
+                    <?php endforeach; ?>
+                  </div>
+    
+                  <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
+                    <a href="#" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
+                    <p id="nb-pages"></p>
+                    <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
+                  </div>
+
+=======
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      <?php endwhile; ?>
+                    <?php endforeach; ?>
+                  </div>
+    
+                  <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
+                    <a href="#" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
+                    <p id="nb-pages"></p>
+                    <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
+=======
+                      <?php foreach($tables as $table): ?>
+                        <?php 
+                          $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
+                          while ($user = $result->fetch_assoc()):
+                        ?>
+                      <div class="col-12 col-md-3 mb-4 d-flex justify-content-center">
+                        <form action="gest-comptes.php" method="post">
+                          <div class="card custom-card">
+                            <div class="card-top">
+                              <div class="input-group mx-3 mt-2">
+                                <div class="input-group-prepend">
+                                  <input type="radio">
+                                </div>
+                              </div>
+                            </div> 
+                            <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+                            <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
+                            <p class="text-center" id="classe">
+                              <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
+                              <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
+                              <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
+                            </p>
+                            <div class="card-body">
+                              <hr class="me-2">
+                              <div class="d-flex justify-content-between gap-4">
+                                <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
+                                <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="accepter1" name="accepter1">
+                                  <i class="fa-solid fa-circle-check"></i>
+                                </button>
+                                <?php 
+                                  if (isset($_POST["accepter1"])){
+                                    $Nom = $_POST["Nom"];
+                                    $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
+                                    $stmt->bind_param("s", $Nom);
+                                    $stmt->execute();
+                                  }
+                                ?>
+                                <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
+                                  <i class="fa-solid fa-circle-xmark"></i>
+                                </button>
+                                <?php 
+                                  if (isset($_POST["refuser1"])){
+                                   $Nom = $_POST["Nom"];
+                                   $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
+                                    $stmt->bind_param("s", $Nom);
+                                    $stmt->execute();
+                                  }
+                                ?>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    <?php endwhile; ?>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+    
+                    <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
+                      <a href="#" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
+                      <p id="nb-pages"></p>
+                      <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
+                  </div>
+
+<<<<<<< HEAD
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                   <!-- GESTION DES COMPTES -->
                   <div class="mt-5 d-flex justify-content-between align-items-center gap-5">
                     <h2>Gestions des comptes</h2>
@@ -227,6 +356,38 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     </h6>
                   </div>
                   <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+            <!-- GESTION DES COMPTES -->
+           <div class="container">
+            <div class="row mt-4">
+              <div class="col-md-9 py-3 custom-bg1 d-flex justify-content-lg-start">
+                <div class="d-flex flex-column flex-lg-column align-items-start gap-3">
+                  <div class="d-flex flex-column gap-2 align-items-start">
+                    <div class="d-flex justify-content-between align-items-center gap-5">
+                      <h2>Gestions des comptes</h2>
+                      <h6>
+                      <?php 
+                      $total = 0;
+                      foreach($tables as $table){
+                        $query = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'";
+                        $result = $conn->query($query);
+                        if($result){
+                          $row = $result->fetch_assoc();
+                          $total += (int)$row['count'];
+                        }
+                      }
+                      echo $total . " comptes accepté";
+                      ?>
+                      </h6>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                     <!-- Partie gauche : Filtrer par -->
                     <form method="get" action="gest-comptes.php">
                       <div class="d-flex align-items-center mb-3 mb-md-0">
@@ -267,6 +428,13 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </div>
                       </div>
                   
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                       <div class="d-flex flex-wrap justify-content-center gap-4">
                         <?php 
                         $profil = isset($_GET['profil']) ? $_GET['profil'] : '';
@@ -291,16 +459,24 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                             <div class="card-wrapper">
                               <form action="gest-comptes.php" method="post">
                                 <div class="card custom-card">
+<<<<<<< HEAD
                                   <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
                                     <div class="input-group">
+=======
+                                  <div class="card-top">
+                                    <div class="input-group mx-3 mt-2">
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                                       <div class="input-group-prepend">
                                         <input type="radio">
                                       </div>
                                     </div>
+<<<<<<< HEAD
                                     <span class="kebab-icon">
                                       <i class="fa-solid fa-ellipsis-vertical"></i>
                                     </span>
                                     <div class="kebab-menu" data-pseudo="<?= $utilisateur['Pseudo'] ?>"></div>
+=======
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                                   </div>
                                   <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
                                   <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
@@ -323,11 +499,68 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                       <?php endif; ?>
                                     </p>
                                   </div>
+<<<<<<< HEAD
                                 </div>
                               </form>
                             </div>
                           <?php endwhile; ?>
                         <?php endforeach; ?>
+=======
+<<<<<<< HEAD
+                                </div>
+                              </form>
+                            </div>
+                          <?php endwhile; ?>
+                        <?php endforeach; ?>
+=======
+                                </div>
+                              </form>
+                            </div>
+                          <?php endwhile; ?>
+                        <?php endforeach; ?>
+=======
+                    <div class="container">
+                      <div class="row">
+                      <?php foreach($tables as $table): ?>
+                        <?php 
+                          $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
+                          while ($user = $result->fetch_assoc()):
+                        ?>
+                        <div class="col-12 col-md-3 mb-4 d-flex justify-content-center">
+                          <form action="gest-comptes.php" method="post">
+                            <div class="card custom-card">
+                              <div class="card-top">
+                                <div class="input-group mx-3 mt-2">
+                                  <div class="input-group-prepend">
+                                    <input type="radio">
+                                  </div>
+                                </div>
+                              </div>
+                              <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+                              <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
+                              <p class="text-center" id="classe">
+                                <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
+                                <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
+                                <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
+                              </p>
+                              <div class="card-body custom-body">
+                                <div class="d-flex justify-content-between gap-4">
+                                  <p id="derniere-reservation">Dernière réservation</p>
+                                  <p id="date-reser">11/05/2025</p>
+                                </div>
+                                <p class="text-center" id="email"></p>
+                                <p class="text-center" id="num-etudiant"></p>
+                                <p class="text-center" id="num-tel"></p>
+                                <p class="text-center" id="pseudo"></p>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      <?php endwhile; ?>
+                      <?php endforeach; ?>
+>>>>>>> b3b0474763c5d010e403160fac3e4820ffbd15d1
+>>>>>>> ff037e5db5cb6cbd0a139902f5a5b8cbac2abc33
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                       </div>
     
                       <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">

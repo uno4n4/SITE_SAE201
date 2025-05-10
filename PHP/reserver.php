@@ -18,24 +18,24 @@
     <title>Réserver</title>
 </head>
 
-<body>
-<section class="container-fluid">
+<body class="overflow-x-hidden">
+    <section class="container-fluid px-0">
         <nav class="navbar navbar-expand">
-            <div class="container-sm px-0 mx-2">
-                <a class="navbar-brand" href="#">
+            <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="accueil.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
 
-                <div class="justify-content-end collapse navbar-collapse gap-2" id="navbar-nav">
+                <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="#">
+                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext">Diaba Samoura</span>
                             </a>
@@ -52,8 +52,7 @@
         </nav>
 
         <div class="container-fluid text-center mt-5">
-            <div class="row">
-                <div class="col-sm-4"></div>
+            <div class="d-flex justify-content-center">
                 <div class="col-sm-1 dropdown me-5">
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -70,16 +69,16 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-sm-6 ms-1">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-info" type="submit">Search</button>
-                    </form>
-                </div>
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-info" type="submit">Search</button>
+                </form>
+
             </div>
 
             <div class="row">
-                <div class="col-sm ms-5">
+                <div class="col-sm ms-md-5">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -91,7 +90,7 @@
                 </div>
             </div>
         </div>
-        <div class="row ms-5">
+        <div class="row ms-2 ms-md-5">
             <h2>MA RESERVATION</h2>
         </div>
     </section>
@@ -141,7 +140,108 @@
         $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
         $signature = htmlspecialchars($_POST['signature']) ?? '';
 
-        if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
+        if ($role == "etudiant") {
+            //Requete SQL d'insertion
+            $sql = "INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participant_un, participant_deux, participant_trois, participant_quatre, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            //Preparer la requete
+            $stmt = $conn->prepare($sql);
+            //Verifier si la preparation a echoue
+            if ($stmt === false) {
+                die("Erreur de preparation de la requete: " . $conn->error);
+            }
+
+            //Lier les paramètres a la requete
+            $stmt->bind_param("ssssss", $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $materiel, $quantite, $signature);
+
+            //Executer la requete
+            if ($stmt->execute()) {
+                echo "Patient ajouté avec succès. ";
+            } else {
+                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
+            }
+
+            //Fermer la declaration et la connexion
+            $stmt->close();
+            $conn->close();
+
+            if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
+                $produit = $_POST['produit'];
+                $quantite = $_POST['quantite'];
+                // formulaire de reçu redirigé vers page accueil à la validation
+                echo "<section id='3'>
+                    <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
+                        <h5 class='mb-4 ms-4'>Votre Réservation</h5>
+                        <div>Nom : {$nom}</div>
+                        <div class='mb-4'>Prénom : {$prenom}</div>
+                        <div>Numéro étudiant : {$numcarteetud}</div>
+                        <div>Adresse email universitaire : {$email}</div>
+                        <div class='mb-4'>Date de réservation : {$date}</div>
+                        <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
+                        <div class='mb-4'>Nom du projet : {$nomProjet}</div>
+                        <div>Etudiants participants : {$participants}</div> 
+                        <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
+                        <p>Matériel : {$produit} x{$quantite}</p>
+                        <p>Signature : A TROUVER</p>
+                        <div class='col-4 ms-auto mb-3 mb-lg-0'>
+                            <div class='me-5 mt-3'>
+                                <a class='icon-link link-dark' href='#'>
+                                    Télécharger le PDF
+                                    <img src='../IMG/google-docs.png' alt='google-docs'>
+                                </a>
+                            </div>
+                        </div>
+                        <div class='row mt-5'>
+                            <div class='col-sm-4'>
+                                <button type='button' class='btn btn-info' onclick='previousForm(event)'><img
+                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour</button>
+                            </div>
+                            <div class='col-sm-4'></div>
+                            <div class='col-sm-4'>
+                                <button type='submit' name='valider' class='btn btn-info'>Valider</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>";
+            } else {
+                echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
+                echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
+                                <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
+                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
+                            </div>
+                <div class='clearfix'></div>
+                <div class='w-100'></div>";
+            }
+
+        } else if ($role == "enseignant") {
+            //Requete SQL d'insertion
+            $sql = "INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, signature)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+
+            //Preparer la requete
+            $stmt = $conn->prepare($sql);
+            //Verifier si la preparation a echoue
+            if ($stmt === false) {
+                die("Erreur de preparation de la requete: " . $conn->error);
+            }
+
+            //Lier les paramètres a la requete
+            $stmt->bind_param("ssssss", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $materiel, $quantite, $signature);
+
+            //Executer la requete
+            if ($stmt->execute()) {
+                echo "Patient ajouté avec succès. ";
+            } else {
+                echo "Erreur lors de l'ajout du patient: " . $stmt->error;
+            }
+
+            //Fermer la declaration et la connexion
+            $stmt->close();
+            $conn->close();
+        }
+
+        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
             $produit = $_POST['produit'];
             $quantite = $_POST['quantite'];
             // formulaire de reçu redirigé vers page accueil à la validation
@@ -150,13 +250,9 @@
                     <h5 class='mb-4 ms-4'>Votre Réservation</h5>
                     <div>Nom : {$nom}</div>
                     <div class='mb-4'>Prénom : {$prenom}</div>
-                    <div>Numéro étudiant : {$numcarteetud}</div>
                     <div>Adresse email universitaire : {$email}</div>
                     <div class='mb-4'>Date de réservation : {$date}</div>
                     <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
-                    <div class='mb-4'>Nom du projet : {$nomProjet}</div>
-                    <div>Etudiants participants : {$participants}</div> 
-                    <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
                     <p>Matériel : {$produit} x{$quantite}</p>
                     <p>Signature : A TROUVER</p>
                     <div class='col-4 ms-auto mb-3 mb-lg-0'>
@@ -204,13 +300,13 @@
                 <!-- Bloc Informations -->
                 <div>
                     <div class="fw-bold mb-2">INFORMATIONS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+                    <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
                 </div>
 
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

@@ -29,15 +29,32 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 <body>
 
   <header class="container-fluid px-0">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
+<<<<<<< HEAD
       <div class="d-flex align-items-center ms-auto gap-2">
         <h6 class="mb-0 text-nowrap text-end">
           <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
         </h6>
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+=======
+      <div class="d-flex align-items-center ms-auto">
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
+        </h6>
+        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
+
+    <div class="d-flex align-items-center flex-nowrap px-3 py-2">
+      <div class="me-auto">
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
       </div>
     </div>
   </header> 

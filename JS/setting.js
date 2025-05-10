@@ -3,10 +3,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const settingButton = document.getElementById("reglage");
     const reglages = document.getElementById("form-reglages");
     const container = document.getElementById("form-container");
+<<<<<<< HEAD
     var nom = document.getElementById('form-container').getAttribute('data-nom');
     var prenom = document.getElementById('form-container').getAttribute('data-prenom');
     var email = document.getElementById('form-container').getAttribute('data-email');
     var numetu = document.getElementById('form-container').getAttribute('data-numetu');
+=======
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     var pseudo = document.getElementById('form-container').getAttribute('data-pseudo');
     function activateButton(buttonToActivate, contentToDisplay) {
 
@@ -38,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
             <div class="form-grid">
                 <div>
+<<<<<<< HEAD
                     <label for="Nom">Nom *</label>
                     <input type="text" name="Nom" value = "${nom}" disabled>
                 </div>
@@ -56,6 +60,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div>
                     <label for="Pseudo">Pseudo *</label>
                     <input type="text" id="Pseudo" name="Pseudo" value = "${pseudo}">
+=======
+                    <label for="Pseudo">Pseudo *</label>
+                    <input type="text" id="Pseudo" name="Pseudo" placeholder = "${pseudo}">
+>>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
                 </div>
             </div>
             <div class="button-container-1">
