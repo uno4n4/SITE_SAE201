@@ -150,19 +150,19 @@ if (!isset($_SESSION['utilisateur'])) {
         $nomProjet = htmlspecialchars($_POST['nomProjet']) ?? '';
         $participants = htmlspecialchars($_POST['participants']) ?? '';
         $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
-        $signature = htmlspecialchars($_POST['signature']) ?? '';
+        /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
         if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
             //Preparer la requete
-            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participant_un, participant_deux, participant_trois, participant_quatre, materiel, quantite, signature)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participants, materiel, quantite) /*penser à ajouter signature*/
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
             //Verifier si la preparation a echoue
             if ($stmt === false) {
                 die("Erreur de preparation de la requete: " . $conn->error);
             }
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("isssssssssssis", $id, $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $materiel, $quantite, $signature);
+            $stmt->bind_param("isssssssssssi", $id, $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
 
             //Executer la requete
             $stmt->execute();
@@ -171,8 +171,6 @@ if (!isset($_SESSION['utilisateur'])) {
             $stmt->close();
             $conn->close();
 
-            $produit = $_POST['produit'];
-            $quantite = $_POST['quantite'];
             // formulaire de reçu redirigé vers page accueil à la validation
             echo "<section id='3'>
                     <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
@@ -186,7 +184,7 @@ if (!isset($_SESSION['utilisateur'])) {
                         <div class='mb-4'>Nom du projet : {$nomProjet}</div>
                         <div>Etudiants participants : {$participants}</div> 
                         <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
-                        <p>Matériel : {$produit} x{$quantite}</p>
+                        <p>Matériel : {$id} x{$quantite}</p>
                         <p>Signature : A TROUVER</p>
                         <div class='col-4 ms-auto mb-3 mb-lg-0'>
                             <div class='me-5 mt-3'>
@@ -228,14 +226,14 @@ if (!isset($_SESSION['utilisateur'])) {
         $date = htmlspecialchars($_POST['date']) ?? '';
         $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
         $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
-        $signature = htmlspecialchars($_POST['signature']) ?? '';
+        /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
         if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
-            $stmt = $conn->prepare("INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, signature)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite)/*penser à ajouter signature*/
+    VALUES (?,?,?,?,?,?,?,?,?,?)");
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("issssssssis", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $materiel, $quantite, $signature);
+            $stmt->bind_param("issssssssi", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
 
             $stmt->execute();
 
@@ -243,8 +241,6 @@ if (!isset($_SESSION['utilisateur'])) {
             $stmt->close();
             $conn->close();
 
-            $produit = $_POST['produit'];
-            $quantite = $_POST['quantite'];
             // formulaire de reçu redirigé vers page accueil à la validation
             echo "<section id='3'>
                 <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
@@ -254,7 +250,7 @@ if (!isset($_SESSION['utilisateur'])) {
                     <div>Adresse email universitaire : {$email}</div>
                     <div class='mb-4'>Date de réservation : {$date}</div>
                     <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
-                    <p>Matériel : {$produit} x{$quantite}</p>
+                    <p>Matériel : {$id} x{$quantite}</p>
                     <p>Signature : A TROUVER</p>
                     <div class='col-4 ms-auto mb-3 mb-lg-0'>
                         <div class='me-5 mt-3'>

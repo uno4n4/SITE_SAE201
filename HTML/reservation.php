@@ -1,3 +1,22 @@
+<?php
+
+include '../PHP/config.php';
+session_start();
+// Vérifie si la connexion fonctionne
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
+// Vérifie si l'ID du produit est bien passé dans l'URL
+if (isset($_GET['id']) && isset($_GET['quantite'])) {
+    $id = $_GET['id'];
+    $quantite = $_GET['quantite'];
+} else {
+    echo "Aucun produit sélectionné.";
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,6 +32,7 @@
         href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&display=swap"
         rel="stylesheet">
     <script src="../JS/reserve.js" defer></script>
+    <script src="../JS/redirection.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
     <link rel="stylesheet" type="text/css" href="../CSS/parcours-user.css">
     <title>Réserver</title>
@@ -37,7 +57,7 @@
                         <li class="nav-item mt-3 d-flex flex-column">
                             <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext">Diaba Samoura</span>
+                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
@@ -262,7 +282,7 @@
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-etud" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-etud" onclick="rediriger()" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
@@ -378,7 +398,7 @@
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-prof" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-prof" onclick="rediriger()" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
