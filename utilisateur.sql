@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 10 mai 2025 à 16:40
+-- Généré le : sam. 10 mai 2025 à 17:32
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
+CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `utilisateur`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Structure de la table `inscription_admin`
 --
 
+DROP TABLE IF EXISTS `inscription_admin`;
 CREATE TABLE `inscription_admin` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -45,6 +48,7 @@ CREATE TABLE `inscription_admin` (
 -- Structure de la table `inscription_agent`
 --
 
+DROP TABLE IF EXISTS `inscription_agent`;
 CREATE TABLE `inscription_agent` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -62,7 +66,9 @@ CREATE TABLE `inscription_agent` (
 --
 
 INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('Gilet', 'Amel Yamina', '0000-00-00', 'Aamel2432@gmail.com', '', '', '', '$2y$10$yWsvMu3c1G8ZDhTOtesYq.H', 'accepté');
+('domingues', 'clara', '0000-00-00', 'clara@gmail.com', '', '', 'domingues.clara', '$2y$10$CccikOy/.mMjJADYChtpEerYfAv6xnVK4UK47cfGRx/thwnq5gQ8u', 'accepté'),
+('prsn', 'test', '0000-00-00', 'testpersonne@gmail.com', '', '', 'prsn.test', '$2y$10$V1lWwcfDt1pjl5uaQQsFOeJDTFZEwijsNYqkxMOPAoT8BP8jXHeIS', 'accepté');
+
 
 -- --------------------------------------------------------
 
@@ -70,6 +76,7 @@ INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_eleve`
 --
 
+DROP TABLE IF EXISTS `inscription_eleve`;
 CREATE TABLE `inscription_eleve` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -91,7 +98,7 @@ CREATE TABLE `inscription_eleve` (
 --
 
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('Mathus', 'diaba', '0000-00-00', 'mathus.diaba@gmail.com', '', '', '', '', '', '', '', '$2y$10$yYu7BL8NL4zIhNcIXOvo9ek8zYtT/z8g0zY.KiANKms5JNQ1te1Y6', 'accepté');
+('samoura', 'diaba', '2025-05-23', 'mathus.samantha@gmail.com', '0660610636', '58 Rue René Leblond', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$QbQ6QLxPCv.RGRkVg8y/7Oii5holXJM4EG5FL5AppuAWays3CA8Ta', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -99,6 +106,7 @@ INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_prof`
 --
 
+DROP TABLE IF EXISTS `inscription_prof`;
 CREATE TABLE `inscription_prof` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -204,6 +212,7 @@ CREATE TABLE `reservation_prof` (
   `quantite` int(11) DEFAULT NULL,
   `signature` varchar(19) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Index pour les tables déchargées

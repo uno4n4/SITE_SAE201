@@ -6,34 +6,18 @@ session_start();
 if($_SERVER["REQUEST_METHOD"] === "POST"){
   $Pseudo = $_POST['Pseudo'];
   $Mdp = $_POST['Mdp'];
-<<<<<<< HEAD
   $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
 
-=======
-  $Mdp = $_POST['Mdp'];
-  $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
-
-
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
   $trouve = false;
 
   foreach($tables as $table){
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ? OR adresse_email = ?");
+    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ? OR Adresse_email = ?");
     $stmt->bind_param("ss", $Pseudo, $Pseudo);
-<<<<<<< HEAD
-=======
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ? OR adresse_email = ?");
-    $stmt->bind_param("ss", $Pseudo, $Pseudo);
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
 
     if($user){
-<<<<<<< HEAD
-=======
-    if($user){
->>>>>>> 9b1d70d44d39286aeacfa953b187081af611b5b3
       $trouve = true;
       if($user["Statut"] === "refusé"){
         echo "Votre demande a été refusée.";
@@ -52,14 +36,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         } elseif($table === "inscription_eleve"){
           header("Location: admin.php");
         } elseif($table === "inscription_agent"){
-          header("Location: agent.php");
+          header("Location: gest-comptes.php");
         } else{
           header("Location: admin.php");
         } 
         exit();
       }
     }
-    break;
   }
 }
 
