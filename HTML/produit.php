@@ -1,3 +1,44 @@
+<?php
+
+include '../PHP/config.php';
+session_start();
+// Vérifie si la connexion fonctionne
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
+// Vérifie si l'ID du produit est bien passé dans l'URL
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    // Requête pour récupérer les détails du produit
+    $sql = "SELECT * FROM materiel WHERE Nom = ?";
+
+    // Prépare la requête
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("s", $id); // Lie l'ID à la requête
+        $stmt->execute(); // Exécute la requête
+
+        // Récupère les résultats
+        $result = $stmt->get_result();
+        $produit = $result->fetch_assoc(); // Récupère les informations du produit
+
+        // Si le produit n'existe pas
+        if (!$produit) {
+            echo "Produit introuvable.";
+            exit;
+        }
+    } else {
+        echo "Erreur dans la préparation de la requête.";
+        exit;
+    }
+} else {
+    echo "Aucun produit sélectionné.";
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,7 +78,7 @@
                         <li class="nav-item mt-3 d-flex flex-column">
                             <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext">Diaba Samoura</span>
+                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
@@ -91,7 +132,7 @@
 
     <div class="container-fluid ms-5 me-5 mt-5">
         <div class="row">
-            <h2>CAMERA XYZ37</h2>
+            <h2><?= htmlspecialchars($produit['Nom']) ?></h2>
         </div>
         <div class="row">
             <div id="carouselExampleIndicators" class="col-sm-4 carousel slide">
@@ -105,13 +146,13 @@
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="../IMG/images/P1018442.JPG" class="d-block w-100" alt="...">
+                        <img src="../IMG/images/<?= htmlspecialchars($produit['Image_un']) ?>" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="../IMG/images/P1018443.JPG" class="d-block w-100" alt="...">
+                        <img src="../IMG/images/<?= htmlspecialchars($produit['Image_deux']) ?>" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="../IMG/images/P1018444.JPG" class="d-block w-100" alt="...">
+                        <img src="../IMG/images/<?= htmlspecialchars($produit['Image_trois']) ?>" class="d-block w-100" alt="...">
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
@@ -127,13 +168,8 @@
             </div>
             <div class="col-sm-7 ms-1 me-1">
                 <div class="row">
-                    <h3 id="nomproduit">Camera XYZ37</h3>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id delectus vitae distinctio veniam
-                        tempore, at ad modi cum, provident mollitia enim aspernatur rerum nobis eveniet sapiente quae
-                        consequuntur quia nemo?
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Id delectus vitae distinctio veniam
-                        tempore, at ad modi cum, provident mollitia enim aspernatur rerum nobis eveniet sapiente quae
-                        consequuntur quia nemo?</p>
+                    <h3 id="nomproduit"><?= htmlspecialchars($produit['Nom']) ?></h3>
+                    <p><?= htmlspecialchars($produit['Description']) ?></p>
                 </div>
 
                 <div class="row">
@@ -148,8 +184,13 @@
                     </div>
                     <div class="col-sm-4 ms-3 mt-4">
                         <span class="rounded bg-light d-flex align-items-center gap-2 text-dark">
-                            <span class="ms-3 rounded-circle bg-success disponibilite"></span>
-                            Disponible
+                            <?php if (htmlspecialchars($produit['disponibilite']) == 1): ?>
+                                <span class="ms-3 rounded-circle bg-success disponibilite"></span>
+                                Disponible
+                            <?php else: ?>
+                                <span class="ms-3 rounded-circle bg-danger disponibilite"></span>
+                                Indisponible
+                            <?php endif; ?>
                         </span>
                     </div>
                 </div>
