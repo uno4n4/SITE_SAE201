@@ -11,7 +11,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
   $trouve = false;
 
   foreach($tables as $table){
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE pseudo = ? OR adresse_email = ?");
+    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ? OR Adresse_email = ?");
     $stmt->bind_param("ss", $Pseudo, $Pseudo);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -36,14 +36,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         } elseif($table === "inscription_eleve"){
           header("Location: admin.php");
         } elseif($table === "inscription_agent"){
-          header("Location: agent.php");
+          header("Location: gest-comptes.php");
         } else{
           header("Location: admin.php");
         } 
         exit();
       }
     }
-    break;
   }
 }
 
