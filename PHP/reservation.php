@@ -126,9 +126,8 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                 <div class="col-sm ms-5">
                     <nav id="fildariane" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Recherche</a></li>
-                            <li class="breadcrumb-item"><a href="../HTML/produit.html">Drone</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Home</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/produit.php">Drone</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Réservation</li>
                         </ol>
                     </nav>
@@ -458,7 +457,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

@@ -118,9 +118,8 @@ if (!isset($_SESSION['utilisateur'])) {
                 <div class="col-sm ms-md-5">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Recherche</a></li>
-                            <li class="breadcrumb-item"><a href="../HTML/produit.html">Drone</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Accueil</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/produit.php">Drone</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Réservation</li>
                         </ol>
                     </nav>
@@ -236,7 +235,7 @@ if (!isset($_SESSION['utilisateur'])) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                                <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
+                                <a href='../PHP/reservation.php' type='button' class='btn btn-primary col-3'><img
                                         src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                             </div>
                 <div class='clearfix'></div>
@@ -304,7 +303,7 @@ if (!isset($_SESSION['utilisateur'])) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                            <a href='../HTML/reservation.html' type='button' class='btn btn-primary col-3'><img
+                            <a href='../PHP/reservation.php' type='button' class='btn btn-primary col-3'><img
                                     src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                         </div>
             <div class='clearfix'></div>
@@ -332,7 +331,7 @@ if (!isset($_SESSION['utilisateur'])) {
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>
