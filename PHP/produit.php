@@ -147,8 +147,7 @@ if (isset($_GET['id'])) {
                 <div class="col-sm ms-5">
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Recherche</a></li>
+                            <li class="breadcrumb-item"><a href="../PHP/accueil.php">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Produit</li>
                         </ol>
                     </nav>
@@ -205,7 +204,7 @@ if (isset($_GET['id'])) {
                         </div>
                         <div class="row mt-2">
                             <input type="button" onclick="rediriger()" class="btn btn-info ms-2" value="RESERVER"
-                                role="button"><!--REDIRECTION vers reservation.html-->
+                                role="button"><!--REDIRECTION vers reservation.php-->
                         </div>
                     </div>
                     <div class="col-sm-4 ms-3 mt-4">
@@ -310,7 +309,7 @@ if (isset($_GET['id'])) {
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

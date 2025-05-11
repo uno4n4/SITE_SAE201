@@ -126,7 +126,6 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Recherche</li>
                         </ol>
                     </nav>
                 </div>
@@ -138,7 +137,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
             <?php foreach ($materiaux as $materiel): ?>
                 <div class="col-sm-6 col-md-4 col-lg-3 my-3">
                     <div class="card card-produit position-relative">
-                        <a href="../HTML/produit.php?id=<?= htmlspecialchars($materiel['Nom']) ?>"><img src="../IMG/images/<?= htmlspecialchars($materiel['Image_un']) ?>" class="card-img-top" alt="<?= htmlspecialchars($materiel['Nom']) ?>"></a>
+                        <a href="../PHP/produit.php?id=<?= htmlspecialchars($materiel['Nom']) ?>"><img src="../IMG/images/<?= htmlspecialchars($materiel['Image_un']) ?>" class="card-img-top" alt="<?= htmlspecialchars($materiel['Nom']) ?>"></a>
                         <span
                             class="position-absolute top-0 start-10 translate-middle-y badge bg-light d-flex align-items-center gap-2 text-dark">
                             <span class="rounded-circle bg-success disponibilite"></span>
@@ -147,7 +146,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($materiel['Nom']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($materiel['Description']) ?></p>
-                            <a href="../HTML/reservation.html" class="btn btn-info mt-2">Réserver</a>
+                            <a href="../PHP/reservation.php" class="btn btn-info mt-2">Réserver</a>
                         </div>
                     </div>
                 </div>
@@ -171,7 +170,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

@@ -124,7 +124,7 @@ if (!isset($_SESSION['utilisateur'])) {
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../HTML/contact.html" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>
