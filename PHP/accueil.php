@@ -146,7 +146,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($materiel['Nom']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($materiel['Description']) ?></p>
-                            <a href="../PHP/reservation.php" class="btn btn-info mt-2">Réserver</a>
+                            <a href="../PHP/reservation.php?id=<?= htmlspecialchars($materiel['Nom']) ?>&quantite=1" class="btn btn-info ms-2">Réserver</a>
                         </div>
                     </div>
                 </div>
