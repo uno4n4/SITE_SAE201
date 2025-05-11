@@ -154,15 +154,15 @@ if (!isset($_SESSION['utilisateur'])) {
 
         if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
             //Preparer la requete
-            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Id, Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participants, materiel, quantite) /*penser à ajouter signature*/
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participants, materiel, quantite) /*penser à ajouter signature*/
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
             //Verifier si la preparation a echoue
             if ($stmt === false) {
                 die("Erreur de preparation de la requete: " . $conn->error);
             }
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("isssssssssssi", $id, $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
+            $stmt->bind_param("sssssssssssi", $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
 
             //Executer la requete
             $stmt->execute();
@@ -229,11 +229,11 @@ if (!isset($_SESSION['utilisateur'])) {
         /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
         if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
-            $stmt = $conn->prepare("INSERT INTO reservation_prof(Id, Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite)/*penser à ajouter signature*/
-    VALUES (?,?,?,?,?,?,?,?,?,?)");
+            $stmt = $conn->prepare("INSERT INTO reservation_prof(Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite)/*penser à ajouter signature*/
+    VALUES (?,?,?,?,?,?,?,?,?)");
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("issssssssi", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
+            $stmt->bind_param("ssssssssi", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
 
             $stmt->execute();
 
