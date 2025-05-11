@@ -8,6 +8,14 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
+// Vérifie si l'ID du produit est bien passé dans l'URL
+if (isset($_GET['id']) && isset($_GET['quantite'])) {
+    $id = $_GET['id'];
+    $quantite = $_GET['quantite'];
+} else {
+    echo "Aucun produit sélectionné.";
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -162,7 +170,7 @@ if (!isset($_SESSION['utilisateur'])) {
             }
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("sssssssssssi", $pseudo, $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
+            $stmt->bind_param("sssssssssssi", $_SESSION['utilisateur']['Pseudo'], $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
 
             //Executer la requete
             $stmt->execute();
@@ -233,7 +241,7 @@ if (!isset($_SESSION['utilisateur'])) {
     VALUES (?,?,?,?,?,?,?,?,?)");
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("ssssssssi", $nom, $prenom, $pseudo, $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
+            $stmt->bind_param("ssssssssi", $nom, $prenom, $_SESSION['utilisateur']['Nom'], $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
 
             $stmt->execute();
 

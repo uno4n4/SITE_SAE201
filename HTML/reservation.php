@@ -282,7 +282,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-etud" onclick="rediriger()" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-etud" onclick="rediriger2()" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
@@ -398,7 +398,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-prof" onclick="rediriger()" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-prof" onclick="rediriger2()" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
