@@ -7,15 +7,6 @@ if (!isset($_SESSION['utilisateur'])) {
     echo "Erreur : Utilisateur non connecté.";
     exit();
 }
-
-// Vérifie si l'ID du produit est bien passé dans l'URL
-if (isset($_GET['id']) && isset($_GET['quantite'])) {
-    $id = $_GET['id'];
-    $quantite = $_GET['quantite'];
-} else {
-    echo "Aucun produit sélectionné.";
-    exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +33,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     <section class="container-fluid px-0">
         <nav class="navbar navbar-expand">
             <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="accueil.php">
+                <a class="navbar-brand" href="../PHP/accueil.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
 
@@ -57,12 +48,38 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <li class="nav-item mt-3 d-flex flex-column">
                             <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?></span>
+                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
-                            <span class="badge d-flex align-items-center gap-2 text-dark">
+                            <?php
+                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_assoc();
+
+                            if ($row['total'] > 0) {
+                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
                                 <span class="spantext">Etudiant(e)</span>
-                            </span>
+                            </span>';
+                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                            } else {
+                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $row = $result->fetch_assoc();
+
+                                if ($row['total'] > 0) {
+                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="spantext">Enseignant(e)</span>
+                            </span>';
+                                }
+                            }
+                            ?>
+
                         </li>
                     </ul>
 
@@ -158,6 +175,8 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
         $nomProjet = htmlspecialchars($_POST['nomProjet']) ?? '';
         $participants = htmlspecialchars($_POST['participants']) ?? '';
         $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
+        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
+        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
         /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
         if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
@@ -170,7 +189,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
             }
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("sssssssssssi", $_SESSION['utilisateur']['Pseudo'], $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $id, $quantite);/*penser à ajouter signature*/
+            $stmt->bind_param("sssssssssssi", $_SESSION['utilisateur']['Pseudo'], $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $nom_produit, $quantite);/*penser à ajouter signature*/
 
             //Executer la requete
             $stmt->execute();
@@ -192,7 +211,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <div class='mb-4'>Nom du projet : {$nomProjet}</div>
                         <div>Etudiants participants : {$participants}</div> 
                         <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
-                        <p>Matériel : {$id} x{$quantite}</p>
+                        <p>Matériel : {$nom_produit} x{$quantite}</p>
                         <p>Signature : A TROUVER</p>
                         <div class='col-4 ms-auto mb-3 mb-lg-0'>
                             <div class='me-5 mt-3'>
@@ -234,6 +253,8 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
         $date = htmlspecialchars($_POST['date']) ?? '';
         $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
         $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
+        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
+        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
         /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
         if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
@@ -241,7 +262,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     VALUES (?,?,?,?,?,?,?,?,?)");
 
             //Lier les paramètres a la requete
-            $stmt->bind_param("ssssssssi", $nom, $prenom, $_SESSION['utilisateur']['Nom'], $email, $date, $heureRetrait, $heureRetour, $id, $quantite); /*penser à ajouter signature*/
+            $stmt->bind_param("ssssssssi", $nom, $prenom, $_SESSION['utilisateur']['Nom'], $email, $date, $heureRetrait, $heureRetour, $nom_produit, $quantite); /*penser à ajouter signature*/
 
             $stmt->execute();
 
@@ -258,7 +279,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <div>Adresse email universitaire : {$email}</div>
                     <div class='mb-4'>Date de réservation : {$date}</div>
                     <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
-                    <p>Matériel : {$id} x{$quantite}</p>
+                    <p>Matériel : {$nom_produit} x{$quantite}</p>
                     <p>Signature : A TROUVER</p>
                     <div class='col-4 ms-auto mb-3 mb-lg-0'>
                         <div class='me-5 mt-3'>
