@@ -1,3 +1,13 @@
+<?php
+
+include 'config.php';
+session_start();
+
+if (!isset($_SESSION['utilisateur'])) {
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,12 +38,38 @@
                         <li class="nav-item mt-3 d-flex flex-column">
                             <a class="icon-link link-dark" href="../HTML/moncompte.html">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext">Diaba Samoura</span>
+                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
-                            <span class="badge d-flex align-items-center gap-2 text-dark">
+                            <?php
+                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_assoc();
+
+                            if ($row['total'] > 0) {
+                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
                                 <span class="spantext">Etudiant(e)</span>
-                            </span>
+                            </span>';
+                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                            } else {
+                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $row = $result->fetch_assoc();
+
+                                if ($row['total'] > 0) {
+                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="spantext">Enseignant(e)</span>
+                            </span>';
+                                }
+                            }
+                            ?>
+
                         </li>
                     </ul>
 

@@ -59,10 +59,36 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
-                            <span class="badge d-flex align-items-center gap-2 text-dark">
+                            <?php
+                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_assoc();
+
+                            if ($row['total'] > 0) {
+                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
                                 <span class="spantext">Etudiant(e)</span>
-                            </span>
+                            </span>';
+                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                            } else {
+                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                $row = $result->fetch_assoc();
+
+                                if ($row['total'] > 0) {
+                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="spantext">Enseignant(e)</span>
+                            </span>';
+                                }
+                            }
+                            ?>
+
                         </li>
                     </ul>
 
@@ -89,12 +115,12 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </ul>
                     </div>
                 </div>
-                
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-info" type="submit">Search</button>
-                    </form>
-                
+
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-info" type="submit">Search</button>
+                </form>
+
             </div>
             <div class="row">
                 <div class="col-sm ms-5">
@@ -151,6 +177,10 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <li class="ms-4">
                         <h5 class="mb-4">Informations Personnelles</h5>
                     </li>
+                    <input type="hidden" name="nom_produit" value="<?php echo htmlspecialchars($_GET['id']); ?>">
+                    <input type="hidden" name="quantite" value="<?php echo htmlspecialchars($_GET['quantite']); ?>">
+
+
 
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
@@ -282,7 +312,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-etud" onclick="rediriger2()" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-etud" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
@@ -301,6 +331,8 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <li class="ms-4">
                         <h5 class="mb-4">Informations Personnelles</h5>
                     </li>
+                    <input type="hidden" name="nom_produit" value="<? htmlspecialchars($id) ?>">
+                    <input type="hidden" name="quantite" value="<? htmlspecialchars($quantite) ?>">
 
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
@@ -398,7 +430,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-prof" onclick="rediriger2()" class="btn btn-info">Suivant<img
+                            <button type="submit" name="submit-prof" class="btn btn-info">Suivant<img
                                     src="../IMG/fleche-droite.png" alt="suivant"></button>
                         </div>
                     </div>
