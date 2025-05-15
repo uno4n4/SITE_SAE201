@@ -149,7 +149,7 @@ INSERT INTO `materiel` (`Nom`, `Description`, `Image_un`, `Image_deux`, `Image_t
 ('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 1),
 ('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 1),
 ('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 1),
-('Oculus cable link (PC VR)', 'Profitez d/\'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.', 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 1),
+('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 1),
 ('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 1),
 ('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 1),
 ('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 1),

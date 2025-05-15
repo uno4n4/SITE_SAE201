@@ -95,7 +95,9 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
                 <input type="password" id="Mdp" name="Mdp" class="form-control" required><br>
       
                 <button type="submit" class="btn submit">Soumettre</button>
-                <button type="button" class="btn mdp">Mot de passe oublié ?</button>
+                <a href="mdp-oublie.php">
+                  <button type="button" class="btn mdp">Mot de passe oublié ?</button>
+                </a>
               </div>
             </form>
         </div>
