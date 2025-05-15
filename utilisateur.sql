@@ -26,6 +26,34 @@ USE `utilisateur`;
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `commentaires_eleve`
+--
+
+CREATE TABLE `commentaires_eleve` (
+  `id` int(11) NOT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `date_comment` datetime NOT NULL,
+  `commentaire` varchar(500) DEFAULT NULL,
+  `reaction` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `commentaires_prof`
+--
+
+CREATE TABLE `commentaires_prof` (
+  `id` int(11) NOT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `date_comment` datetime NOT NULL,
+  `commentaire` varchar(500) DEFAULT NULL,
+  `reaction` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `inscription_admin`
 --
 
@@ -189,6 +217,13 @@ CREATE TABLE `reservation_etudiant` (
   `signature` varchar(19) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `reservation_etudiant`
+--
+
+INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`) VALUES
+(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -212,6 +247,20 @@ CREATE TABLE `reservation_prof` (
 --
 -- Index pour les tables déchargées
 --
+
+--
+-- Index pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Pseudo` (`Pseudo`);
+
+--
+-- Index pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Pseudo` (`Pseudo`);
 
 --
 -- Index pour la table `inscription_admin`
@@ -265,10 +314,22 @@ ALTER TABLE `reservation_prof`
 --
 
 --
+-- AUTO_INCREMENT pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `reservation_etudiant`
 --
 ALTER TABLE `reservation_etudiant`
-  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `reservation_prof`
@@ -279,6 +340,18 @@ ALTER TABLE `reservation_prof`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  ADD CONSTRAINT `commentaires_eleve_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_eleve` (`Pseudo`);
+
+--
+-- Contraintes pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  ADD CONSTRAINT `commentaires_prof_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_prof` (`Pseudo`);
 
 --
 -- Contraintes pour la table `reservation_etudiant`
