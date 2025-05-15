@@ -3,11 +3,15 @@
 include('config.php');
 session_start();
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
 if($_SERVER["REQUEST_METHOD"] === "POST"){
   $Pseudo = $_POST['Pseudo'];
-  $Mdp = $_POST['Mdp'];
   $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
-
   $trouve = false;
 
   foreach($tables as $table){
@@ -19,34 +23,52 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
     if($user){
       $trouve = true;
-      if($user["Statut"] === "refusé"){
-        echo "Votre demande a été refusée.";
-        break;
-      } elseif($user["Statut"] === "en attente"){
-        echo "Votre demande est en attente.";
-        break;
-      } elseif (!password_verify($Mdp, $user["Mdp"])){
-        echo "Mot de passe incorrect.";
-        break;
-      } else {
-        $_SESSION["utilisateur"] = $user;
-        $_SESSION["table"] = $table;
-        if($table === "inscription_prof"){
-          header("Location: admin.php");
-        } elseif($table === "inscription_eleve"){
-          header("Location: admin.php");
-        } elseif($table === "inscription_agent"){
-          header("Location: gest-comptes.php");
-        } else{
-          header("Location: admin.php");
-        } 
-        exit();
+      $email = $user['Adresse_email'];
+      $Pseudo = $user['Pseudo'];
+      $mdp_temporaire = bin2hex(random_bytes(4));
+      $mdp_hash = password_hash($mdp_temporaire, PASSWORD_DEFAULT);
+
+      $update = $conn->prepare("UPDATE `$table` SET Mdp = ? WHERE Pseudo = ? OR Adresse_email = ?");
+      $update->bind_param("sss", $mdp_hash, $Pseudo, $email);
+      $update->execute();
+
+      $mail = new PHPMailer(true);
+
+      try {
+          $mail->isSMTP();
+          $mail->Host = 'smtp.gmail.com';  
+          $mail->SMTPAuth = true;
+          $mail->Username = 'materiel.iut@gmail.com'; 
+          $mail->Password = 'obmv hoac gbrw ftwz'; 
+          $mail->SMTPSecure = 'tls';
+          $mail->Port = 587;
+
+          $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+          $mail->addAddress($email, $Pseudo);
+          $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support'); // Ajout du Reply-To
+
+          $mail->Subject = 'Réinitialisation de votre mot de passe';
+          $mail->Body = "Bonjour $Pseudo,\n\nVoici votre mot de passe temporaire : $mdp_temporaire\n\nMerci de le changer dès votre connexion.\n\nCordialement,\nL'équipe IUT";
+
+          if(!$mail->send()) {
+              echo "Erreur d'envoi : " . $mail->ErrorInfo;
+          } else {
+              echo "Message envoyé avec succès.";
+          }
+      } catch (Exception $e) {
+          echo "Une erreur est survenue lors de l'envoi de l'email. Erreur : {$mail->ErrorInfo}";
       }
+
+      break;
     }
-  }
 }
 
+if(!$trouve){
+    echo "Aucun compte n'a été trouvé sous ce pseudo ou cette adresse email.";
+}
+}
 ?>
+
 
 
 
@@ -63,41 +85,38 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
-    <title>Authentification</title>
+    <title>Mot de passe oublié</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
     <header class="container-fluid px-0">
-        <div class="d-flex align-items-center justify-content-between flex-nowrap px-3 py-2">
+        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
           <div class="me-auto">
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+            <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
           </div>
           <div class="d-flex flex-nowrap gap-2">
+            <a href="authentification.php" class="btn border rounded text-white bouton-co"><i class="fa-solid fa-user me-2"></i>Connexion</a>
             <a href="inscription.php" class="btn border rounded text-white bouton-co">Créer un compte</a>
           </div>
         </div>
-      </header>
+    </header> 
 
       <main class="d-flex flex-column justify-content-center align-items-center flex-fill text-center">
       <div class="container text-center">
         <div id="form-container" style="display: block;">
-            <form class="form-inline form-style" action="authentification.php" method="post">
+            <form class="form-inline form-style" action="mdp-oublie.php" method="post">
               <div class="form-group">
-              <h2>Connexion : </h2>
+                <a href="authentification.php">
+                    <button type="button" class="btn btn-sm mb-3">Revenir en arrière</button>
+                </a>
+              <h2>Mot de passe oublié : </h2>
               <label for="Pseudo">Pseudo ou Adresse email universitaire :</label>
               <div class="input-icon-e">
                 <input type="text" class="form-control" id="Pseudo" name="Pseudo" placeholder="Ex : noob1234 ou clara.domingues@edu.univ-eiffel.fr" required>
                 <i class="fa-solid fa-envelope icon-inside"></i>
               </div>
-              
-      
-                <label for="Mdp">Mot de passe :</label>
-                <input type="password" id="Mdp" name="Mdp" class="form-control" required><br>
       
                 <button type="submit" class="btn submit">Soumettre</button>
-                <a href="mdp-oublie.php">
-                  <button type="button" class="btn mdp">Mot de passe oublié ?</button>
-                </a>
               </div>
             </form>
         </div>

@@ -4,68 +4,154 @@ include('config.php');
 session_start();
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
+$tableOrigine = $_POST['tableOrigine'] ?? '';
+$roles = [
+    'inscription_eleve' => 'Étudiant',
+    'inscription_prof' => 'Professeur',
+    'inscription_admin' => 'Admin',
+    'inscription_agent' => 'Agent'
+];
+
 
 if(isset($_GET['Pseudo'])){
   $Pseudo = $_GET['Pseudo'];
 
+  // Chercher l'utilisateur dans les tables
+  $found = false;  // Variable pour savoir si l'utilisateur a été trouvé
   foreach($tables as $table){
     $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ?");
     $stmt->bind_param("s", $Pseudo);
     $stmt->execute();
     $result = $stmt->get_result();
-    $utilisateur = $result->fetch_assoc();
-
-    if($utilisateur){
+    if($utilisateur = $result->fetch_assoc()){
+      $tableOrigine = $table;  // Table d'origine trouvée
+      $found = true;  // Utilisateur trouvé
       break;
     }
   }
+
+  if(!$found) {
+    die("L'utilisateur n'a pas été trouvé dans la base de données.");
+  }
 }
 
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
+  $Nom = $_POST['Nom'];
+  $Prenom = $_POST['Prenom'];
+  $Anniv = $_POST['Anniv'];
+  $Email = $_POST['Email'];
+  $Tel = $_POST["Tel"];
+  $Adresse = $_POST['Adresse'];
   $Pseudo = $_POST['Pseudo'];
-  $Nom=$_POST['Nom'];
-  $Prenom=$_POST['Prenom'];
-  $Email=$_POST['Email'];
-  $Tel=$_POST["Tel"];
-  $Role=$_POST['Role'];
+  $tableOrigine = $_POST['tableOrigine'];
+  if (!in_array($tableOrigine, $tables)) {
+    die("Table d'origine invalide.");
+  }
 
+  // Récupération de l'utilisateur depuis la bonne table
+  $stmt = $conn->prepare("SELECT * FROM `$tableOrigine` WHERE Pseudo = ?");
+  $stmt->bind_param("s", $Pseudo);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $utilisateur = $result->fetch_assoc();
+
+  if (!$utilisateur) {
+      die("Utilisateur introuvable pour mise à jour.");
+  }
+  $Statut = 'accepté';
+  $Role = $_POST['Role'];
+  $Mdp = $utilisateur['Mdp'];
+
+
+  // Définir la nouvelle table en fonction du rôle
   switch($Role){
     case 'admin':
-      $table = 'inscription_admin';
-      break;
+          $table = 'inscription_admin';
+          break;
     case 'agent':
-      $table = 'inscription_agent';
-      break;
+          $table = 'inscription_agent';
+          break;
     case 'etudiant':
-      $table = 'inscription_eleve';
-      break;
+          $table = 'inscription_eleve';
+          break;
     case 'prof':
-      $table = 'inscription_prof';
-      break;
+          $table = 'inscription_prof';
+          break;
     default:
-      die("Rôle invalide.");
-      
+        $table = $tableOrigine;
+          break;
   }
 
-  $sql = "UPDATE $table SET nom = ?, prenom = ?, adresse_email = ?, tel = ? WHERE Pseudo = ?";
-  $stmt = $conn->prepare($sql);
-  if ($stmt === false){
-    die("Erreur préparation : " . $conn->error); 
-  }
-  $stmt->bind_param("sssss", $Nom, $Prenom, $Email, $Tel, $Pseudo);
+  // Vérifier si la table d'origine est définie avant de supprimer
+  if ($tableOrigine && $table !== $tableOrigine) {
+    // Supprimer l'utilisateur de la table d'origine
+    $stmtDelete = $conn->prepare("DELETE FROM `$tableOrigine` WHERE Pseudo = ?");
+    $stmtDelete->bind_param("s", $Pseudo);
+    if (!$stmtDelete->execute()) {
+      die("Erreur de suppression dans la table d'origine.");
+    }
 
-  if($stmt->execute()){
-    echo "Inscription réussie !";
-  } else {
-    echo "Erreur : " . $stmt->error;
-  }
-  $stmt->close();
-  }
+    // Ajouter l'utilisateur dans la nouvelle table
+    $sql = "INSERT INTO `$table` (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmtInsert = $conn->prepare($sql);
+    $stmtInsert->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
+    if($stmtInsert->execute()){
+      echo "Le rôle a été mis à jour et l'utilisateur déplacé avec succès !";
+    } else {
+      echo "Erreur : " . $stmtInsert->error;
+    }
 
-  $conn->close();
+    $stmtDelete->close();
+    $stmtInsert->close();
+  } elseif ($tableOrigine && $table === $tableOrigine) {
+    // Cas : rôle inchangé → mise à jour dans la même table
+    $sql = "UPDATE `$tableOrigine` SET nom = ?, prenom = ?, date_naissance = ?, adresse_email = ?, numero_tel = ?, adresse = ?, statut = ? WHERE pseudo = ?";
+    $stmtUpdate = $conn->prepare($sql);
+    $stmtUpdate->bind_param("ssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Statut, $Pseudo);
+    if($stmtUpdate->execute()){
+        echo "Informations mises à jour avec succès !";
+    } else {
+        echo "Erreur lors de la mise à jour : " . $stmtUpdate->error;
+    }
+    $stmtUpdate->close();
+} else {
+    die("Table d'origine invalide ou non définie.");
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['supprimer_compte'])) {
+    $Pseudo = $_POST['Pseudo'];
+    $tableOrigine = $_POST['tableOrigine'];
 
+    if (!in_array($tableOrigine, $tables)) {
+        die("Table d'origine invalide.");
+    }
+
+    // Supprimer l'utilisateur
+    $stmt = $conn->prepare("DELETE FROM `$tableOrigine` WHERE Pseudo = ?");
+    $stmt->bind_param("s", $Pseudo);
+
+    if ($stmt->execute()) {
+        echo "Le compte a été supprimé avec succès.";
+        // Optionnel : rediriger ou afficher un message HTML
+        // header("Location: gest-comptes.php?success=suppression");
+        exit;
+    } else {
+        echo "Erreur lors de la suppression du compte : " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+}
+
+
+
+$conn->close();
 
 ?>
+
+
+
 
 
 <!DOCTYPE html>
@@ -87,7 +173,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
-      <div class="d-flex align-items-center ms-auto">
+      <div class="d-flex align-items-center ms-auto gap-2">
         <h6 class="mb-0 text-nowrap text-end">
           <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
         </h6>
@@ -151,6 +237,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
     <div class="col py-3 custom-bg d-flex justify-content-lg-start">
         <form class="mx-auto" method="post" action="modifier-compte.php">
           <input type="hidden" name="Pseudo" value="<?= $utilisateur['Pseudo'] ?>">
+          <input type="hidden" name="tableOrigine" value="<?= htmlspecialchars($tableOrigine) ?>">
+          <input type="hidden" name="Anniv" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Date_naissance']) : '' ?>">
+          <input type="hidden" name="Adresse" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Adresse']) : '' ?>">
             <h2>Modifier Le compte</h2>
             <div class="photo-container">
                 <label for="photoUpload">
@@ -169,21 +258,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
                 </div>
                 <div>
                     <label for="Prenom">Prénom *</label>
-                    <input type="text" id="Prenom" name="Prenom"  placeholder="<?= htmlspecialchars($utilisateur['Prenom']) ?>">
+                    <input type="text" id="Prenom" name="Prenom"  value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Prenom']) : '' ?>">
                 </div>
                 <div>
                     <label for="Email">Email *</label>
-                    <input type="text" id="Email" name="Email"  placeholder="<?= htmlspecialchars($utilisateur['Adresse_email']) ?>">
+                    <input type="text" id="Email" name="Email" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Adresse_email']) : '' ?>">
                 </div>
                 <div>
                     <label for="Tel">Numéro de téléphone *</label>
-                    <input type="text" id="Tel" name="Tel"  placeholder="<?= htmlspecialchars($utilisateur['Numero_tel']) ?>">
+                    <input type="text" id="Tel" name="Tel" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Numero_tel']) : '' ?>">
                 </div>
                 <div>
                     <label for="Role" class="me-3">Rôle</label>
                 
                     <select class="border none" name="Role">
-                      <option selected>Profil</option>
+                      <option selected><?= isset($utilisateur) && isset($roles[$tableOrigine]) ? $roles[$tableOrigine] : '' ?></option>
                       <option value="etudiant" name="Role">Étudiant</option>
                       <option value="prof" name="Role">Professeur</option>
                       <option value="agent" name="Role">Agent</option>
@@ -194,6 +283,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])) {
                 <button type="submit" id="submit">Enregistrer les changements</button>
                 <button type="button" id="submit2">Annuler</button>
             </div>
+            <button class="btn btn-danger text-white justify-content-center" type="button" id="supprimer-compte">Supprimer le compte</button>
+            <div id="container-supp"></div>
         </form>
  
     </div>
