@@ -93,7 +93,7 @@ if (isset($_GET['id'])) {
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
                                 <span class="spantext">Etudiant(e)</span>
                             </span>';
-                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
                             } else {
                                 $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
                                 $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
@@ -234,63 +234,84 @@ if (isset($_GET['id'])) {
 
     <div class="container-fluid mt-5">
         <div class="row ms-5">
-            <div class="col-sm-4 bg-info mt-5">
+            <div class="col-sm-4 fs-3 mt-5">
                 Commentaires
             </div>
         </div>
-        <div id="com1" class="row ms-5">
-            <div class="col-sm-10 mt-2 ms-5">
-                <div class="row ms-5">
-                    <div class="col-sm-1 bg-danger">photo</div>
-                    <div class="col-sm-4 bg-success">profil</div>
-                </div>
-                <div class="row ms-5">
-                    <div class="col-sm-2 bg-success">stars</div>
-                    <div class="col-sm-2 bg-danger">date</div>
-                </div>
-                <div class="row ms-2 mt-2">
-                    <div class="col-sm-10 bg-danger">msg</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="com1" class="row ms-5 mt-3">
-            <div class="col-sm-10 mt-2 ms-5">
-                <div class="row ms-5">
-                    <div class="col-sm-1 bg-danger">photo</div>
-                    <div class="col-sm-4 bg-success">profil</div>
-                </div>
-                <div class="row ms-5">
-                    <div class="col-sm-2 bg-success">stars</div>
-                    <div class="col-sm-2 bg-danger">date</div>
-                </div>
-                <div class="row ms-2 mt-2">
-                    <div class="col-sm-10 bg-danger">msg</div>
+        <?php
+        $result = $conn->query("SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_eleve UNION SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_prof;");
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+        ?>
+        <?php foreach ($users as $user): ?>
+            <div id="com1" class="row ms-5">
+                <div class="col-sm-10 mt-2 ms-5 border border-secondary rounded p-3">
+                    <div class="row ms-5">
+                        <div class="col-sm-1"><img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts"></div>
+                        <div class="col-sm-4"><?= htmlspecialchars($user['Pseudo']) ?></div>
+                    </div>
+                    <div class="row ms-5">
+                        <div class="col-sm-2"><?= htmlspecialchars($user['reaction']) ?> ☆</div>
+                        <div class="col-sm-2"><?= htmlspecialchars($user['date_comment']) ?></div>
+                    </div>
+                    <div class="row ms-2 mt-2">
+                        <div class="col-sm-10"><?= htmlspecialchars($user['commentaire']) ?></div>
+                    </div>
                 </div>
             </div>
-        </div>
+        <?php endforeach ?>
 
-        <div id="com1" class="row ms-5 mt-3">
-            <div class="col-sm-10 mt-2 ms-5">
-                <div class="row ms-5">
-                    <div class="col-sm-1 bg-danger">photo</div>
-                    <div class="col-sm-4 bg-success">profil</div>
-                </div>
-                <div class="row ms-5">
-                    <div class="col-sm-2 bg-success">stars</div>
-                    <div class="col-sm-2 bg-danger">date</div>
-                </div>
-                <div class="row ms-2 mt-2">
-                    <div class="col-sm-10 bg-danger">msg</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-5 col-sm-10 ms-5">
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
-                placeholder="Ecrire un commentaire"></textarea>
-        </div>
+        <form action="#" method="post" class="mt-5 d-flex align-items-center ms-5">
+            <textarea class="form-control me-3" id="exampleFormControlTextarea1" rows="1"
+                name="commentaire" placeholder="Ecrire un commentaire" style="resize: none; width: 70%;"></textarea>
+            <input type="number" name="reaction" value="5" min="1" max="5" style="width: 60px; margin-right: 5px;"> ☆
+            <input type="submit" name="submit" class="btn btn-info ms-2" value="ENVOYER">
+        </form>
     </div>
+
+    <?php
+        if (isset($_POST["submit"])) {
+            $commentaire = htmlspecialchars($_POST['commentaire']) ?? '';
+            $reaction = htmlspecialchars($_POST['reaction']) ?? '';
+
+            if (!empty($commentaire) && !empty($reaction)) {
+                if ($_SESSION['utilisateur']['Td']) {
+                    //Preparer la requete
+                    $stmt = $conn->prepare("INSERT INTO commentaires_eleve(Pseudo, date_comment, commentaire, reaction) 
+    VALUES (?,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'),?,?)");
+                    //Verifier si la preparation a echoue
+                    if ($stmt === false) {
+                        die("Erreur de preparation de la requete: " . $conn->error);
+                    }
+
+                    //Lier les paramètres a la requete
+                    $stmt->bind_param("ssi", $_SESSION['utilisateur']['Pseudo'], $commentaire, $reaction);
+
+                    //Executer la requete
+                    $stmt->execute();
+
+                    //Fermer la declaration et la connexion
+                    $stmt->close();
+                }else {
+                    //Preparer la requete
+                    $stmt = $conn->prepare("INSERT INTO commentaires_prof(Pseudo, date_comment, commentaire, reaction) 
+    VALUES (?,NOW(),?,?)");
+                    //Verifier si la preparation a echoue
+                    if ($stmt === false) {
+                        die("Erreur de preparation de la requete: " . $conn->error);
+                    }
+
+                    //Lier les paramètres a la requete
+                    $stmt->bind_param("sssi", $_SESSION['utilisateur']['Pseudo'], $commentaire, $reaction);
+
+                    //Executer la requete
+                    $stmt->execute();
+
+                    //Fermer la declaration et la connexion
+                    $stmt->close();
+                }
+            }
+        }
+    ?>
 
 
     <footer class="container-fluid mt-5 text-white custom-bg">
