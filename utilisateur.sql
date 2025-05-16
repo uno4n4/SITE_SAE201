@@ -20,6 +20,36 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
+CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `utilisateur`;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `commentaires_eleve`
+--
+
+CREATE TABLE `commentaires_eleve` (
+  `id` int(11) NOT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `date_comment` datetime NOT NULL,
+  `commentaire` varchar(500) DEFAULT NULL,
+  `reaction` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `commentaires_prof`
+--
+
+CREATE TABLE `commentaires_prof` (
+  `id` int(11) NOT NULL,
+  `Pseudo` varchar(30) DEFAULT NULL,
+  `date_comment` datetime NOT NULL,
+  `commentaire` varchar(500) DEFAULT NULL,
+  `reaction` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -134,6 +164,7 @@ CREATE TABLE `materiel` (
   `quantite` int(11) DEFAULT NULL,
   `date_achat` date DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,
+  `categorie` varchar(20) DEFAULT NULL,
   `disponibilite` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -141,27 +172,27 @@ CREATE TABLE `materiel` (
 -- Déchargement des données de la table `materiel`
 --
 
-INSERT INTO `materiel` (`Nom`, `Description`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `disponibilite`) VALUES
-('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 1),
-('Casque réalité virtuelle 1', 'noir moche', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 1),
-('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 1),
-('Gopro', 'description', '20230505_105927.jpg', '20230505_105700.jpg', '20230505_105908.jpg', 1, '2024-01-01', 300.00, 1),
-('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 1),
-('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 1),
-('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 1),
-('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 1),
-('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 1),
-('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 1),
-('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 1),
-('Salle 212', 'description', 'Salle212.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 1),
-('Set réalité virtuelle blanc', 'lunettes et manettes incluses', 'IMG_0007.JPG', '20230505_101530.jpg', '20230505_102025.jpg', 1, '2024-01-01', 300.00, 1),
-('Set réalité virtuelle noir', 'Casque noir avec une icone manettes incluses', 'P1018553.JPG', 'P1018533.JPG', 'P1018548.JPG', 1, '2024-01-01', 300.00, 1),
-('Tablette', 'description', 'P1018472.JPG', 'P1018469.JPG', 'P1018467.JPG', 1, '2024-01-01', 300.00, 1),
-('Tablette graphique WACOM', 'Libérez votre créativité avec la tablette graphique Wacom ! Cette tablette à pied avec stylet inclus offre une précision exceptionnelle.', 'P1018503.JPG', 'P1018508.JPG', 'none', 1, '2024-01-01', 300.00, 1),
-('Trépied', 'description', '20230505_110219.jpg', '20230505_110146.jpg', 'none', 1, '2024-01-01', 300.00, 1),
-('Trépied 2', 'description', 'P1018450.JPG', 'P1018463.JPG', 'P1018466.JPG', 1, '2024-01-01', 300.00, 1),
-('Trépied téléphone', 'description', 'P1018485.JPG', 'P1018487.JPG', 'P1018484.JPG', 1, '2024-01-01', 300.00, 1),
-('Vive Streaming Cable', 'Plongez dans la réalité virtuelle sans latence avec le Vive Streaming Cable. Ce câble haute performance connecte votre casque HTC Vive à votre PC.', 'P1018496.JPG', 'P1018497.JPG', 'P1018498.JPG', 1, '2024-01-01', 300.00, 1);
+INSERT INTO `materiel` (`Nom`, `Description`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `categorie`, `disponibilite`) VALUES
+('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Casque réalité virtuelle 1', 'noir moche', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Gopro', 'description', '20230505_105927.jpg', '20230505_105700.jpg', '20230505_105908.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Salle', 1),
+('Salle 212', 'description', 'Salle212.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Set réalité virtuelle blanc', 'lunettes et manettes incluses', 'IMG_0007.JPG', '20230505_101530.jpg', '20230505_102025.jpg', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Set réalité virtuelle noir', 'Casque noir avec une icone manettes incluses', 'P1018553.JPG', 'P1018533.JPG', 'P1018548.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Tablette', 'description', 'P1018472.JPG', 'P1018469.JPG', 'P1018467.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Tablette graphique WACOM', 'Libérez votre créativité avec la tablette graphique Wacom ! Cette tablette à pied avec stylet inclus offre une précision exceptionnelle.', 'P1018503.JPG', 'P1018508.JPG', 'none', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Trépied', 'description', '20230505_110219.jpg', '20230505_110146.jpg', 'none', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Trépied 2', 'description', 'P1018450.JPG', 'P1018463.JPG', 'P1018466.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Trépied téléphone', 'description', 'P1018485.JPG', 'P1018487.JPG', 'P1018484.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
+('Vive Streaming Cable', 'Plongez dans la réalité virtuelle sans latence avec le Vive Streaming Cable. Ce câble haute performance connecte votre casque HTC Vive à votre PC.', 'P1018496.JPG', 'P1018497.JPG', 'P1018498.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1);
 
 -- --------------------------------------------------------
 
@@ -186,6 +217,13 @@ CREATE TABLE `reservation_etudiant` (
   `signature` varchar(19) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `reservation_etudiant`
+--
+
+INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`) VALUES
+(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -209,6 +247,20 @@ CREATE TABLE `reservation_prof` (
 --
 -- Index pour les tables déchargées
 --
+
+--
+-- Index pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Pseudo` (`Pseudo`);
+
+--
+-- Index pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `Pseudo` (`Pseudo`);
 
 --
 -- Index pour la table `inscription_admin`
@@ -262,10 +314,22 @@ ALTER TABLE `reservation_prof`
 --
 
 --
+-- AUTO_INCREMENT pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `reservation_etudiant`
 --
 ALTER TABLE `reservation_etudiant`
-  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `reservation_prof`
@@ -276,6 +340,18 @@ ALTER TABLE `reservation_prof`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `commentaires_eleve`
+--
+ALTER TABLE `commentaires_eleve`
+  ADD CONSTRAINT `commentaires_eleve_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_eleve` (`Pseudo`);
+
+--
+-- Contraintes pour la table `commentaires_prof`
+--
+ALTER TABLE `commentaires_prof`
+  ADD CONSTRAINT `commentaires_prof_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_prof` (`Pseudo`);
 
 --
 -- Contraintes pour la table `reservation_etudiant`
