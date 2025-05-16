@@ -37,7 +37,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
         <h6 class="mb-0 text-nowrap text-end">
           <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
         </h6>
-        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
   </header> 
@@ -236,7 +235,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   ?>
                   <form method="post" action="admin.php">
                   <div class="d-flex align-items-center gap-2">
-                    <img src="../IMAGE/logo-iut.png" id="pp">
                     <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
                     <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
                     <p id="Numetu">

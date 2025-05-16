@@ -20,7 +20,8 @@ document.getElementById("btn-etudiant").onclick = function() {
             <h3>2. Informations de contact</h3>
             <div class="input-icon">
                 <label for="Email">Adresse email universitaire :</label>
-                <input name="Email" id="Email" type="email" placeholder="Ex : clara.domingues@edu.univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+                <input name="Email" id="Email" type="email" placeholder="Ex : clara.domingues@edu.univ-eiffe.fr" pattern=".+@edu\.univ-eiffel\.fr$" title="L'email doit finir par @edu.univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+                <div id="emailError" style="color:red; display:none;"></div>
             </div>
             <div class="input-icon">
                 <label for="Tel">Numéro de téléphone :</label>
@@ -77,7 +78,19 @@ document.getElementById("btn-etudiant").onclick = function() {
     
             <button type="submit" class="submit">Soumettre</button>
         </div>
-    </form>`
+    </form>`;
+     const emailInput = document.getElementById('Email');
+    const emailError = document.getElementById('emailError');
+
+  emailInput.addEventListener('input', () => {
+    if (emailInput.validity.valid) {
+      emailError.style.display = 'none';
+      emailError.textContent = '';
+    } else {
+      emailError.style.display = 'block';
+      emailError.textContent = emailInput.validationMessage || "Format incorrect";
+    }
+  });
 }
 
 
@@ -106,7 +119,8 @@ document.getElementById("btn-prof").onclick = function() {
             <h3>2. Informations de contact</h3>
             <div class="input-icon">
                 <label for="Emailprof">Adresse email universitaire :</label>
-                <input name="Emailprof" id="Emailprof" type="email" placeholder="Ex : clara.domingues@univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+                <input name="Emailprof" id="Emailprof" type="email" placeholder="Ex : clara.domingues@univ-eiffel.fr" pattern=".+@univ-eiffel\.fr$" title="L'email doit finir par @univ-eiffel.fr" required><i class="fa-solid fa-envelope"></i>
+                <div id="emailErrorProf" style="color:red; display:none;"></div>
             </div>
             <div class="input-icon">
                 <label for="Numprof">Numéro de téléphone :</label>
@@ -133,7 +147,19 @@ document.getElementById("btn-prof").onclick = function() {
             </div>
             <button type="submit" class="submit">Soumettre</button>
         </div>
-    </form>`
+    </form>`; 
+    const emailInputProf = document.getElementById('Emailprof');
+    const emailErrorProf = document.getElementById('emailErrorProf');
+
+  emailInputProf.addEventListener('input', () => {
+    if (emailInputProf.validity.valid) {
+      emailErrorProf.style.display = 'none';
+      emailErrorProf.textContent = '';
+    } else {
+      emailErrorProf.style.display = 'block';
+      emailErrorProf.textContent = emailInputProf.validationMessage || "Format incorrect";
+    }
+  });
 }
     
 

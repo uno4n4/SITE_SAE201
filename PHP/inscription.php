@@ -44,6 +44,7 @@ elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
   $Pseudo=$_POST['Pseudoprof'];
   $Mdp = password_hash($_POST['Mdpprof'], PASSWORD_DEFAULT);
 
+
   $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
   $stmt = $conn->prepare($sql);

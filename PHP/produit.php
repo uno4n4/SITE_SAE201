@@ -1,6 +1,6 @@
 <?php
 
-include '../PHP/config.php';
+include('config.php');
 session_start();
 // Vérifie si la connexion fonctionne
 if ($conn->connect_error) {
@@ -36,6 +36,23 @@ if (isset($_GET['id'])) {
     echo "Aucun produit sélectionné.";
     exit;
 }
+
+
+
+$sql = "SELECT contenu FROM consigne WHERE id = 1";
+$result = $conn->query($sql);
+
+if ($result && $row = $result->fetch_assoc()) {
+    echo '<div class="consignes-eleve">';
+    echo $row['contenu'];  // Affiche le HTML enregistré
+    echo '</div>';
+} else {
+    echo "<p>Aucune consigne disponible pour le moment.</p>";
+}
+
+$conn->close();
+
+
 
 ?>
 
@@ -231,6 +248,8 @@ if (isset($_GET['id'])) {
             </div>
         </div>
     </div>
+
+    <div class="consignes-eleve"></div>
 
     <div class="container-fluid mt-5">
         <div class="row ms-5">

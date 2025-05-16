@@ -1,3 +1,36 @@
+<?php
+include('config.php'); // ta connexion DB
+
+if(isset($_POST['contenu'])) {
+    $contenu = $_POST['contenu'];
+
+    // Prépare la requête UPDATE ou INSERT selon si y a déjà une consigne
+    $check = $conn->query("SELECT id FROM consigne LIMIT 1");
+    if($check->num_rows > 0) {
+        // Update
+        $stmt = $conn->prepare("UPDATE consigne SET contenu = ? WHERE id = 1");
+        $stmt->bind_param("s", $contenu);
+        $stmt->execute();
+        $stmt->close();
+        echo "Consigne mise à jour.";
+    } else {
+        // Insert
+        $stmt = $conn->prepare("INSERT INTO consigne (contenu) VALUES (?)");
+        $stmt->bind_param("s", $contenu);
+        $stmt->execute();
+        $stmt->close();
+        echo "Consigne enregistrée.";
+    }
+} else {
+    echo "Aucun contenu reçu.";
+}
+
+$conn->close();
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -11,6 +44,7 @@
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+  <script src="../JS/consigne.js" defer></script>
   <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
   <title>Gestion des réservations</title>
 </head>
@@ -24,23 +58,6 @@
     </div>
 </header> 
 
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-    crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
-  <title>Gestion des réservations</title>
-
-</head>
-
-<body style="background-color: #d3d2d2; overflow-x: hidden;">
   <div class="container-fluid">
     <div class="row flex-nowrap">
       <!-- Sidebar -->
@@ -402,10 +419,11 @@
               <button id="voir" class="visu">Visualiser</button>
             </div>
             <hr id="ligne">
-            <div contenteditable="true">
+            <div contenteditable="true" id="zone-ecriture">
               <p id="ecrire">Aa<i class="fa-solid fa-i-cursor"></i></p>
             </div>
             <button id="enregistrer">Enregistrer</button>
+            <div id="message"></div>
           </div>
         </div>
       </section>

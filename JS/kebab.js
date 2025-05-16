@@ -22,9 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   kebabIcon.addEventListener("click", function () {
     contentAccept.style.display = "block";
+    const pseudos = Array.from(check).filter(c => c.checked).map(c => c.getAttribute('data-pseudo'));
     contentAccept.innerHTML = `
       <form action="../PHP/gest-comptes.php" method="post">
-        <input type="hidden" name="Nom">
+        ${pseudos.map(pseudo => `<input type="hidden" name="choix[]" value="${pseudo}">`).join('')}
         <ul class="d-flex flex-column list-unstyled m-3 gap-2">
           <li><button type="submit" class="btn btn-success text-white" name="accept">Accepter</button></li>
           <li><button type="submit" class="btn btn-danger text-white" name="refuse">Refuser</button></li>
@@ -33,52 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
   });
 });
-
-
-document.addEventListener("DOMContentLoaded", function(){
-  const buttonKebab = document.querySelectorAll('.icon-kebab');
-  const contents = document.querySelectorAll('.kebabs-menu');
-
-  buttonKebab.forEach((button, index) => {
-    button.addEventListener("click", function(event){
-      event.stopPropagation(); // Évite la fermeture immédiate
-
-      // Fermer tous les autres menus
-      contents.forEach(content => {
-        content.style.display = "none";
-        content.innerHTML = "";
-      });
-
-      const content = contents[index];
-
-      content.style.display = "block";
-      content.innerHTML = `
-      <form action="../PHP/gest-comptes.php" method="post">
-        <ul class="d-flex flex-column">
-            <li><button type="submit" class="vert" name="accept">Accepter</button></li>
-            <li><button type="submit" class="rouge" name="refuse">Refuser</button></li>
-        </ul>
-      </form>
-      `;
-    });
-  });
-
-  // Fermer tous les menus si on clique ailleurs
-  document.addEventListener("click", function(){
-    contents.forEach(content => {
-      content.style.display = "none";
-      content.innerHTML = "";
-    });
-  });
-
-  // Ne pas fermer si on clique dans le menu
-  contents.forEach(content => {
-    content.addEventListener("click", function(event){
-      event.stopPropagation();
-    });
-  });
-});
-
 
 
 /* CHECKBOX */
@@ -111,49 +66,42 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-document.addEventListener("DOMContentLoaded", function(){
-  const kebabButton = document.querySelectorAll('.kebab-icon');
-  const containers = document.querySelectorAll('.kebab-menu');
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".kebab-icon").forEach(icon => {
+    icon.addEventListener("click", e => {
+      e.stopPropagation();
+      const menu = icon.nextElementSibling;
 
-  kebabButton.forEach((button, index) => {
-    button.addEventListener("click", function(event){
-      event.stopPropagation(); // Évite la fermeture immédiate
-
-      // Fermer tous les autres menus
-      containers.forEach(container => {
-        container.style.display = "none";
-        container.innerHTML = "";
+      // Ferme les autres menus
+      document.querySelectorAll(".kebab-menu").forEach(m => {
+        if (m !== menu) m.style.display = "none";
       });
 
-      const container = containers[index];
-      const Pseudo = container.getAttribute('data-pseudo');
+      // Toggle le menu
+      const isVisible = menu.style.display === "block";
+      menu.style.display = isVisible ? "none" : "block";
 
-      container.style.display = "block";
-      container.innerHTML = `
-        <ul>
-          <a href="../PHP/modifier-compte.php?Pseudo=${Pseudo}">
-            <li><button type="button">Modifier</button></li>
-            <li><button type="button">Supprimer</button></li>
-          </a>
-        </ul>
-      `;
+      if (!isVisible) {
+        const pseudo = menu.dataset.pseudo;
+
+        menu.innerHTML = `
+          <ul>
+            <a href="../PHP/modifier-compte.php?Pseudo=${pseudo}">
+              <li><button type="button">Modifier</button></li>
+              <li><button type="button">Supprimer</button></li>
+            </a>
+          </ul>`;
+      }
     });
   });
 
-  // Fermer tous les menus si on clique ailleurs
-  document.addEventListener("click", function(){
-    containers.forEach(container => {
-      container.style.display = "none";
-      container.innerHTML = "";
-    });
-  });
-
-  // Ne pas fermer si on clique dans le menu
-  containers.forEach(container => {
-    container.addEventListener("click", function(event){
-      event.stopPropagation();
+  // Clique en dehors → ferme tous les menus
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".kebab-menu").forEach(menu => {
+      menu.style.display = "none";
     });
   });
 });
+
 
 

@@ -1,28 +1,40 @@
 <?php 
-
 include 'config.php';
 session_start();
 
-
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
-foreach($tables as $table){
-  $stmt = $conn->prepare("SELECT * FROM `$table` WHERE statut = 'en attente'");
-  
-  if(isset($_POST['accept'])){
-    $Nom = $_POST['Nom'];
-    $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
-    $stmt->bind_param("s", $Nom);
-    $stmt->execute();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $pseudos = $_POST['choix'] ?? [];
+
+  if (!is_array($pseudos)) {
+    $pseudos = [$pseudos];
   }
 
-  if(isset($_POST['refuse'])){
-    $Nom = $_POST['Nom'];
-    $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
-    $stmt->bind_param("s", $Nom);
-    $stmt->execute();
+  if (empty($pseudos)) {
+    die("Aucun pseudo sélectionné.");
   }
+
+  // Sinon, c’est une mise à jour de statut
+  $newStatus = isset($_POST['accept']) ? 'accepté' : (isset($_POST['refuse']) ? 'refusé' : null);
+
+  if ($newStatus === null) {
+    die("Action non reconnue.");
+  }
+
+  foreach ($tables as $table) {
+    foreach ($pseudos as $pseudo) {
+      if (!is_string($pseudo)) continue;
+      $stmt = $conn->prepare("UPDATE `$table` SET Statut = ? WHERE Pseudo = ?");
+      $stmt->bind_param("ss", $newStatus, $pseudo);
+      $stmt->execute();
+    }
+  }
+
+  echo "Comptes mis à jour.";
 }
+
+
 ?>
 
 
@@ -162,7 +174,6 @@ foreach($tables as $table){
                       <div id="content-accept"></div>
                     </div>
                   </div>
-                  
                   <div class="d-flex flex-wrap justify-content-center gap-4">
                       <!-- Carte 1 -->
                     <?php foreach($tables as $table): ?>
@@ -176,13 +187,10 @@ foreach($tables as $table){
                               <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
                                 <div class="input-group">
                                   <div class="input-group-prepend">
-                                    <input type="checkbox" name="choix[]" class="appro-checkbox">
+                                    <input type="checkbox" name="choix[]" value="<?= htmlspecialchars($user['Pseudo']) ?>" class="appro-checkbox" data-pseudo="<?= $user['Pseudo'] ?>">
                                   </div>
                                 </div>
-                                <span class="icon-kebab">
-                                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </span>
-                                <div class="kebabs-menu"></div>
+                                
                               </div> 
                               <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
                               <p class="text-center" id="classe">
@@ -253,8 +261,7 @@ foreach($tables as $table){
                     <!-- Partie gauche : Filtrer par -->
                     <form method="get" action="gest-comptes.php">
                       <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <label for="filtre" class="me-3">Filtrer par :</label>
-                  
+                        <label for="filtre" class="me-3">Filtrer par :</label>            
                         <select class="custom-select" name="profil">
                           <option selected>Profil</option>
                           <option value="Etu">Étudiant</option>
@@ -283,9 +290,6 @@ foreach($tables as $table){
                     <div class="d-flex align-items-center">
                       <!-- Texte cwsv -->
                       <div class="selection me-3 mx-3" id="selection">O compte(s) sélectionnés</div>
-                      <div id="kebab-icon" style="display: none; cursor: pointer;">
-                        <i class="fa-solid fa-ellipsis-vertical me-2"></i>
-                      </div>
                         <!-- Ligne verticale -->
                         <div class="ligne-verticale d-none d-md-block mx-3"></div>
                           <!-- Bouton Ajouter un compte -->
@@ -320,12 +324,13 @@ foreach($tables as $table){
                                   <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
                                     <div class="input-group">
                                       <div class="input-group-prepend">
-                                        <input type="checkbox" name="choix[]" class="compte-checkbox">
+                                        <input type="checkbox" name="choix[]" class="compte-checkbox" value="<?= htmlspecialchars($user['Pseudo']) ?>">
                                       </div>
                                     </div>
                                     <span class="kebab-icon">
                                       <i class="fa-solid fa-ellipsis-vertical"></i>
                                     </span>
+                                    <div class="kebab-menu" data-pseudo="<?= $user['Pseudo'] ?>"></div>
                                     <?php
 if (isset($_POST['Pseudo'])) {
 
@@ -346,7 +351,6 @@ if (isset($_POST['Pseudo'])) {
 <?php endif; ?>
 
                                   </div>
-                                  <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
                                   <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
                                   <p class="text-center" id="classe">
                                     <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
