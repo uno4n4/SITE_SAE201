@@ -1,25 +1,11 @@
-<<<<<<< HEAD
-<?php 
-=======
 <?php
 
->>>>>>> b3caf63b945a61485eacca705238ebbff9e18e2c
 include 'config.php';
 session_start();
 
+
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
-<<<<<<< HEAD
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $pseudos = $_POST['choix'] ?? [];
-
-  if (!is_array($pseudos)) {
-    $pseudos = [$pseudos];
-  }
-
-  if (empty($pseudos)) {
-    die("Aucun pseudo sélectionné.");
-=======
 foreach ($tables as $table) {
   $stmt = $conn->prepare("SELECT * FROM `$table` WHERE statut = 'en attente'");
 
@@ -35,29 +21,8 @@ foreach ($tables as $table) {
     $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
     $stmt->bind_param("s", $Nom);
     $stmt->execute();
->>>>>>> b3caf63b945a61485eacca705238ebbff9e18e2c
   }
-
-  // Sinon, c’est une mise à jour de statut
-  $newStatus = isset($_POST['accept']) ? 'accepté' : (isset($_POST['refuse']) ? 'refusé' : null);
-
-  if ($newStatus === null) {
-    die("Action non reconnue.");
-  }
-
-  foreach ($tables as $table) {
-    foreach ($pseudos as $pseudo) {
-      if (!is_string($pseudo)) continue;
-      $stmt = $conn->prepare("UPDATE `$table` SET Statut = ? WHERE Pseudo = ?");
-      $stmt->bind_param("ss", $newStatus, $pseudo);
-      $stmt->execute();
-    }
-  }
-
-  echo "Comptes mis à jour.";
 }
-
-
 ?>
 
 
@@ -320,66 +285,11 @@ foreach ($tables as $table) {
                   <div class="d-flex align-items-center">
                     <!-- Texte cwsv -->
                     <div class="selection me-3 mx-3" id="selection">O compte(s) sélectionnés</div>
-                    <div id="kebab-icon" style="display: none; cursor: pointer;">
-                      <i class="fa-solid fa-ellipsis-vertical me-2"></i>
-                    </div>
                     <!-- Ligne verticale -->
                     <div class="ligne-verticale d-none d-md-block mx-3"></div>
                     <!-- Bouton Ajouter un compte -->
                     <a href="ajout-compte.php" id="ajouter" class="btn border rounded bg-white p-2">+ Ajouter un compte</a>
                   </div>
-<<<<<<< HEAD
-                  <div class="d-flex flex-wrap justify-content-center gap-4">
-                      <!-- Carte 1 -->
-                    <?php foreach($tables as $table): ?>
-                      <?php 
-                        $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
-                        while ($user = $result->fetch_assoc()):
-                      ?>
-                        <div class="card-wrapper">
-                          <form action="gest-comptes.php" method="post">
-                            <div class="card custom-card">
-                              <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <input type="checkbox" name="choix[]" value="<?= htmlspecialchars($user['Pseudo']) ?>" class="appro-checkbox" data-pseudo="<?= $user['Pseudo'] ?>">
-                                  </div>
-                                </div>
-                                
-                              </div> 
-                              <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
-                              <p class="text-center" id="classe">
-                                <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
-                                <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
-                                <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
-                              </p>
-                              <div class="card-body">
-                                <hr class="me-2">
-                                <div class="d-flex justify-content-between gap-4">
-                                  <input type="hidden" name="Nom"  value="<?= htmlspecialchars($user['Nom']) ?>">
-                                  <button class="card-link text-light border-0 rounded btn-acces mb-2 ms-2" id="accepter1" name="accepter1">
-                                    <i class="fa-solid fa-circle-check"></i>
-                                  </button>
-                                  <?php 
-                                    if (isset($_POST["accepter1"])){
-                                      $Nom = $_POST["Nom"];
-                                      $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
-                                      $stmt->bind_param("s", $Nom);
-                                      $stmt->execute();
-                                    }
-                                  ?>
-                                  <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
-                                    <i class="fa-solid fa-circle-xmark"></i>
-                                  </button>
-                                  <?php 
-                                    if (isset($_POST["refuser1"])){
-                                      $Nom = $_POST["Nom"];
-                                      $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
-                                      $stmt->bind_param("s", $Nom);
-                                      $stmt->execute();
-                                    }
-                                  ?>
-=======
                 </div>
 
                 <div class="d-flex flex-wrap justify-content-center gap-4">
@@ -410,7 +320,6 @@ foreach ($tables as $table) {
                               <div class="input-group">
                                 <div class="input-group-prepend">
                                   <input type="checkbox" name="choix[]" class="compte-checkbox">
->>>>>>> b3caf63b945a61485eacca705238ebbff9e18e2c
                                 </div>
                               </div>
                               <span class="kebab-icon">
@@ -443,7 +352,7 @@ foreach ($tables as $table) {
                               <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
                               <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
                             </p>
-                            <div class="card-body">
+                            <div class="card-body p-2">
                               <div class="d-flex justify-content-between gap-4">
                                 <p id="derniere-reservation">Dernière réservation</p>
                                 <p id="date-reser">
@@ -464,142 +373,6 @@ foreach ($tables as $table) {
                                     echo $row['last_date'];
                                   }
 
-<<<<<<< HEAD
-                  <!-- GESTION DES COMPTES -->
-                  <div class="mt-5 d-flex justify-content-between align-items-center gap-5">
-                    <h2>Gestions des comptes</h2>
-                    <h6>
-                      <?php 
-                        $total = 0;
-                        foreach($tables as $table){
-                          $query = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'";
-                          $result = $conn->query($query);
-                          if($result){
-                            $row = $result->fetch_assoc();
-                            $total += (int)$row['count'];
-                          }
-                        }  
-                        echo $total . " comptes accepté";
-                      ?>
-                    </h6>
-                  </div>
-                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
-                    <!-- Partie gauche : Filtrer par -->
-                    <form method="get" action="gest-comptes.php">
-                      <div class="d-flex align-items-center mb-3 mb-md-0">
-                        <label for="filtre" class="me-3">Filtrer par :</label>            
-                        <select class="custom-select" name="profil">
-                          <option selected>Profil</option>
-                          <option value="Etu">Étudiant</option>
-                          <option value="Prof">Professeur</option>
-                        </select>
-                  
-                        <select class="custom-select" name="classe">
-                          <option selected>Classes</option>
-                          <option value="MMI1">MMI 1</option>
-                          <option value="MMI2">MMI 2</option>
-                          <option value="MMI3">MMI 3</option>
-                        </select>
-                  
-                        <select class="custom-select" name="tp">
-                          <option selected>TP</option>
-                          <option value="TPA">TP A</option>
-                          <option value="TPB">TP B</option>
-                          <option value="TPC">TP C</option>
-                        </select>
-                  
-                        <input type="submit" class="btn btn-custom mx-5" value="Confirmer"></input>
-                      </div>
-                    </form>
-                  
-                    <!-- Partie droite : cwsv et ajouter un compte -->
-                    <div class="d-flex align-items-center">
-                      <!-- Texte cwsv -->
-                      <div class="selection me-3 mx-3" id="selection">O compte(s) sélectionnés</div>
-                        <!-- Ligne verticale -->
-                        <div class="ligne-verticale d-none d-md-block mx-3"></div>
-                          <!-- Bouton Ajouter un compte -->
-                          <a href="ajout-compte.php" id="ajouter" class="btn border rounded bg-white p-2">+ Ajouter un compte</a>
-                        </div>
-                      </div>
-                  
-                      <div class="d-flex flex-wrap justify-content-center gap-4">
-                        <?php 
-                        $profil = isset($_GET['profil']) ? $_GET['profil'] : '';
-                        $classe = isset($_GET['formation']) ? $_GET['formation'] : '';
-                        $tp = isset($_GET['tp']) ? $_GET['tp'] : '';
-
-                        $sql = "SELECT * FROM `$table` WHERE statut = 'accepté'";
-
-                        $conditions = [];
-
-                        foreach($tables as $table):
-
-                        if ($profil != '' && in_array($profil, ['Etu', 'Prof'])){
-                          $conditions[] = "profil = '$profil'";
-                        } else {
-                          $sql = "SELECT * FROM `$table` WHERE statut = 'accepté'";
-                        }?>
-                          <?php 
-                            $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
-                            while ($user = $result->fetch_assoc()):
-                          ?>
-                            <div class="card-wrapper">
-                              <form action="gest-comptes.php" method="post">
-                                <div class="card custom-card">
-                                  <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
-                                    <div class="input-group">
-                                      <div class="input-group-prepend">
-                                        <input type="checkbox" name="choix[]" class="compte-checkbox" value="<?= htmlspecialchars($user['Pseudo']) ?>">
-                                      </div>
-                                    </div>
-                                    <span class="kebab-icon">
-                                      <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </span>
-                                    <div class="kebab-menu" data-pseudo="<?= $user['Pseudo'] ?>"></div>
-                                    <?php
-if (isset($_POST['Pseudo'])) {
-
-    $pseudo = $_POST['Pseudo']; 
-
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ?");
-    $stmt->bind_param("s", $pseudo); // Lie le pseudo à la requête
-    $stmt->execute();
-    $result = $stmt->get_result();
-}
-?>
-
-<!-- Vérifie si $utilisateur est défini avant d'utiliser ses informations -->
-<?php if (isset($user) && $user !== null): ?>
-    <div class="kebab-menu" data-pseudo="<?= $user['Pseudo'] ?>"></div>
-<?php else: ?>
-    <div class="kebab-menu">Utilisateur introuvable</div>
-<?php endif; ?>
-
-                                  </div>
-                                  <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
-                                  <p class="text-center" id="classe">
-                                    <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
-                                    <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
-                                    <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
-                                  </p>
-                                  <div class="card-body">
-                                    <div class="d-flex justify-content-between gap-4">
-                                      <p id="derniere-reservation">Dernière réservation</p>
-                                      <p id="date-reser">11/05/2025</p>
-                                    </div>
-                                    <p class="text-left card-text"> <strong>Email : </strong> <?= htmlspecialchars($user['Adresse_email']) ?></p>
-                                    <p class="text-left card-text"> <strong>Numéro de téléphone : </strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
-                                    <p class="text-left card-text"> <strong>Pseudo : </strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
-                                    <p class="text-left card-text"> 
-                                      <?php if ($table === 'inscription_eleve'): ?>
-                                        <strong>Numéro étudiant :</strong> <?= htmlspecialchars($user['Num_etudiant'] ?? '') ?>
-                                      <?php endif; ?>
-                                    </p>
-                                  </div>
-                                </div>
-                              </form>
-=======
                                   ?>
                                 </p>
                               </div>
@@ -611,7 +384,6 @@ if (isset($_POST['Pseudo'])) {
                                   <strong>Numéro étudiant :</strong> <?= htmlspecialchars($user['Num_etudiant'] ?? '') ?>
                                 <?php endif; ?>
                               </p>
->>>>>>> b3caf63b945a61485eacca705238ebbff9e18e2c
                             </div>
                           </div>
                         </form>
