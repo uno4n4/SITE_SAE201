@@ -41,17 +41,11 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function() {
   const checkboxes = document.querySelectorAll('.compte-checkbox');  // Sélectionne toutes les checkboxes
   const display = document.getElementById('selection'); // La div où on affiche le comptage
-  const kebabIcon = document.getElementById('kebab-icon');
   
   // Fonction pour mettre à jour le nombre de comptes sélectionnés
   function updateSelectionCount() {
     const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
     display.textContent = `${selectedCount} compte${selectedCount !== 1 ? 's' : ''} sélectionné${selectedCount !== 1 ? 's' : ''}`;
-    if (selectedCount > 0) {
-      kebabIcon.style.display = 'block';  // Affiche l'icône
-    } else {
-      kebabIcon.style.display = 'none';   // Cache l'icône si aucune case n'est cochée
-    }
   }
 
   // Ajoute un événement sur chaque checkbox pour mettre à jour le comptage à chaque changement

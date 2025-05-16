@@ -38,26 +38,10 @@ if (isset($_GET['id'])) {
 }
 
 
-
-$sql = "SELECT contenu FROM consigne WHERE id = 1";
-$result = $conn->query($sql);
-
-if ($result && $row = $result->fetch_assoc()) {
-    echo '<div class="consignes-eleve">';
-    echo $row['contenu'];  // Affiche le HTML enregistré
-    echo '</div>';
-} else {
-    echo "<p>Aucune consigne disponible pour le moment.</p>";
-}
-
-$conn->close();
-
-
-
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
@@ -249,7 +233,23 @@ $conn->close();
         </div>
     </div>
 
-    <div class="consignes-eleve"></div>
+    <div class="w-50 border border-dark mt-5 rounded consignes-eleve ms-5">
+        <h6 class="text-danger text-decoration-underline text-start">Les consignes de sécurité : </h6>
+        <div class="text-center">
+        <?php
+        
+            $sql = "SELECT contenu FROM consigne WHERE id = 1";
+            $result = $conn->query($sql);
+
+            if ($result && $row = $result->fetch_assoc()) {
+                echo $row['contenu'];  // Affiche le HTML enregistré
+            } else {
+                echo "<p>Aucune consigne disponible pour le moment.</p>";
+            }
+        ?>
+        </div>
+
+    </div>
 
     <div class="container-fluid mt-5">
         <div class="row ms-5">

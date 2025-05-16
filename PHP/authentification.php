@@ -32,11 +32,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         $_SESSION["utilisateur"] = $user;
         $_SESSION["table"] = $table;
         if($table === "inscription_prof"){
-          header("Location: admin.php");
-        } elseif($table === "inscription_eleve"){
-          header("Location: admin.php");
+          header("Location: accueil.php");
+        } elseif($table === "Inscription_eleve"){
+          header("Location: accueil.php");
         } elseif($table === "inscription_agent"){
-          header("Location: gest-comptes.php");
+          header("Location: ../HTML/agent.html");
         } else{
           header("Location: admin.php");
         } 
