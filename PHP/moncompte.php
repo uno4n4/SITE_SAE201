@@ -161,7 +161,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                     <i class="fa-regular fa-comment"></i>
                                     <span class="spantext">
                                         <?php
-                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM reservation_etudiant WHERE Pseudo = ?"); //A CHANGER POUR LA BDD COMENTAIRES
+                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM commentaires_eleve WHERE Pseudo = ?"); //A CHANGER POUR LA BDD COMENTAIRES
                                         $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
@@ -190,17 +190,28 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                 </div>
                             </div>
                             <?php endforeach; ?>
-                            <!--FAIRE LA MEME POUR LES COMMENTAIRES-->
-                            <div class="rounded bg-light border text-center p-3 m-2">
-                                <div class="d-flex justify-content-baseline"><i></i>Vous avez commenté un matériel le <span class="text-black ms-1">Jeudi 5 Mai
-                                        2025</span></div>
-                                <div class="d-flex justify-content-between">
-                                    <div>Caméra</div>
-                                    <a class='icon-link link-dark' href='#'>
-                                        Voir le commentaire
-                                    </a>
+                            <?php
+                            $stmt = $conn->prepare("SELECT * FROM commentaires_eleve WHERE Pseudo = ?");
+                            $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $commentaires = $result->fetch_all(MYSQLI_ASSOC); // Récupérer tous les commentaires sous forme de tableau associatif
+                            ?>
+
+                            <?php foreach ($commentaires as $commentaire): ?>
+                                <div class="rounded bg-light border text-center p-3 m-2">
+                                    <div class="d-flex justify-content-baseline">
+                                        <i></i>Vous avez commenté un matériel le
+                                        <span class="text-black ms-1"><?= htmlspecialchars($commentaire['date_comment']) ?></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div><?= htmlspecialchars($commentaire['materiel']) ?></div>
+                                        <a class='icon-link link-dark' href='#'>
+                                            Voir le commentaire
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endforeach; ?>
 
                         </div>
                         <div class="col-12 col-lg-4 d-flex flex-co">
