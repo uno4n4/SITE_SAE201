@@ -352,7 +352,7 @@ foreach ($tables as $table) {
                               <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
                               <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
                             </p>
-                            <div class="card-body">
+                            <div class="card-body p-2">
                               <div class="d-flex justify-content-between gap-4">
                                 <p id="derniere-reservation">Dernière réservation</p>
                                 <p id="date-reser">
