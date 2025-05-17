@@ -91,6 +91,34 @@
     pointer-events: none;
 }
 
+.msg-ko {
+    color: red;
+    font-weight: bold;
+}
+
+.msg-ok {
+    color: green;
+    font-weight: bold;
+}
+
+#formProfError {
+  font-size: 1.2em;
+  margin-top: 20px;
+  border: 1px solid red;
+  background: #ffe6e6;
+  padding: 10px;
+}
+
+
+#formEleveError {
+    font-size: 1.2em;
+    margin-top: 20px;
+    border: 1px solid red;
+    background: #ffe6e6;
+    padding: 10px;
+}
+
+
 @media (max-width: 576px) {
     #inputEmailPseudo::placeholder {
       font-size: 12px; 

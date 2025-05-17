@@ -8,7 +8,7 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
-if ($_SESSION['utilisateur']['Td']){
+if (isset($_SESSION['utilisateur']['Td'])){
     $result = $conn->query("SELECT * FROM reservation_etudiant");
 }else{
     $result = $conn->query("SELECT * FROM reservation_prof");
@@ -40,37 +40,78 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 </head>
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
+
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+        </div>
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // Étudiant
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>';
+                } else {
+                    // Professeur
+                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                    $stmt->bind_param("s", $nom);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    if ($row['total'] > 0) {
+                        echo '
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
+                    }
+                    else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            <span class="spantext">Utilisateur</span>';
+                    }
+                }
+            }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
+    </div>
+</header>
+
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <!-- Sidebar -->
             <div class="col-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
                 <div
                     class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
-                    <div class="me-auto mt-4">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4mOrNvQ_JLv_FKwDyYEn7HsfRVHEpgFCWnw&s"
-                            class="img-fluid float-left d-none d-md-block" id="logo-iut-head" alt="Logo IUT"
-                            style="height: 40px;">
-                    </div>
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
                         <li class="nav-item">
-                            <a href="../PHP/admin.php" class="nav-link align-middle px-0 mt-2 text-dark">
-                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
-                                    bord</span>
+                            <a href="accueil.php" class="nav-link align-middle px-0 mt-2 text-dark">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
                             </a>
                         </li>
 
-                        <li>
-                            <a href="./gest-reservation.html" data-bs-toggle="collapse"
-                                class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-bell"></i><span
-                                    class="ms-1 d-none d-sm-inline">Notifications</span>
+                         <li>
+                            <a href="moncompte.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mon compte</span>
                             </a>
                         </li>
 
                     </ul>
                     <div class="mt-auto w-100">
-                        <a href="./setting.html" class="nav-link align-middle px-0">
+                        <a href="setting.php" class="nav-link align-middle px-0">
                             <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
                         </a>
                     </div>
@@ -90,18 +131,9 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                 <option value="commentaires">Commentaires</option>
                             </select>
                         </div>
-                        <h5 class="ms-auto mt-3 d-flex align-items-center">
-                            <i class="bi bi-circle-fill text-info mx-2"></i><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?><img
-                                src="data:image/jpeg;base64,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"
-                                class="rounded-circle mx-3" style="width: 35px; height: 35px;">
-                        </h5>
                     </div>
 
                     <div class="row ms-md-5 my-5">
-                        <div class="col-md-2">
-                            <img src="data:image/jpeg;base64,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"
-                                class="rounded mx-3 img-fluid" style="max-width:150px; max-height: 150px;">
-                        </div>
                         <div class="col-md-8">
                             <h2 class="mt-3 text-start">
                                 <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
@@ -119,9 +151,10 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                                 if ($row) {
                                     echo '<span class="badge d-flex align-items-baseline gap-2 text-dark">
-                <i class="bi bi-circle-fill text-info mx-2"></i>
-                <h6 class="spantext">Étudiant(e) ' . ' ' . htmlspecialchars($row['Formation'])  . ' ' . htmlspecialchars($row['Td']) . ' ' . htmlspecialchars($row['Tp']) . '</h6>
-            </span>';
+                                            <i class="bi bi-circle-fill text-info mx-2"></i>
+                                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>
+                                            <h6 class="spantext">Étudiant(e) ' . ' ' . htmlspecialchars($row['Formation'])  . ' ' . htmlspecialchars($row['Td']) . ' ' . htmlspecialchars($row['Tp']) . '</h6>
+                                        </span>';
                                     // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
                                 } else {
                                     $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
@@ -132,7 +165,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                                     if ($row['total'] > 0) {
                                         echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                                 <span class="spantext">Enseignant(e)</span>
                             </span>';
                                     }
@@ -161,7 +194,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                     <i class="fa-regular fa-comment"></i>
                                     <span class="spantext">
                                         <?php
-                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM reservation_etudiant WHERE Pseudo = ?"); //A CHANGER POUR LA BDD COMENTAIRES
+                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM commentaires_eleve WHERE Pseudo = ?"); //A CHANGER POUR LA BDD COMENTAIRES
                                         $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
@@ -190,17 +223,28 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                 </div>
                             </div>
                             <?php endforeach; ?>
-                            <!--FAIRE LA MEME POUR LES COMMENTAIRES-->
-                            <div class="rounded bg-light border text-center p-3 m-2">
-                                <div class="d-flex justify-content-baseline"><i></i>Vous avez commenté un matériel le <span class="text-black ms-1">Jeudi 5 Mai
-                                        2025</span></div>
-                                <div class="d-flex justify-content-between">
-                                    <div>Caméra</div>
-                                    <a class='icon-link link-dark' href='#'>
-                                        Voir le commentaire
-                                    </a>
+                            <?php
+                            $stmt = $conn->prepare("SELECT * FROM commentaires_eleve WHERE Pseudo = ?");
+                            $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $commentaires = $result->fetch_all(MYSQLI_ASSOC); // Récupérer tous les commentaires sous forme de tableau associatif
+                            ?>
+
+                            <?php foreach ($commentaires as $commentaire): ?>
+                                <div class="rounded bg-light border text-center p-3 m-2">
+                                    <div class="d-flex justify-content-baseline">
+                                        <i></i>Vous avez commenté un matériel le
+                                        <span class="text-black ms-1"><?= htmlspecialchars($commentaire['date_comment']) ?></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div><?= htmlspecialchars($commentaire['materiel']) ?></div>
+                                        <a class='icon-link link-dark' href='#'>
+                                            Voir le commentaire
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endforeach; ?>
 
                         </div>
                         <div class="col-12 col-lg-4 d-flex flex-co">

@@ -30,6 +30,41 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 </head>
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
+
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+        </div>
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // ADMIN :
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
+    </div>
+</header>
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <!-- Sidebar -->
@@ -44,14 +79,14 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
                         <li class="nav-item">
-                            <a href="../PHP/admin.php" class="nav-link align-middle px-0 mt-2 text-dark">
+                            <a href="admin.php" class="nav-link align-middle px-0 mt-2 text-dark">
                                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
                                     bord</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="./gest-reservation.html" data-bs-toggle="collapse"
+                            <a href="gest-reservation.php" data-bs-toggle="collapse"
                                 class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion
                                     des réservations</span>
@@ -59,14 +94,14 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </li>
 
                         <li>
-                            <a href="./gest-comptes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                            <a href="gest-comptes.php" class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des
                                     comptes</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="./materiel.html" data-bs-toggle="collapse"
+                            <a href="#" 
                                 class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
                                     matériel</span>
@@ -74,7 +109,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </li>
 
                         <li>
-                            <a href="./statistiques.html" data-bs-toggle="collapse"
+                            <a href="gest-reservation.php" 
                                 class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-chart-simple"></i><span
                                     class="ms-1 d-none d-sm-inline">Statistiques</span>
@@ -82,17 +117,12 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </li>
 
                         <li>
-                            <a href="../HTML/consignes.html" class="nav-link px-0 align-middle mt-2 text-dark">
+                            <a href="gest-reservation.php" class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de
                                     sécurité</span>
                             </a>
                         </li>
                     </ul>
-                    <div class="mt-auto w-100">
-                        <a href="./setting.html" class="nav-link align-middle px-0">
-                            <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-                        </a>
-                    </div>
                 </div>
             </div>
 
@@ -101,11 +131,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                 <div class="col-12">
                     <div class="d-flex align-items-center flex-wrap">
                         <h2 class="mt-3 ms-3">Gestion du matériel</h2>
-                        <h5 class="ms-auto mt-3 d-flex align-items-center">
-                            <i class="bi bi-circle-fill text-success mx-2"></i><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-                        </h5>
-                        <img src="data:image/jpeg;base64,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"
-                            class="rounded-circle mx-3" style="width: 35px; height: 35px;">
                     </div>
 
                     <div class="row ms-2 mb-5">

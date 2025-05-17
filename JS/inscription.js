@@ -2,7 +2,7 @@ document.getElementById("btn-etudiant").onclick = function() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les étudiants : </h2>
-    <form method="post" action="../PHP/inscription.php" id="form-etudiant" class="form-style">
+    <form method="post" action="../PHP/inscription.php" id="form-etudiant" class="form-style" novalidate>
         <div id="etape1">
             <h3>1. Informations Personnelles</h3>
             <label for="Nom">Nom :</label>
@@ -70,6 +70,7 @@ document.getElementById("btn-etudiant").onclick = function() {
             <h3>4. Informations du compte</h3>
             <label for="Pseudo">Pseudo : </label>
                 <input name="Pseudo" id="Pseudo" type="text" placeholder="Ex : noob1234" required><br>
+                <div id="msgPseudo" style="color:red; display:none;"></div>
             <label for="Mdp">Mot de passe : </label>
                 <input name="Mdp" id="Mdp" type="password" required><br>
             <div class="button-container">
@@ -78,6 +79,7 @@ document.getElementById("btn-etudiant").onclick = function() {
     
             <button type="submit" class="submit">Soumettre</button>
         </div>
+                <div id="formEleveError" style="color:red; display:none"></div>
     </form>`;
      const emailInput = document.getElementById('Email');
     const emailError = document.getElementById('emailError');
@@ -91,8 +93,86 @@ document.getElementById("btn-etudiant").onclick = function() {
       emailError.textContent = emailInput.validationMessage || "Format incorrect";
     }
   });
-}
 
+  const pseudoInput = document.getElementById('Pseudo');
+const messagePseudo = document.getElementById('msgPseudo');
+const form = document.querySelector('form');  // Cible le formulaire
+const erreurEleve = document.getElementById("formEleveError");
+
+// Cette variable sert à vérifier l'état du pseudo (disponible ou déjà utilisé)
+let pseudoDisponible = false;
+
+pseudoInput.addEventListener("input", function () {
+    const Pseudo = pseudoInput.value.trim().toLowerCase();
+
+    // Si le champ est vide, on cache le message d'erreur
+    if (Pseudo.length === 0) {
+        messagePseudo.style.display = 'none';
+        messagePseudo.textContent = '';
+        return;
+    }
+
+    // On fait une vérification côté serveur (ici tu pourrais utiliser une API ou une logique PHP côté serveur)
+    fetch("../PHP/inscription.php?Pseudo=" + encodeURIComponent(Pseudo))
+        .then(res => res.text())
+        .then(data => {
+            if (data === "pris") {
+                messagePseudo.style.display = 'block';
+                messagePseudo.textContent = "Ce pseudo est déjà utilisé.";
+                messagePseudo.style.color = 'red';  // Le message en rouge pour une erreur
+                pseudoDisponible = false;  // Le pseudo n'est pas disponible
+            } else if (data === "dispo") {
+                messagePseudo.style.display = 'block';
+                messagePseudo.textContent = "Ce pseudo est disponible";
+                messagePseudo.style.color = 'green';  // Le message en vert pour la disponibilité
+                pseudoDisponible = true;  // Le pseudo est disponible
+            } else {
+                messagePseudo.style.display = 'none';  // Aucun message si l'état est indéfini
+                pseudoDisponible = false;
+            }
+        })
+        .catch(err => {
+            messagePseudo.style.display = 'block';
+            messagePseudo.textContent = "Erreur lors de la vérification";
+            messagePseudo.style.color = 'red';  // Message d'erreur en cas de problème de réseau
+            pseudoDisponible = false;
+        });
+});
+
+// Empêcher la soumission du formulaire si le pseudo n'est pas disponible
+form.addEventListener('submit', function (e) {
+    let formValid = true;
+
+    // Vérifie les champs required manuellement
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            formValid = false;
+        }
+    });
+
+    if (!formValid) {
+        e.preventDefault();
+        erreurEleve.style.display = 'block';
+        erreurEleve.textContent = "Un champ requis a été oublié.";
+        erreurEleve.scrollIntoView({ behavior: 'smooth'});
+        return;
+    }
+
+    // Vérifie la disponibilité du pseudo
+    if (!pseudoDisponible) {
+        e.preventDefault();
+        messagePseudo.style.display = 'block';
+        messagePseudo.textContent = "Veuillez choisir un pseudo disponible avant de soumettre le formulaire.";
+        messagePseudo.style.color = 'red';
+
+        erreurEleve.style.display = 'block';
+        erreurEleve.textContent = "";  // On efface le message de champ oublié si c’est juste le pseudo
+    }
+});
+
+
+}
 
 // FORMULAIRE POUR LES PROFS : 
 
@@ -101,7 +181,7 @@ document.getElementById("btn-prof").onclick = function() {
     document.getElementById("form-container").style.display = "block";
     document.getElementById("form-container").innerHTML = 
     `<h2>Formulaire d'inscription pour les professeurs : </h2>
-    <form method="post" action="../PHP/inscription.php" id="form-prof" class="form-style">
+    <form method="post" action="../PHP/inscription.php" id="form-prof" class="form-style" novalidate>
         <div id="etape1prof">
             <h3>1. Informations Personnelles</h3>
             <label for="Nomprof">Nom :</label>
@@ -140,6 +220,7 @@ document.getElementById("btn-prof").onclick = function() {
             <h3>3. Informations du compte</h3>
             <label for="Pseudoprof">Pseudo : </label>
             <input name="Pseudoprof" id="Pseudoprof" type="text" placeholder="Ex : noob1234" required><br>
+            <div id="msgPseudoProf" style="color:red; display:none;"></div>
             <label for="Mdpprof">Mot de passe : </label>
             <input name="Mdpprof" id="Mdpprof" type="password" required><br>
             <div class="button-container">
@@ -147,6 +228,7 @@ document.getElementById("btn-prof").onclick = function() {
             </div>
             <button type="submit" class="submit">Soumettre</button>
         </div>
+        <div id="formProfError" style="color:red; display:none"></div>
     </form>`; 
     const emailInputProf = document.getElementById('Emailprof');
     const emailErrorProf = document.getElementById('emailErrorProf');
@@ -160,6 +242,85 @@ document.getElementById("btn-prof").onclick = function() {
       emailErrorProf.textContent = emailInputProf.validationMessage || "Format incorrect";
     }
   });
+
+  
+  const pseudoProf = document.getElementById('Pseudoprof');
+const messageProf = document.getElementById('msgPseudoProf');
+const formProf = document.getElementById('form-prof');  // Cible le formulaire
+const errorBox = document.getElementById("formProfError");
+
+// Cette variable sert à vérifier l'état du pseudo (disponible ou déjà utilisé)
+let pseudoProfDisponible = false;
+
+pseudoProf.addEventListener("input", function () {
+    const Pseudo = pseudoProf.value.trim().toLowerCase();
+
+    // Si le champ est vide, on cache le message d'erreur
+    if (Pseudo.length === 0) {
+        messageProf.style.display = 'none';
+        messageProf.textContent = '';
+        return;
+    }
+
+    // On fait une vérification côté serveur (ici tu pourrais utiliser une API ou une logique PHP côté serveur)
+    fetch("../PHP/inscription.php?Pseudo=" + encodeURIComponent(Pseudo))
+        .then(res => res.text())
+        .then(data => {
+            if (data === "pris") {
+                messageProf.style.display = 'block';
+                messageProf.textContent = "Ce pseudo est déjà utilisé.";
+                messageProf.style.color = 'red';  // Le message en rouge pour une erreur
+                pseudoProfDisponible = false;  // Le pseudo n'est pas disponible
+            } else if (data === "dispo") {
+                messageProf.style.display = 'block';
+                messageProf.textContent = "Ce pseudo est disponible";
+                messageProf.style.color = 'green';  // Le message en vert pour la disponibilité
+                pseudoProfDisponible = true;  // Le pseudo est disponible
+            } else {
+                messageProf.style.display = 'none';  // Aucun message si l'état est indéfini
+                pseudoProfDisponible = false;
+            }
+        })
+        .catch(err => {
+            messageProf.style.display = 'block';
+            messageProf.textContent = "Erreur lors de la vérification";
+            messageProf.style.color = 'red';  // Message d'erreur en cas de problème de réseau
+            pseudoProfDisponible = false;
+        });
+});
+
+
+formProf.addEventListener('submit', function (e) {
+    let formValid = true;
+
+    // Vérifie les champs required manuellement
+    const requiredFields = formProf.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            formValid = false;
+        }
+    });
+
+    if (!formValid) {
+        e.preventDefault();
+        errorBox.style.display = 'block';
+        errorBox.textContent = "Un champ requis a été oublié.";
+        errorBox.scrollIntoView({ behavior: 'smooth'});
+        return;
+    }
+
+    // Vérifie la disponibilité du pseudo
+    if (!pseudoProfDisponible) {
+        e.preventDefault();
+        messageProf.style.display = 'block';
+        messageProf.textContent = "Veuillez choisir un pseudo disponible avant de soumettre le formulaire.";
+        messageProf.style.color = 'red';
+
+        errorBox.style.display = 'block';
+        errorBox.textContent = "";  // On efface le message de champ oublié si c’est juste le pseudo
+    }
+});
+
 }
     
 

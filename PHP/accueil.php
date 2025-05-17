@@ -1,6 +1,7 @@
 <?php
 
 include 'config.php';
+
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
@@ -52,7 +53,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
+                            <a class="icon-link link-dark" href="moncompte.php">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>

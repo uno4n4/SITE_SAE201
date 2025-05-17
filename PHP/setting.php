@@ -10,73 +10,72 @@ if (!isset($_SESSION['utilisateur'])) {
 $pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
 $ancienPass = $_SESSION['utilisateur']['Mdp'];
 
-if($_SERVER["REQUEST_METHOD"] === "POST"){
-  if(isset($_POST['update_pseudo'])){
-    $nouveauPseudo = trim($_POST['Pseudo']);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Vérification et mise à jour du pseudo
+    if (isset($_POST['update_pseudo'])) {
+        $nouveauPseudo = trim($_POST['Pseudo']);
+        $sql = "UPDATE inscription_eleve SET Pseudo = ? WHERE Pseudo = ?";
+        $stmt = $conn->prepare($sql);
 
-    $sql = "UPDATE inscription_eleve SET Pseudo = ? WHERE Pseudo = ?";
-    $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Erreur de préparation : " . $conn->error);
+        }
 
-    if(!$stmt){
-      die("Erreur de préparation : " . $conn->error);
+        $stmt->bind_param("ss", $nouveauPseudo, $pseudoActuel);
+
+        if ($stmt->execute()) {
+            $_SESSION['utilisateur']['Pseudo'] = $nouveauPseudo;
+            header("Location: admin.php");
+            exit();
+        } else {
+            echo "Erreur lors de la mise à jour du pseudo : " . $stmt->error;
+        }
+        $stmt->close();
     }
 
-    $stmt->bind_param("ss", $nouveauPseudo, $pseudoActuel);
+    // Vérification et mise à jour du mot de passe
+    if (isset($_POST['update_pass'])) {
+        $ancienPass = trim($_POST['old']);
+        $nouveauPass = trim($_POST['new']);
+        $confirmPass = trim($_POST['new1']);
 
-    if($stmt->execute()){
-      $_SESSION['utilisateur']['Pseudo'] = $nouveauPseudo;
-      header("Location: admin.php");
-      exit();
-    } else {
-      echo "Erreur lors de la mise à jour : " . $stmt->error;
+        if ($nouveauPass !== $confirmPass) {
+            echo "Les mots de passe ne correspondent pas.";
+            exit();
+        }
+
+        $pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
+
+        // Récupérer l'ancien mot de passe pour la vérification
+        $sql = "SELECT Mdp FROM inscription_eleve WHERE Pseudo = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $pseudoActuel);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $utilisateur = $result->fetch_assoc();
+
+        if (!$utilisateur || !password_verify($ancienPass, $utilisateur['Mdp'])) {
+            echo "Ancien mot de passe incorrect";
+            exit();
+        }
+
+        // Mettre à jour le mot de passe
+        $nouveauHash = password_hash($nouveauPass, PASSWORD_DEFAULT);
+
+        $sqlUpdate = "UPDATE inscription_eleve SET Mdp = ? WHERE Pseudo = ?";
+        $stmt = $conn->prepare($sqlUpdate);
+        $stmt->bind_param("ss", $nouveauHash, $pseudoActuel);
+
+        if ($stmt->execute()) {
+            $_SESSION['utilisateur']['Mdp'] = $nouveauHash;
+            header("Location: setting.php");
+            exit();
+        } else {
+            echo "Erreur lors de la mise à jour du mot de passe : " . $stmt->error;
+        }
+        $stmt->close();
     }
-    $stmt->close();
-  }
 }
-
-if($_SERVER["REQUEST_METHOD"] === "POST"){
-  if(isset($_POST['update_pass'])){
-    $ancienPass = trim($_POST['old']);
-    $nouveauPass = trim($_POST['new']);
-    $confirmPass = trim($_POST['new1']);
-
-    if($nouveauPass !== $confirmPass){
-      echo "Les mots de passe ne correspondent pas.";
-      exit();
-    }
-
-    $pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
-
-    $sql = "SELECT Mdp FROM inscription_eleve WHERE Pseudo = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $pseudoActuel);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $utlisateur = $result->fetch_assoc();
-
-    if(!$utlisateur || !password_verify($ancienPass, $utlisateur['Mdp'])){
-      echo "Ancien mot de passe incorrect";
-      exit();
-    }
-
-    $nouveauHash = password_hash($nouveauPass, PASSWORD_DEFAULT);
-
-    $sqlUpdate = "UPDATE inscription_eleve SET Mdp = ? WHERE Pseudo = ?";
-    $stmt = $conn->prepare($sqlUpdate);
-    $stmt->bind_param("ss", $nouveauHash, $pseudoActuel);
-
-    if($stmt->execute()){
-      $_SESSION['utilisateur']['Mdp'] = $nouveauHash;
-      header("Location: setting.php");
-      exit();
-    } else {
-      echo "Erreur lors de la mise à jour : " . $stmt->errror;
-    }
-    $stmt->close();
-  }
-}
-
-$conn->close();
 ?>
 
 
@@ -97,17 +96,51 @@ $conn->close();
 
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-      <div>
-        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-      </div>
-      <div class="d-flex align-items-center ms-auto gap-2">
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-        </h6>
-        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
-      </div>
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+        </div>
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // Étudiant
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>';
+                } else {
+                    // Professeur
+                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                    $stmt->bind_param("s", $nom);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
+
+                    if ($row['total'] > 0) {
+                        echo '
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
+                    }
+                    else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            <span class="spantext">Utilisateur</span>';
+                    }
+                }
+            }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
     </div>
-  </header> 
+</header>
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -117,43 +150,20 @@ $conn->close();
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
   
             <li class="nav-item">
-              <a href="admin.php" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+              <a href="accueil.php" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
+              <a href="moncompte.php" class="nav-link px-0 align-middle">
+                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mon compte</span>
               </a>
             </li>
-  
-            <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
-                <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
-              </a>
-            </li>
-  
-            <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
-              </a>
-            </li>
-  
-            <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
-              </a>
-            </li>
-  
-            <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
-                <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
-              </a>
-            </li>
+            
           </ul>
             <div class="mt-auto w-100">
-              <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+              <a href="setting.php" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
               </a>
             </div>
@@ -175,9 +185,7 @@ $conn->close();
         <div id="form-container" class="mt-5" 
                                             data-nom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>"
                                             data-prenom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>"
-                                            data-email ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Adresse_email'])) ?>"
-                                            data-numetu ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Num_etudiant'])) ?>"
-                                            data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
+                                            data-email ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Adresse_email'])) ?>"                                            data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
       </div>   
     </div>
   </div>
@@ -185,3 +193,9 @@ $conn->close();
     
 </body>
 </html>
+
+<?php
+
+$conn->close();
+
+?>

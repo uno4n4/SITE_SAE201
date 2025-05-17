@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var nom = document.getElementById('form-container').getAttribute('data-nom');
     var prenom = document.getElementById('form-container').getAttribute('data-prenom');
     var email = document.getElementById('form-container').getAttribute('data-email');
-    var numetu = document.getElementById('form-container').getAttribute('data-numetu');
     var pseudo = document.getElementById('form-container').getAttribute('data-pseudo');
     function activateButton(buttonToActivate, contentToDisplay) {
 
@@ -38,10 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div>
                     <label for="Email">Email *</label>
                     <input type="text" name="Adresse_email" value = "${email}" disabled>
-                </div>
-                <div>
-                    <label for="Numetu">Numéro étudiant *</label>
-                    <input type="text" name="Numetu" value = "${numetu}" disabled>
                 </div>
                 <div>
                     <label for="Pseudo">Pseudo *</label>

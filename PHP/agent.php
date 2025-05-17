@@ -1,3 +1,11 @@
+<?php
+
+include 'config.php';
+session_start();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -14,13 +22,40 @@
 </head>
 <body>
     
-    <header class="container-fluid px-0">
-        <div class="d-flex align-items-center flex-nowrap px-3 py-2">
-          <div class="me-auto">
-            <img src="../IMAGE/logo-iut.png" class="img-fluid float-left" id="logo-iut-head" alt="Logo IUT">
-          </div>
+<header class="container-fluid px-0">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
         </div>
-      </header> 
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // Étudiant
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_agent WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #F4A261;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
+    </div>
+</header>
     
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -30,22 +65,11 @@
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
       
                 <li class="nav-item">
-                  <a href="../HTML/agent.html" class="nav-link align-middle px-0">
+                  <a href="#" class="nav-link align-middle px-0">
                     <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                   </a>
                 </li>
-      
-                <li>
-                  <a href="../HTML/gest-reser.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                    <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
-                  </a>
-                </li>
               </ul>
-                <div class="mt-auto w-100">
-                  <a href="../HTML/setting2.html" class="nav-link align-middle px-0">
-                    <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-                  </a>
-                </div>
             </div>
           </div>
     

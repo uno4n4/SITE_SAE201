@@ -2,6 +2,41 @@
 
 include('config.php');
 
+function pseudoExiste($conn, $pseudo) {
+    // Vérifie dans inscription_eleve
+    $sql1 = "SELECT 1 FROM inscription_eleve WHERE pseudo = ?";
+    $stmt1 = $conn->prepare($sql1);
+    $stmt1->bind_param("s", $pseudo);
+    $stmt1->execute();
+    $stmt1->store_result();
+    $existeDansEleve = $stmt1->num_rows > 0;
+    $stmt1->close();
+
+    // Vérifie dans inscription_prof
+    $sql2 = "SELECT 1 FROM inscription_prof WHERE pseudo = ?";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->bind_param("s", $pseudo);
+    $stmt2->execute();
+    $stmt2->store_result();
+    $existeDansProf = $stmt2->num_rows > 0;
+    $stmt2->close();
+
+    return $existeDansEleve || $existeDansProf;
+}
+if(isset($_GET['Pseudo'])){
+  $pseudo = trim(strtolower($_GET['Pseudo']));
+
+  if(pseudoExiste($conn, $pseudo)){
+    echo "pris";
+  } else {
+    echo "dispo";
+  }
+  exit();
+}
+
+
+
+
 //ETUDIANT : 
 
 if(isset($_POST['Nom']) && isset($_POST['Prenom'])){
@@ -15,21 +50,25 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom'])){
   $Formation =$_POST['Formations'];
   $TD=$_POST['TD'];
   $TP=$_POST['TP'];
-  $Pseudo=$_POST['Pseudo'];
+  $Pseudo= trim(strtolower($_POST['Pseudo']));
   $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
 
-  $sql = "INSERT INTO inscription_eleve (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, num_etudiant, formation, td, tp, pseudo, mdp, statut)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  $stmt = $conn->prepare($sql);
-  $Statut = "en attente";
-  $stmt->bind_param("sssssssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut);
-
-  if($stmt->execute()){
-    echo "Inscription étudiant réussie !";
+  if(pseudoExiste($conn, $Pseudo)){
+    exit;
   } else {
-    echo "Erreur : " . $stmt->error;
+      $sql = "INSERT INTO inscription_eleve (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, num_etudiant, formation, td, tp, pseudo, mdp, statut)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $conn->prepare($sql);
+      $Statut = "en attente";
+      $stmt->bind_param("sssssssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut);
+
+      if($stmt->execute()){
+        echo "Inscription étudiant réussie !";
+      } else {
+        echo "Erreur : " . $stmt->error;
+      }
+      $stmt->close();
   }
-  $stmt->close();
 }
 
 //PROF : 
@@ -41,23 +80,28 @@ elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
   $Email=$_POST['Emailprof'];
   $Tel=$_POST['Numprof'];
   $Adresse=$_POST['Adresseprof'];
-  $Pseudo=$_POST['Pseudoprof'];
+  $Pseudo= trim(strtolower($_POST['Pseudoprof']));
   $Mdp = password_hash($_POST['Mdpprof'], PASSWORD_DEFAULT);
 
-
-  $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  $stmt = $conn->prepare($sql);
-  $Statut = "en attente";
-  $stmt->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
-
-  if ($stmt->execute()){
-    echo "Inscription professeur réussie !";
+  if(pseudoExiste($conn, $Pseudo)){
+    exit;
   } else {
-    echo "Erreur :" . $stmt->error;
+      $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+      $stmt = $conn->prepare($sql);
+      $Statut = "en attente";
+      $stmt->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
+
+    if ($stmt->execute()){
+      echo "Inscription professeur réussie !";
+    } else {
+      echo "Erreur :" . $stmt->error;
+    }
+    $stmt->close();
   }
-  $stmt->close();
-} else {
+}
+
+else {
   echo "Aucun formulaire valide soumis.";
 }
 

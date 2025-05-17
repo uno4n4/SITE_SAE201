@@ -42,18 +42,41 @@ foreach ($tables as $table) {
 
 <body>
 
-  <header class="container-fluid px-0">
+<header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-      <div>
-        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-      </div>
-      <div class="d-flex align-items-center ms-auto gap-2">
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-        </h6>
-      </div>
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+        </div>
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // Étudiant
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
     </div>
-  </header>
+</header>
+
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -69,40 +92,35 @@ foreach ($tables as $table) {
             </li>
 
             <li>
-              <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+              <a href="#" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
           </ul>
-          <div class="mt-auto w-100">
-            <a href="setting.php" class="nav-link align-middle px-0">
-              <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-            </a>
-          </div>
         </div>
       </div>
       <!--APPRO-->
@@ -171,6 +189,14 @@ foreach ($tables as $table) {
                     <?php
                     $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
                     while ($user = $result->fetch_assoc()):
+                      $color = '';
+                    if($table === 'inscription_eleve'){
+                      $color = '#12A19A';
+                    } elseif ($table === 'inscription_prof'){
+                      $color = '#8B1E3F';
+                    } else {
+                      $color = '#6c757d';
+                    }
                     ?>
                       <div class="card-wrapper">
                         <form action="gest-comptes.php" method="post">
@@ -186,7 +212,14 @@ foreach ($tables as $table) {
                               </span>
                               <div class="kebabs-menu"></div>
                             </div>
-                            <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
+                          <div class="d-flex align-items-center gap-1 ms-1">
+                            <!-- Pastille -->
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
+                            <!-- Nom et prénom -->
+                            <h6 class="text-nowrap mb-0" id="nom-prenom">
+                              <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
+                            </h6>
+                          </div>
                             <p class="text-center" id="classe">
                               <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
                               <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
@@ -293,25 +326,22 @@ foreach ($tables as $table) {
                 </div>
 
                 <div class="d-flex flex-wrap justify-content-center gap-4">
-                  <?php
-                  $profil = isset($_GET['profil']) ? $_GET['profil'] : '';
-                  $classe = isset($_GET['formation']) ? $_GET['formation'] : '';
-                  $tp = isset($_GET['tp']) ? $_GET['tp'] : '';
-
-                  $sql = "SELECT * FROM `$table` WHERE statut = 'accepté'";
-
-                  $conditions = [];
-
-                  foreach ($tables as $table):
-
-                    if ($profil != '' && in_array($profil, ['Etu', 'Prof'])) {
-                      $conditions[] = "profil = '$profil'";
-                    } else {
-                      $sql = "SELECT * FROM `$table` WHERE statut = 'accepté'";
-                    } ?>
+                  <?php foreach ($tables as $table): ?>
                     <?php
                     $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
                     while ($user = $result->fetch_assoc()):
+                      $color = '';
+                    if($table === 'inscription_eleve'){
+                      $color = '#12A19A';
+                    } elseif ($table === 'inscription_prof'){
+                      $color = '#8B1E3F';
+                    } elseif ($table === 'inscription_agent'){
+                      $color = '#F4A261';
+                    } elseif ($table === 'inscription_admin'){
+                      $color = '#2F2A85';
+                    } else {
+                      $color = '#6c757d';
+                    }
                     ?>
                       <div class="card-wrapper">
                         <form action="gest-comptes.php" method="post">
@@ -345,19 +375,25 @@ foreach ($tables as $table) {
                               <?php endif; ?>
 
                             </div>
-                            <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
-                            <h6 class="text-center mt-2" id="nom-prenom"><?= strtoupper(htmlspecialchars($user['Nom'])) . '  ' . htmlspecialchars($user['Prenom']) ?></h6>
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                              <!-- Pastille -->
+                              <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
+                              <!-- Nom et prénom -->
+                              <h6 class="text-nowrap mb-0" id="nom-prenom">
+                                <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
+                              </h6>
+                            </div>
                             <p class="text-center" id="classe">
                               <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
                               <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
                               <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
                             </p>
-                            <div class="card-body">
+                            <div class="card-body p-2">
                               <div class="d-flex justify-content-between gap-4">
                                 <p id="derniere-reservation">Dernière réservation</p>
                                 <p id="date-reser">
                                   <?php
-                                  if ($_SESSION['utilisateur']['td']) {
+                                  if (isset($user['Td'])) {
                                     $stmt = $conn->prepare("SELECT max(Date_reservation) AS last_date FROM reservation_etudiant WHERE Pseudo = ?");
                                     $stmt->bind_param("s", $user['Pseudo']);
                                     $stmt->execute();

@@ -28,18 +28,40 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 </head>
 <body>
 
-  <header class="container-fluid px-0">
+<header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-      <div>
-        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-      </div>
-      <div class="d-flex align-items-center ms-auto gap-2">
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-        </h6>
-      </div>
+        <div>
+            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+        </div>
+        <div class="d-flex align-items-center ms-auto gap-2">
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // ADMIN :
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
     </div>
-  </header> 
+</header>
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -55,7 +77,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </li>
   
             <li>
-              <a href="../HTML/gest-reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
@@ -67,28 +89,23 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </li>
   
             <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
           </ul>
-          <div class="mt-auto w-100">
-            <a href="setting.php" class="nav-link align-middle px-0">
-              <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-            </a>
-          </div>
         </div>
       </div>
  
@@ -204,7 +221,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                     <h2>Gérer le matériel</h2>
                     <a href="#" id="voir"><small class="text-muted me-3">Voir plus</small></a>
                   </div>
-                  <a href="#" id="ajouter" class=" d-block text-end fs-4 text-dark">Ajouter du matériel</a>
+                  <a href="materiel.php" id="ajouter" class=" d-block text-end fs-4 text-dark">Ajouter du matériel</a>
     
                   <div class="card w-100 custom-card mt-3">
                     <img src="../IMAGE/logo-iut.png" id="img-produit">
@@ -232,9 +249,18 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   <?php 
                   $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
                   while ($user = $result->fetch_assoc()):
+                    $color = '';
+                    if($table === 'inscription_eleve'){
+                      $color = '#12A19A';
+                    } elseif ($table === 'inscription_prof'){
+                      $color = '#8B1E3F';
+                    } else {
+                      $color = '#6c757d';
+                    }
                   ?>
                   <form method="post" action="admin.php">
                   <div class="d-flex align-items-center gap-2">
+                    <span class="rounded-circle" style="width:10px;height:10px;margin-top:-13px;background-color: <?= $color ?>;"></span>
                     <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
                     <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
                     <p id="Numetu">

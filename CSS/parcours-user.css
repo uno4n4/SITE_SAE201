@@ -4,11 +4,6 @@ body {
     font-family: "Inter", sans-serif;
 }
 
-#roleicon {
-    /*always bg-warning so change here*/
-    width: 10px;
-    height: 10px;
-}
 
 .breadcrumb-item a {
     color: #2F2A85;
