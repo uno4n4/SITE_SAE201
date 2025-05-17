@@ -260,12 +260,6 @@ foreach ($tables as $table) {
                   <?php endforeach; ?>
                 </div>
 
-                <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
-                  <a href="#" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
-                  <p id="nb-pages"></p>
-                  <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
-                </div>
-
                 <!-- GESTION DES COMPTES -->
                 <div class="mt-5 d-flex justify-content-between align-items-center gap-5">
                   <h2>Gestions des comptes</h2>
