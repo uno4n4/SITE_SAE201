@@ -180,10 +180,14 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
     
                 <!-- RESERVATION -->
                 <div class="col-12 col-lg-6 d-flex flex-column">
-                  <!-- Première carte -->
-                  <div class="card custom-card mb-4">
-                    <p>Souhaite effectuer une réservation pour le : <strong id="jour"></strong></p>
-                    <p id="nom"></p>
+                  <?php
+                  $result = $conn->query("SELECT * FROM reservation_etudiant");
+                  $users = $result->fetch_all(MYSQLI_ASSOC);
+                  ?>
+                  <?php foreach ($users as $user): ?>
+                  <div class="card custom-card mb-4 p-2">
+                    <p>Souhaite effectuer une réservation pour le : <strong id="jour"><?= htmlspecialchars($user['Date_reservation']) ?></strong></p>
+                    <p id="nom"><?= htmlspecialchars($user['Nom']) . ' ' . htmlspecialchars($user['Prenom']) ?></p>
                     <div class="card-body">
                       <div class="d-flex align-items-center">
                         <div class="button-group d-flex">
@@ -194,21 +198,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                       </div>
                     </div>
                   </div>
-    
-                  <!-- Deuxième carte -->
-                  <div class="card custom-card">
-                    <p>Autre réservation pour le : <strong id="jour2"></strong></p>
-                    <p id="nom2"></p>
-                    <div class="card-body">
-                      <div class="d-flex align-items-center">
-                        <div class="button-group d-flex">
-                          <a href="#" class="card-link vert" id="accepter2">Accepter</a>
-                          <a href="#" class="card-link rouge" id="refuser2">Refuser</a>
-                        </div>
-                        <a href="#" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-reser2">Modifier la réservation</a>
-                      </div>
-                    </div>
-                  </div>
+                  <?php endforeach ?>
                 </div>
               </div>
             </div>
@@ -223,20 +213,26 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                   </div>
                   <a href="materiel.php" id="ajouter" class=" d-block text-end fs-4 text-dark">Ajouter du matériel</a>
     
-                  <div class="card w-100 custom-card mt-3">
-                    <img src="../IMAGE/logo-iut.png" id="img-produit">
-                    <h4 id="produit">Caméra untel</h4>
-                    <div class="card-body">
-                      <p id="description">Description</p>
-                      <div class="d-flex align-items-center">
-                        <div class="button-group d-flex">
-                          <a href="#" class="card-link vert" id="dispo">Disponible</a>
-                          <a href="#" class="card-link rouge" id="indispo">Indisponible</a>
+                  <?php
+                  $result = $conn->query("SELECT * FROM materiel WHERE Image_un LIKE '%.jpg'");
+                  $users = $result->fetch_all(MYSQLI_ASSOC);
+                  ?>
+                  <?php foreach ($users as $user): ?>
+                    <div class="card w-100 custom-card mt-3 p-2">
+                      <img class="rounded" src="../IMG/images/<?= htmlspecialchars($user['Image_un']) ?>" id="img-produit">
+                      <h4 id="produit"><?= htmlspecialchars($user['Nom']) ?></h4>
+                      <div class="card-body">
+                        <p id="description"><?= htmlspecialchars($user['Description']) ?></p>
+                        <div class="d-flex align-items-center">
+                          <div class="button-group d-flex">
+                            <a href="#" class="card-link vert" id="dispo">Disponible</a>
+                            <a href="#" class="card-link rouge" id="indispo">Indisponible</a>
+                          </div>
+                          <a href="#" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
                         </div>
-                        <a href="#" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
                       </div>
                     </div>
-                  </div>
+                  <?php endforeach ?>
                 </div>
     
                 <!-- APPROUVER -->
