@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 11 mai 2025 à 02:04
+-- Généré le : sam. 17 mai 2025 à 17:32
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -54,6 +54,24 @@ CREATE TABLE `commentaires_prof` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `consigne`
+--
+
+CREATE TABLE `consigne` (
+  `id` int(11) NOT NULL,
+  `contenu` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `consigne`
+--
+
+INSERT INTO `consigne` (`id`, `contenu`) VALUES
+(1, '\n                <p id=\"ecrire\" name=\"contenu\">bonjour</p>\n              ');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `inscription_admin`
 --
 
@@ -92,7 +110,6 @@ CREATE TABLE `inscription_agent` (
 --
 
 INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('domingues', 'clara', '0000-00-00', 'clara@gmail.com', '', '', 'domingues.clara', '$2y$10$CccikOy/.mMjJADYChtpEerYfAv6xnVK4UK47cfGRx/thwnq5gQ8u', 'accepté'),
 ('prsn', 'test', '0000-00-00', 'testpersonne@gmail.com', '', '', 'prsn.test', '$2y$10$V1lWwcfDt1pjl5uaQQsFOeJDTFZEwijsNYqkxMOPAoT8BP8jXHeIS', 'accepté');
 
 -- --------------------------------------------------------
@@ -122,7 +139,11 @@ CREATE TABLE `inscription_eleve` (
 --
 
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('samoura', 'diaba', '2025-05-23', 'mathus.samantha@gmail.com', '0660610636', '58 Rue René Leblond', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$QbQ6QLxPCv.RGRkVg8y/7Oii5holXJM4EG5FL5AppuAWays3CA8Ta', 'accepté');
+('alexandre', 'alexandre', '2025-05-01', 'alex@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI3', 'TD1', 'TPE', 'alex', '$2y$10$0T4CCQEHkapNdamRYx/O3uUXWRuZOJO6n9r/WkR/ggItJE5qH1rDC', 'accepté'),
+('gilet', 'amel', '2025-05-01', 'Aamel2432@gmail.com', '060606076', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'amel', '$2y$10$AARSlK8gKWQeIkTOgK6mvOQS4EnV8NBYm1wKdmMECZcfhbwN/lUpa', 'accepté'),
+('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$hDTLctiXMONI1w0DmzyWQeCbHSszfhWIe7c8FFIR1nurE/mtTa9CW', 'en attente'),
+('mathilda', 'mathile', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'mathilde', '$2y$10$QuTpBIhstDsLnbb1pgpN2./NiAeB5AJayVNuKxWvDj9N1GmSz0wEe', 'accepté'),
+('test', 'lool', '2025-05-05', 'test@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'test1234', '$2y$10$6B1WqWWvXBkS20GhI2x/yuuM7WvAij5W9ksbI/mw37gt0.ao4wyc2', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -147,6 +168,10 @@ CREATE TABLE `inscription_prof` (
 --
 
 INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
+('chloe', 'chloe', '2025-05-01', 'chloe@gmail.com', '0606060606', '1 rue de la rue', 'chloe', '$2y$10$IKs2ENJq9sZGJ9yaa7FxN.Mg7AcHVUrelMqCq6PHscQjijFMcLjya', 'accepté'),
+('mathis', 'mathis', '2025-05-01', 'test@gmail.com', '0606060606', '1 rue de la rue', 'diabasmr', '$2y$10$b9Ix5AGRkhIKOdU1LH2zLe3nTMcilHgG9aplbwW1RwfbcwL79102i', 'accepté'),
+('domingues', 'clara', '0000-00-00', 'clara@gmail.com', '', '', 'domingues.clara', '$2y$10$CccikOy/.mMjJADYChtpEerYfAv6xnVK4UK47cfGRx/thwnq5gQ8u', 'accepté'),
+('test', 'encoretest', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', 'encoretestettt', '$2y$10$CT8gys6jHuExo09suz52CebowSc9icTKtKscz8MP5GPpIHrCubvty', 'accepté'),
 ('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé');
 
 -- --------------------------------------------------------
@@ -164,7 +189,6 @@ CREATE TABLE `materiel` (
   `quantite` int(11) DEFAULT NULL,
   `date_achat` date DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,
-  `categorie` varchar(20) DEFAULT NULL,
   `disponibilite` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -172,27 +196,27 @@ CREATE TABLE `materiel` (
 -- Déchargement des données de la table `materiel`
 --
 
-INSERT INTO `materiel` (`Nom`, `Description`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `categorie`, `disponibilite`) VALUES
-('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Casque réalité virtuelle 1', 'noir moche', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Gopro', 'description', '20230505_105927.jpg', '20230505_105700.jpg', '20230505_105908.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Salle', 1),
-('Salle 212', 'description', 'Salle212.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Set réalité virtuelle blanc', 'lunettes et manettes incluses', 'IMG_0007.JPG', '20230505_101530.jpg', '20230505_102025.jpg', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Set réalité virtuelle noir', 'Casque noir avec une icone manettes incluses', 'P1018553.JPG', 'P1018533.JPG', 'P1018548.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Tablette', 'description', 'P1018472.JPG', 'P1018469.JPG', 'P1018467.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Tablette graphique WACOM', 'Libérez votre créativité avec la tablette graphique Wacom ! Cette tablette à pied avec stylet inclus offre une précision exceptionnelle.', 'P1018503.JPG', 'P1018508.JPG', 'none', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Trépied', 'description', '20230505_110219.jpg', '20230505_110146.jpg', 'none', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Trépied 2', 'description', 'P1018450.JPG', 'P1018463.JPG', 'P1018466.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Trépied téléphone', 'description', 'P1018485.JPG', 'P1018487.JPG', 'P1018484.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
-('Vive Streaming Cable', 'Plongez dans la réalité virtuelle sans latence avec le Vive Streaming Cable. Ce câble haute performance connecte votre casque HTC Vive à votre PC.', 'P1018496.JPG', 'P1018497.JPG', 'P1018498.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1);
+INSERT INTO `materiel` (`Nom`, `Description`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `disponibilite`) VALUES
+('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 1),
+('Casque réalité virtuelle 1', 'noir moche', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 1),
+('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 1),
+('Gopro', 'description', '20230505_105927.jpg', '20230505_105700.jpg', '20230505_105908.jpg', 1, '2024-01-01', 300.00, 1),
+('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 1),
+('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 1),
+('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 1),
+('Oculus cable link (PC VR)', 'Profitez d\'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.', 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 1),
+('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 1),
+('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 1),
+('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 1),
+('Salle 212', 'description', 'Salle212.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 1),
+('Set réalité virtuelle blanc', 'lunettes et manettes incluses', 'IMG_0007.JPG', '20230505_101530.jpg', '20230505_102025.jpg', 1, '2024-01-01', 300.00, 1),
+('Set réalité virtuelle noir', 'Casque noir avec une icone manettes incluses', 'P1018553.JPG', 'P1018533.JPG', 'P1018548.JPG', 1, '2024-01-01', 300.00, 1),
+('Tablette', 'description', 'P1018472.JPG', 'P1018469.JPG', 'P1018467.JPG', 1, '2024-01-01', 300.00, 1),
+('Tablette graphique WACOM', 'Libérez votre créativité avec la tablette graphique Wacom ! Cette tablette à pied avec stylet inclus offre une précision exceptionnelle.', 'P1018503.JPG', 'P1018508.JPG', 'none', 1, '2024-01-01', 300.00, 1),
+('Trépied', 'description', '20230505_110219.jpg', '20230505_110146.jpg', 'none', 1, '2024-01-01', 300.00, 1),
+('Trépied 2', 'description', 'P1018450.JPG', 'P1018463.JPG', 'P1018466.JPG', 1, '2024-01-01', 300.00, 1),
+('Trépied téléphone', 'description', 'P1018485.JPG', 'P1018487.JPG', 'P1018484.JPG', 1, '2024-01-01', 300.00, 1),
+('Vive Streaming Cable', 'Plongez dans la réalité virtuelle sans latence avec le Vive Streaming Cable. Ce câble haute performance connecte votre casque HTC Vive à votre PC.', 'P1018496.JPG', 'P1018497.JPG', 'P1018498.JPG', 1, '2024-01-01', 300.00, 1);
 
 -- --------------------------------------------------------
 
@@ -216,13 +240,6 @@ CREATE TABLE `reservation_etudiant` (
   `quantite` int(11) DEFAULT NULL,
   `signature` varchar(19) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `reservation_etudiant`
---
-
-INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`) VALUES
-(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -249,18 +266,10 @@ CREATE TABLE `reservation_prof` (
 --
 
 --
--- Index pour la table `commentaires_eleve`
+-- Index pour la table `consigne`
 --
-ALTER TABLE `commentaires_eleve`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Pseudo` (`Pseudo`);
-
---
--- Index pour la table `commentaires_prof`
---
-ALTER TABLE `commentaires_prof`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Pseudo` (`Pseudo`);
+ALTER TABLE `consigne`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Index pour la table `inscription_admin`
@@ -314,16 +323,10 @@ ALTER TABLE `reservation_prof`
 --
 
 --
--- AUTO_INCREMENT pour la table `commentaires_eleve`
+-- AUTO_INCREMENT pour la table `consigne`
 --
-ALTER TABLE `commentaires_eleve`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `commentaires_prof`
---
-ALTER TABLE `commentaires_prof`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `consigne`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `reservation_etudiant`
@@ -340,18 +343,6 @@ ALTER TABLE `reservation_prof`
 --
 -- Contraintes pour les tables déchargées
 --
-
---
--- Contraintes pour la table `commentaires_eleve`
---
-ALTER TABLE `commentaires_eleve`
-  ADD CONSTRAINT `commentaires_eleve_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_eleve` (`Pseudo`);
-
---
--- Contraintes pour la table `commentaires_prof`
---
-ALTER TABLE `commentaires_prof`
-  ADD CONSTRAINT `commentaires_prof_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_prof` (`Pseudo`);
 
 --
 -- Contraintes pour la table `reservation_etudiant`
