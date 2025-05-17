@@ -31,40 +31,40 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
 
-<header class="container-fluid px-0">
-    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+    <header class="container-fluid px-0">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+            <div>
+                <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+            </div>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <?php
+                if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                    $nom = $_SESSION['utilisateur']['Nom'];
 
-                // ADMIN :
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+                    // ADMIN :
+                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                    $stmt->bind_param("s", $nom);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
 
-                if ($row['total'] > 0) {
-                    echo '
+                    if ($row['total'] > 0) {
+                        echo '
                         <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                } else {
+                    } else {
                         // Aucun des deux trouvés
                         echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                             ';
                     }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
+                }
+                ?>
+                <h6 class="mb-0 text-nowrap text-end">
+                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+                </h6>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <!-- Sidebar -->
@@ -101,7 +101,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </li>
 
                         <li>
-                            <a href="#" 
+                            <a href="#"
                                 class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
                                     matériel</span>
@@ -109,7 +109,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                         </li>
 
                         <li>
-                            <a href="gest-reservation.php" 
+                            <a href="gest-reservation.php"
                                 class="nav-link px-0 align-middle mt-2 text-dark">
                                 <i class="fa-solid fa-chart-simple"></i><span
                                     class="ms-1 d-none d-sm-inline">Statistiques</span>
@@ -165,14 +165,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                             </div>
                             <p>Réservations effectuées</p>
                         </div>
-                        <div class="bg-light col-5 col-md-2 p-3 pb-1 m-2">
-                            <div class="d-flex justify-content-between align-items-baseline flex-wrap">
-                                <i class="fa-solid fa-calendar-minus fa-2xl p-2"></i>
-                                <h4>5</h4>
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </div>
-                            <p class="pt-2">Réservations annulées</p>
-                        </div>
                     </div>
 
                     <div class="row table-responsive-md ">
@@ -215,8 +207,12 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                             ☆☆☆☆☆
                                         </td>
                                         <td class="text-center">
-                                            <i class="fa-solid fa-pen-to-square fs-5"></i>
-                                            <i class="bi bi-three-dots-vertical fs-5"></i>
+                                            <form action="modifier-materiel.php" method="post">
+                                                <input type="hidden" name="materiel" value="<?= htmlspecialchars($user['Nom']) ?>">
+                                                <button type="submit" name="modif" class="btn">
+                                                    <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>
