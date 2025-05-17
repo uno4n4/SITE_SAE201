@@ -325,10 +325,30 @@ foreach ($tables as $table) {
                   </div>
                 </div>
 
+                <?php 
+
+                $perpage = 5;
+
+                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                $offset = ($page - 1) * $perpage;
+
+                $offset = max(0, $offset);
+
+                $query = "SELECT COUNT(*) AS total FROM `$table` WHERE statut = 'accepté'";
+                $result = $conn->query($query);
+                $row = $result->fetch_assoc();
+                $totalUsers = $row['total'];
+
+                $totalPages = ceil($totalUsers / $perpage);
+                $query = "SELECT * FROM `$table` WHERE statut = 'accepté' LIMIT $perpage OFFSET $offset";
+                $result = $conn->query($query);
+
+                ?>
                 <div class="d-flex flex-wrap justify-content-center gap-4">
                   <?php foreach ($tables as $table): ?>
                     <?php
-                    $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
+                    $query = "SELECT * FROM `$table` WHERE statut = 'accepté' LIMIT $perpage OFFSET $offset";
+                    $result = $conn->query($query);
                     while ($user = $result->fetch_assoc()):
                       $color = '';
                     if($table === 'inscription_eleve'){
@@ -429,9 +449,9 @@ foreach ($tables as $table) {
                 </div>
 
                 <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
-                  <a href="#" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
-                  <p id="nb-pages"></p>
-                  <a href="#" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
+                  <a href="?page=<?= max(1, $page - 1) ?>" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
+                  <p id="nb-pages"><?= $page ?> / <?= $totalPages ?></p>
+                  <a href="?page=<?= min($totalPages, $page + 1)?>" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
               </div>
             </div>
