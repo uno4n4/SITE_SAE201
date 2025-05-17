@@ -92,7 +92,7 @@ foreach ($tables as $table) {
             </li>
 
             <li>
-              <a href="gest-reservation.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
@@ -104,13 +104,13 @@ foreach ($tables as $table) {
             </li>
 
             <li>
-              <a href="materiel.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
 
             <li>
-              <a href="gest-reservation.php" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>

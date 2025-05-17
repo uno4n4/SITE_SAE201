@@ -113,7 +113,7 @@ if(isset($_POST['contenu'])) {
             </li>
 
             <li>
-              <a href="gest-materiel.php" 
+              <a href="materiel.php" 
                 class="nav-link px-0 align-middle mt-2 text-dark">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
                   matériel</span>
