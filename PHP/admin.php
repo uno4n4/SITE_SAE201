@@ -209,7 +209,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                 <div class="col-12 col-lg-6 mb-lg-0">
                   <div class="materiel d-flex align-items-center justify-content-between mb-2" id="gest-materiel">
                     <h2>Gérer le matériel</h2>
-                    <a href="#" id="voir"><small class="text-muted me-3">Voir plus</small></a>
+                    <a href="materiel.php" id="voir"><small class="text-muted me-3">Voir plus</small></a>
                   </div>
                   <a href="materiel.php" id="ajouter" class=" d-block text-end fs-4 text-dark">Ajouter du matériel</a>
     
@@ -228,7 +228,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                             <a href="#" class="card-link vert" id="dispo">Disponible</a>
                             <a href="#" class="card-link rouge" id="indispo">Indisponible</a>
                           </div>
-                          <a href="#" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
+                          <a href="materiel.php" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
                         </div>
                       </div>
                     </div>
