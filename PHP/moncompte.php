@@ -8,10 +8,11 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
+$pseudo  = $_SESSION['utilisateur']['Pseudo'];
 if (isset($_SESSION['utilisateur']['Td'])){
-    $result = $conn->query("SELECT * FROM reservation_etudiant");
+    $result = $conn->query("SELECT * FROM reservation_etudiant WHERE Pseudo = '$pseudo'");
 }else{
-    $result = $conn->query("SELECT * FROM reservation_prof");
+    $result = $conn->query("SELECT * FROM reservation_prof WHERE Pseudo = '$pseudo'");
 }
 
 
