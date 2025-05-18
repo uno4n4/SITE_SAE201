@@ -110,6 +110,12 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                             </a>
                         </li>
 
+                        <li>
+                            <a href="mesemprunts.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
+                            </a>
+                        </li>
+
                     </ul>
                     <div class="mt-auto w-100">
                         <a href="setting.php" class="nav-link align-middle px-0">
