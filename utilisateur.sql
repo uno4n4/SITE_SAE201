@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 17 mai 2025 à 17:32
+-- Généré le : dim. 18 mai 2025 à 21:37
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -150,7 +150,7 @@ CREATE TABLE `inscription_eleve` (
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
 ('alexandre', 'alexandre', '2025-05-01', 'alex@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI3', 'TD1', 'TPE', 'alex', '$2y$10$0T4CCQEHkapNdamRYx/O3uUXWRuZOJO6n9r/WkR/ggItJE5qH1rDC', 'accepté'),
 ('gilet', 'amel', '2025-05-01', 'Aamel2432@gmail.com', '060606076', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'amel', '$2y$10$AARSlK8gKWQeIkTOgK6mvOQS4EnV8NBYm1wKdmMECZcfhbwN/lUpa', 'accepté'),
-('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$hDTLctiXMONI1w0DmzyWQeCbHSszfhWIe7c8FFIR1nurE/mtTa9CW', 'en attente'),
+('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$hDTLctiXMONI1w0DmzyWQeCbHSszfhWIe7c8FFIR1nurE/mtTa9CW', 'accepté'),
 ('mathilda', 'mathile', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'mathilde', '$2y$10$QuTpBIhstDsLnbb1pgpN2./NiAeB5AJayVNuKxWvDj9N1GmSz0wEe', 'accepté'),
 ('test', 'lool', '2025-05-05', 'test@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'test1234', '$2y$10$6B1WqWWvXBkS20GhI2x/yuuM7WvAij5W9ksbI/mw37gt0.ao4wyc2', 'accepté');
 
@@ -207,6 +207,7 @@ CREATE TABLE `materiel` (
 --
 
 INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `categorie`, `disponibilite`) VALUES
+('Caméra', 'test : Une caméra audiovisuel ', NULL, NULL, NULL, 1, '2025-05-18', 100.00, 'Caméra', 1),
 ('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Casque réalité virtuelle 1', 'noir', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
@@ -248,15 +249,16 @@ CREATE TABLE `reservation_etudiant` (
   `participants` varchar(600) DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL
+  `signature` varchar(19) DEFAULT NULL,
+  `accepte` varchar(3) DEFAULT 'oui'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `reservation_etudiant`
 --
 
-INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`) VALUES
-(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL);
+INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`, `accepte`) VALUES
+(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL, 'oui');
 
 -- --------------------------------------------------------
 
@@ -275,7 +277,8 @@ CREATE TABLE `reservation_prof` (
   `heure_fin` time DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL
+  `signature` varchar(19) DEFAULT NULL,
+  `accepte` varchar(3) DEFAULT 'oui'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
