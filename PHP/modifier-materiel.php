@@ -13,22 +13,27 @@ if (isset($_POST['modif'])) {
 
   if (isset($_POST['submit'])) {
     $Nom = htmlspecialchars($_POST['Nom']);
-    $Description = htmlspecialchars($_POST['Description_materiel']);
+    $Description = htmlspecialchars($_POST['description']);
     $Categorie = htmlspecialchars($_POST['categorie']);
     $Prix = htmlspecialchars($_POST['prix']);
     $Quantite = htmlspecialchars($_POST['quantite']);
-    $Date_achat = htmlspecialchars($_POST['date_achat']);
+    $Date_achat = htmlspecialchars($_POST['dateachat']);
     $Disponibilite = htmlspecialchars($_POST['disponibilite']);
 
     // Mise à jour du matériel
     $stmt = $conn->prepare("UPDATE materiel SET Nom = ?, Description_materiel = ?, categorie = ?, date_achat = ?, prix = ?, quantite = ?, disponibilite = ? WHERE Nom = ?");
-    $stmt->bind_param("sssssssi", $Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite, $_POST['materiel']);
+    $stmt->bind_param("sssssssi", $Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite, $_POST['Nom-sauve']);
     if ($stmt->execute()) {
-        echo "Le matériel a été changé avec succès.";
-        header("Location: ../HTML/materiel.html");
-        exit;
+      echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">Le matériel a été modifié</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+      exit;
     } else {
-        echo "Une erreur s'est produite. Veuillez réessayer.";
+      echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">Il y a eu une erreur, veuillez réessayer</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
     }
   }
 
@@ -36,16 +41,11 @@ if (isset($_POST['modif'])) {
     $stmt = $conn->prepare("DELETE FROM materiel WHERE Nom = ?");
     $stmt->bind_param("s", $_POST['materiel']);
     if ($stmt->execute()) {
-        echo "Le matériel a été supprimé avec succès.";
-        exit;
+      echo "Le matériel a été supprimé avec succès.";
+      exit;
     } else {
-        echo "Une erreur s'est produite. Veuillez réessayer.";
+      echo "Une erreur s'est produite. Veuillez réessayer.";
     }
-  }
-
-  if (isset($_POST['annuler'])) {
-    header("Location: ../HTML/materiel.html");
-    exit;
   }
 
   $stmt->close();
@@ -91,37 +91,37 @@ if (isset($_POST['modif'])) {
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
             <li class="nav-item">
-              <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+              <a href="admin.php" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+              <a href="gest-comptes.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php#stats" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
 
             <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php#consignes" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
@@ -139,53 +139,54 @@ if (isset($_POST['modif'])) {
         <form class="mx-auto" method="post" action="modifier-materiel.php">
           <input type="hidden" name="Nom-sauve" value="<?= htmlspecialchars($materiel['Nom']) ?>">
           <input type="hidden" name="Description-sauve" value="<?= htmlspecialchars($materiel['Description_materiel']) ?>">
-          <input type="hidden" name="categorie-sauve" value="<?= htmlspecialchars($materiel['categorie']) ?>>">
+          <input type="hidden" name="categorie-sauve" value="<?= htmlspecialchars($materiel['categorie']) ?>">
           <input type="hidden" name="date_achat-sauve" value="<?= htmlspecialchars($materiel['date_achat']) ?>">
           <input type="hidden" name="Prix-sauve" value="<?= htmlspecialchars($materiel['prix']) ?>">
           <input type="hidden" name="Quantite-sauve" value="<?= htmlspecialchars($materiel['quantite']) ?>">
           <input type="hidden" name="dispo-sauve" value="<?= htmlspecialchars($materiel['disponibilite']) ?>">
           <h2>Modifier le matériel</h2>
           <div class="photo-container">
-            <img src="../IMG/images/<?= htmlspecialchars($materiel['Image_un']) ?>" alt="Photo de profil" id="photo">
+            <img src="../IMG/images/<?= isset($materiel) ? htmlspecialchars($materiel['Image_un']) : 'logo-iut.png' ?>" alt="Photo de profil" id="photo">
           </div>
           <div class="form-grid">
             <div>
               <label for="Nom">Nom *</label>
-              <input type="text" name="Nom" value="<?= htmlspecialchars($materiel['Nom']) ?>">
+              <input type="text" name="Nom" value="<?= isset($materiel) ? htmlspecialchars($materiel['Nom']) : '' ?>">
             </div>
             <div>
               <label for="description">Description *</label>
-              <input type="text" id="description" name="description" value="<?= htmlspecialchars($materiel['Description_materiel']) ?>">
+              <input type="text" id="description" name="description" value="<?= isset($materiel) ? htmlspecialchars($materiel['Description_materiel']) : '' ?>">
             </div>
             <div>
               <label for="categorie">Catégorie *</label>
-              <input type="text" id="categorie" name="categorie" value="<?= htmlspecialchars($materiel['categorie']) ?>">
+              <input type="text" id="categorie" name="categorie" value="<?= isset($materiel) ? htmlspecialchars($materiel['categorie']) : '' ?>">
             </div>
             <div>
               <label for="date-achat">Date d'achat *</label>
-              <input type="text" id="date-achat" name="date-achat" value="<?= htmlspecialchars($materiel['date_achat']) ?>">
+              <input type="text" id="date-achat" name="dateachat" value="<?= isset($materiel) ? htmlspecialchars($materiel['date_achat']) : '' ?>">
             </div>
             <div>
               <label for="prix">Prix *</label>
-              <input type="text" id="prix" name="prix" value="<?= htmlspecialchars($materiel['prix']) ?> €">
+              <input type="text" id="prix" name="prix" value="<?= isset($materiel) ? htmlspecialchars($materiel['prix']) : '' ?>">
             </div>
             <div>
               <label for="quantite">Quantite *</label>
-              <input type="number" min="0" id="quantite" name="quantite" value="<?= htmlspecialchars($materiel['quantite']) ?>">
+              <input type="number" min="0" id="quantite" name="quantite" value="<?= isset($materiel) ? htmlspecialchars($materiel['quantite']) : '' ?>">
             </div>
             <div>
               <label for="disponibilite" class="me-3">Disponibilité</label>
 
-              <select class="border none" name="disponibilite">
-                <option value="disponible" name="disponibilite">Disponible</option>
-                <option value="indisponible" name="disponibilite">Indisponible</option>
+              <select name="disponibilite" class="border none">
+                <option value="disponible" <?= (isset($materiel) && $materiel['disponibilite'] === 'disponible') ? 'selected' : '' ?>>Disponible</option>
+                <option value="indisponible" <?= (isset($materiel) && $materiel['disponibilite'] === 'indisponible') ? 'selected' : '' ?>>Indisponible</option>
               </select>
+
             </div>
             <div class="button-container-1">
-              <button type="submit" name="submit">Enregistrer les changements</button>
-              <button type="button" name="annuler">Annuler</button>
+              <button type="submit" id="submit" name="submit">Enregistrer les changements</button>
+              <button type="button" id="submit2" onclick="window.location.href='../HTML/materiel.html'">Annuler</button>
             </div>
-            <button class="btn btn-danger text-white justify-content-center" type="submit" name="supprimer-materiel">Supprimer le materiel</button>
+            <button class="btn btn-danger text-white justify-content-center" type="submit" name="supprimer_materiel">Supprimer le materiel</button>
             <div id="container-supp"></div>
         </form>
 
