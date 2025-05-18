@@ -72,7 +72,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                                 <span id="roleicon" class="rounded-circle bg-warning"></span>
                                 <span class="spantext">Etudiant(e)</span>
                             </span>';
-                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
                             } else {
                                 $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
                                 $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
@@ -166,8 +166,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
             </div>
         </div>
     </div>
-
-    <div id="formulaires-etudiant" class="container-fluid gx-3 my-5">
+    <div id="formulaires-etudiant" class="container-fluid gx-3 my-5 <?= isset($_SESSION['utilisateur']['Td']) ? 'd-block' : 'd-none' ?>">
         <!-- Formulaire informations personnelles -->
         <form action="../PHP/reserver.php" method="post"
             class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
@@ -321,7 +320,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     </div>
 
 
-    <div id="formulaires-prof" class="container-fluid gx-3 my-5">
+    <div id="formulaires-prof" class="container-fluid gx-3 my-5 <?= isset($_SESSION['utilisateur']['Td']) ? 'd-none' : 'd-block' ?>">
         <!-- Formulaire informations personnelles -->
         <form action="../PHP/reserver.php" method="post"
             class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
