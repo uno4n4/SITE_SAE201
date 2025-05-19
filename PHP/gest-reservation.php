@@ -22,6 +22,23 @@ if (isset($_POST['contenu'])) {
   exit;  // <--- ça évite d'afficher le reste du HTML
 }
 
+if (isset($_POST["validmodif"])) {
+  // Met à jour reservation_etudiant
+  $stmt = $conn->prepare("UPDATE reservation_etudiant SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  // Met à jour reservation_prof
+  $stmt = $conn->prepare("UPDATE reservation_prof SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">La réservation a été modifiée</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+}
+
 if (isset($_POST["accepter"])) {
   // Met à jour reservation_etudiant
   $stmt = $conn->prepare("UPDATE reservation_etudiant SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
@@ -34,7 +51,7 @@ if (isset($_POST["accepter"])) {
   $stmt->execute();
 
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">Réservation acceptée confirmée</p>
+            <p class="mb-2">La réservation a été acceptée</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
             </div>';
 }
@@ -49,10 +66,46 @@ if (isset($_POST["refuser"])) {
   $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
   $stmt->execute();
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">Réservation refusée confirmée</p>
+            <p class="mb-2">La réservation a été refusée</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
             </div>';
 }
+
+if (isset($_POST["supprimer"])) {
+  $idResa = $_POST['id_resa'];
+  $pseudoResa = $_POST['pseudo_resa'];
+
+  echo '<div id="msg" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>Etes-vous sûr(e) de supprimer la réservation ?</p>
+        <form method="post">
+            <input type="hidden" name="id_resa" value="' . htmlspecialchars($idResa) . '">
+            <input type="hidden" name="pseudo_resa" value="' . htmlspecialchars($pseudoResa) . '">
+            <button type="submit" name="supprime" class="btn btn-primary">Supprimer</button>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById(\'msg\').style.display=\'none\'">Annuler</button>
+        </form>
+    </div>';
+}
+
+if (isset($_POST["supprime"])) {
+  $idResa = $_POST['id_resa'];
+  $pseudoResa = $_POST['pseudo_resa'];
+
+  // Prépare et exécute suppression en toute sécurité
+  $stmt = $conn->prepare("DELETE FROM reservation_etudiant WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $idResa, $pseudoResa);
+  $stmt->execute();
+
+  $stmt = $conn->prepare("DELETE FROM reservation_prof WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $idResa, $pseudoResa);
+  $stmt->execute();
+
+  echo '<div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>La réservation a été supprimée</p>
+        <button class="btn btn-primary" onclick="this.parentElement.style.display=\'none\'">Fermer</button>
+    </div>';
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +123,7 @@ if (isset($_POST["refuser"])) {
   <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
   <script src="../JS/consigne.js" defer></script>
   <script src="../JS/reserve.js" defer></script>
+  <script src="../JS/checked.js" defer></script>
   <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
   <title>Gestion des réservations</title>
 </head>
@@ -171,7 +225,6 @@ if (isset($_POST["refuser"])) {
               <div class="d-flex align-items-center flex-wrap">
                 <h2 class="mt-3">Gestion des réservations</h2>
               </div>
-              <h5 class="mt-3">3 Réservations en attente</h5>
             </div>
           </div>
           <!--Ton premier tableau-->
@@ -186,29 +239,31 @@ if (isset($_POST["refuser"])) {
                         <!-- Première ligne de ton tableau, tes boutons et tout alignés -->
                         <!-- Pour cocher décocher date -->
                         <p class="text-md-center mb-1 fw-semibold ">
-                          <input class="form-check-input mx-2" type="checkbox" value="" id="flexCheckChecked" checked>
-                          Aujourd'hui, 11 Mai 2025
+                          <input class="form-check-input mx-2" type="checkbox" value="" id="flexCheckChecked">
+                          Aujourd'hui, <input type="date" id="jour">
                         </p>
                         <!-- Réservation sélectionnée -->
                         <div class="row">
                           <div class="col-md-4"></div>
-                          <p class="text-center col-md-4 col-6 ms-5 ms-md-0 mb-1 fw-semibold text-dark p-2 rounded-3 mt-2 mt-sm-0"
-                            style="background-color: rgb(244, 244, 244);">2 Réservations sélectionnées</p>
+                          <p id="selection" class="text-center col-md-4 col-6 ms-5 ms-md-0 mb-1 fw-semibold text-dark p-2 rounded-3 mt-2 mt-sm-0"
+                            style="background-color: rgb(244, 244, 244);"> Réservations sélectionnées</p>
                           <div class="col-md-4"></div>
                         </div>
 
                         <div class="row gap-2 mt-2 ms-md-4 mt-sm-0">
-                          <button type="button" class="col-2 btn btn-light fw-medium">
-                            <i class="bi bi-pen-fill mx-1"></i><span class="d-none d-sm-inline">Signer</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium">
-                            <i class="bi bi-pencil-square mx-1"></i><span class="d-none d-sm-inline">Modifier</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium">
-                            <i class="bi bi-chat-left-text mx-1"></i><span class="d-none d-sm-inline">Commenter</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium text-danger">
-                            <i class="bi bi-trash-fill mx-1"></i><span class="d-none d-sm-inline">Supprimer</span>
+                          <form method="post">
+                            <button type="button" name="signer" class="col-2 btn btn-light fw-medium">
+                              <i class="bi bi-pen-fill mx-1"></i><span class="d-none d-sm-inline">Signer</span>
+                            </button>
+                            <button type="button" id="modifier" class="col-2 col-md-3 btn btn-light fw-medium">
+                              <i class="bi bi-pencil-square mx-1"></i><span class="d-none d-sm-inline">Modifier</span>
+                            </button>
+                            <button type="button" name="commenter" class="col-2 col-md-3 btn btn-light fw-medium">
+                              <i class="bi bi-chat-left-text mx-1"></i><span class="d-none d-sm-inline">Commenter</span>
+                            </button>
+                            <button type="button" name="" class="col-2 col-md-3 btn btn-light fw-medium text-danger">
+                              <i class="bi bi-trash-fill mx-1"></i><span class="d-none d-sm-inline">Supprimer</span>
+                          </form>
                           </button>
                         </div>
                       </th>
@@ -223,10 +278,10 @@ if (isset($_POST["refuser"])) {
                     <?php foreach ($reservations as $reservation): ?>
                       <tr>
                         <td>
-                          <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de <?= htmlspecialchars($reservation['materiel']) ?></p>
+                          <p class="d-flex mt-3"><input class="form-check-input mx-2 reservation-checkbox" type="checkbox">Réservation de <?= htmlspecialchars($reservation['materiel']) ?></p>
                         </td>
                         <td class="mt-4">
-                          <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
+                          <p class="d-flex p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
                             <i class="bi bi-circle-fill mx-2" style="<?php if ($reservation['nom_projet']) {
                                                                         echo 'color: #12A19A;';
                                                                       } else {
@@ -234,12 +289,22 @@ if (isset($_POST["refuser"])) {
                                                                       } ?>"></i><?= htmlspecialchars($reservation['Nom']) ?> <?= htmlspecialchars($reservation['Prenom']) ?>
                           </p>
                         </td>
-                        <td>
-                          <p class="mt-3"><i class="bi bi-clock mx-2"></i><?= htmlspecialchars($reservation['heure_debut']) ?> - <?= htmlspecialchars($reservation['heure_fin']) ?></p>
-                        </td>
-                        <td>
-                          <p class="mt-3"><i class="bi bi-clock mx-2"></i><?= htmlspecialchars($reservation['Date_reservation']) ?></p>
-                        </td>
+                        <form method="post">
+                          <td>
+                            <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i>
+                              <input type="time" name="heure_debut" value="<?= htmlspecialchars($reservation['heure_debut']) ?>" disabled>
+                              <span> - </span>
+                              <input type="time" name="heure_fin" value="<?= htmlspecialchars($reservation['heure_fin']) ?>" disabled>
+                            </p>
+                          </td>
+                          <td>
+                            <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i><input type="date" name="date_reservation" value="<?= htmlspecialchars($reservation['Date_reservation']) ?>" readonly>
+                              <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                              <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                              <button type="submit" id="valid" name="validmodif" class="mx-2" style="display:none;">Valider</button>
+                            </p>
+                          </td>
+                        </form>
                         <td>
                           <div class="dropdown">
                             <button class="btn btn-light" data-bs-toggle="dropdown">
@@ -257,6 +322,12 @@ if (isset($_POST["refuser"])) {
                                 <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
                                 <input type="hidden" name="refuser" value="refuser">
                                 <button type="submit" class="dropdown-item">Refuser</button>
+                              </form>
+                              <form method="post">
+                                <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                                <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                                <input type="hidden" name="supprimer" value="supprimer">
+                                <button type="submit" class="dropdown-item">Supprimer</button>
                               </form>
                             </ul>
                           </div>
@@ -388,7 +459,6 @@ if (isset($_POST["refuser"])) {
                   </a>
                 </div>
               </div>
-
             </div>
           </div>
 
