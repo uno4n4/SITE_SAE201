@@ -246,7 +246,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <div><?= htmlspecialchars($commentaire['materiel']) ?></div>
-                                        <a class='icon-link link-dark' href='#'>
+                                        <a class='icon-link link-dark' href='produit.php?id=<?= htmlspecialchars($commentaire['materiel'])?>#com1'>
                                             Voir le commentaire
                                         </a>
                                     </div>

@@ -610,12 +610,23 @@ input[type="text"] {
 
 /*stats*/
 .bar-vertical {
-    width: 100px;
+    width: 40px;
     background-color: #0d6efd;
     color: #fff;
     text-align: center;
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
+    transition: height 0.3s ease;
+    cursor: pointer;
     border-radius: 5px 5px 0 0;
+}
+
+.bar-vertical::after {
+    content: attr(data-value);
+    position: absolute;
+    top: -25px;
+    font-size: 12px;
+    color: #000;
 }
