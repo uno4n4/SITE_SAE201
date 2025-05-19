@@ -217,7 +217,7 @@ if (isset($_POST["refuser"])) {
                   <!--Tout les autres lignes de ton tableau c'est toujours le meme code-->
                   <tbody>
                     <?php
-                    $result = $conn->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant UNION SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_prof");
+                    $result = $conn->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet FROM reservation_etudiant UNION SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL FROM reservation_prof");
                     $reservations = $result->fetch_all(MYSQLI_ASSOC);
                     ?>
                     <?php foreach ($reservations as $reservation): ?>
@@ -227,7 +227,11 @@ if (isset($_POST["refuser"])) {
                         </td>
                         <td class="mt-4">
                           <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                            <i class="bi bi-circle-fill text-success mx-2"></i><?= htmlspecialchars($reservation['Nom']) ?> <?= htmlspecialchars($reservation['Prenom']) ?>
+                            <i class="bi bi-circle-fill mx-2" style="<?php if ($reservation['nom_projet']) {
+                                                                        echo 'color: #12A19A;';
+                                                                      } else {
+                                                                        echo 'color: #8B1E3F;';
+                                                                      } ?>"></i><?= htmlspecialchars($reservation['Nom']) ?> <?= htmlspecialchars($reservation['Prenom']) ?>
                           </p>
                         </td>
                         <td>
@@ -345,79 +349,77 @@ if (isset($_POST["refuser"])) {
               </div>
             </div>
 
-            <div class="row ms-3 mt-5">
-              <div class="card col-11 col-md-8">
-                <div class="row">
-                  <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
-                  <select class="col-3 p-1 mt-2">
-                    <option selected>Profil</option>
-                    <option value="Etu">Étudiants</option>
-                    <option value="Prof">Professeurs</option>
-                  </select>
-                </div>
+            <div class="col-12 rounded my-3 p-5">
+              <?php
+              // Récupération des réservations par mois
+              $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+              $reservationsParMois = array_fill(0, 12, 0);
 
-                <div class="col-12 rounded my-3 p-5">
-                  <?php
-                  $moisannee = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'];
-                  $stmt = $conn->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total FROM (SELECT Date_reservation FROM reservation_etudiant UNION ALL SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
-                  $stmt->execute();
-                  $result = $stmt->get_result();
-                  $rows = $result->fetch_all(MYSQLI_ASSOC);
+              $stmt = $conn->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total FROM (SELECT Date_reservation FROM reservation_etudiant UNION ALL SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
+              $stmt->execute();
+              $result = $stmt->get_result();
+              while ($row = $result->fetch_assoc()) {
+                $reservationsParMois[$row['mois'] - 1] = $row['total'];
+              }
+              $stmt->close();
+              ?>
+              <div class="row ms-3 mt-5">
+                <div class="card col-11 col-md-8">
+                  <div class="row align-items-center">
+                    <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
+                  </div>
 
-                  $stmt->close();
-                  ?>
-                  <div class="text-center">
-                    <h3>Réservations par Mois</h3>
-                    <div class="d-flex align-items-end gap-3">
-                      <?php foreach ($rows as $row): ?>
-                        <div style="text-align:center;">
-                          <div class="bar-vertical" style="height: <?= $row['total'] ?>px;"></div>
-                          <small><?= $moisannee[$row['mois'] - 1] ?></small>
-                          <small><?= $row['total'] ?></small>
-                        </div>
-                      <?php endforeach; ?>
+                  <div class="col-12 rounded my-3 p-4">
+                    <div class="text-center">
+                      <div class="d-flex gap-3 align-items-end justify-content-center" style="height: 300px;">
+                        <?php foreach ($reservationsParMois as $index => $total): ?>
+                          <div class="bar-vertical bg-primary rounded" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
+                            <small class="d-block mt-2"><?= $months[$index] ?></small>
+                          </div>
+                        <?php endforeach; ?>
+                      </div>
                     </div>
                   </div>
                 </div>
-            </div>
 
-            <div class="pdf col-auto col-md-3 mt-2 mt-md-0">
-              <a href="#" download="" id="telecharger" class="text-black ">
-                Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
-              </a>
+                <div class="pdf col-auto col-md-3 mt-2 mt-md-0 text-end">
+                  <a href="#" download id="telecharger" class="text-black">
+                    Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
+                  </a>
+                </div>
+              </div>
+
             </div>
           </div>
-        </div>
-    </div>
 
-    <div class="d-flex justify-content-between custom-bg-2 mt-5">
-      <h2 id="consignes" class="consigne">Gestions des consignes de sécurité</h2>
-      <div class="container">
-        <div class="d-flex custom-back m-0">
-          <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
-          <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
-          <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
-          <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
-          <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
-          <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
-          <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
-          <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
-          <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
-          <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
-          <button id="voir" class="visu">Visualiser</button>
-        </div>
-        <hr id="ligne">
-        <form action="gest-reservation.php" method="post">
-          <div contenteditable="true" id="zone-ecriture">
-            <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+          <div class="d-flex justify-content-between custom-bg-2 mt-5">
+            <h2 id="consignes" class="consigne">Gestions des consignes de sécurité</h2>
+            <div class="container">
+              <div class="d-flex custom-back m-0">
+                <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
+                <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
+                <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
+                <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
+                <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
+                <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
+                <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
+                <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
+                <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
+                <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
+                <button id="voir" class="visu">Visualiser</button>
+              </div>
+              <hr id="ligne">
+              <form action="gest-reservation.php" method="post">
+                <div contenteditable="true" id="zone-ecriture">
+                  <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+                </div>
+                <button id="enregistrer">Enregistrer</button>
+                <div id="message"></div>
+              </form>
+            </div>
           </div>
-          <button id="enregistrer">Enregistrer</button>
-          <div id="message"></div>
-        </form>
-      </div>
+      </section>
     </div>
-    </section>
-  </div>
 </body>
 
 </html>
