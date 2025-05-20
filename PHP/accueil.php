@@ -47,7 +47,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
+                            <a class="icon-link link-dark" href="../HTML/mesemprunts.php">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
@@ -146,7 +146,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                         </span>
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($materiel['Nom']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($materiel['Description']) ?></p>
+                            <p class="card-text"><?= htmlspecialchars($materiel['Description_materiel']) ?></p>
                             <a href="../PHP/reservation.php?id=<?= htmlspecialchars($materiel['Nom']) ?>&quantite=1" class="btn btn-info ms-2">Réserver</a>
                         </div>
                     </div>
@@ -193,7 +193,6 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                 <p class="mb-4">Vous pouvez la consulter dans la page Mes emprunts</p>
                 <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
             </div>';
-        //ajout de la réservation dans la bdd
     }
     ?>
 </body>

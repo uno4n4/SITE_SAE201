@@ -31,98 +31,88 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
 
-<header class="container-fluid px-0">
-    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+    <header class="container-fluid px-0">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+            <div>
+                <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+            </div>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <?php
+                if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                    $nom = $_SESSION['utilisateur']['Nom'];
 
-                // ADMIN :
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+                    // ADMIN :
+                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                    $stmt->bind_param("s", $nom);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $row = $result->fetch_assoc();
 
-                if ($row['total'] > 0) {
-                    echo '
+                    if ($row['total'] > 0) {
+                        echo '
                         <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                } else {
+                    } else {
                         // Aucun des deux trouvés
                         echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                             ';
                     }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
+                }
+                ?>
+                <h6 class="mb-0 text-nowrap text-end">
+                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+                </h6>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <!-- Sidebar -->
-            <div class="col-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
-                <div
-                    class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
-                    <div class="me-auto mt-4">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4mOrNvQ_JLv_FKwDyYEn7HsfRVHEpgFCWnw&s"
-                            class="img-fluid float-left d-none d-md-block" id="logo-iut-head" alt="Logo IUT"
-                            style="height: 40px;">
-                    </div>
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
                         <li class="nav-item">
-                            <a href="admin.php" class="nav-link align-middle px-0 mt-2 text-dark">
-                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
-                                    bord</span>
+                            <a href="admin.php" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="gest-reservation.php" data-bs-toggle="collapse"
-                                class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion
-                                    des réservations</span>
+                            <a href="gest-reservation.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="gest-comptes.php" class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des
-                                    comptes</span>
+                            <a href="gest-comptes.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="#" 
-                                class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
-                                    matériel</span>
+                            <a href="materiel.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="gest-reservation.php" 
-                                class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-chart-simple"></i><span
-                                    class="ms-1 d-none d-sm-inline">Statistiques</span>
+                            <a href="gest-reservation.php#stats" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="gest-reservation.php" class="nav-link px-0 align-middle mt-2 text-dark">
-                                <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de
-                                    sécurité</span>
+                            <a href="gest-reservation.php#consignes" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
                             </a>
                         </li>
                     </ul>
+                    <div class="mt-auto w-100">
+                        <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                            <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -139,39 +129,23 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                 <i class="fa-solid fa-display fa-2xl p-2"></i>
                                 <h4>
                                     <?php
-                                    if ($_SESSION['utilisateur']['Td']) {
-
-                                        $result = $conn->query("SELECT * FROM reservation_etudiant");
-                                        $reservations = $result->fetch_all(MYSQLI_ASSOC);
-                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM reservation_etudiant WHERE Pseudo = ?");
-                                        $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        $row = $result->fetch_assoc();
-                                        echo $row['total'];
-                                    } else {
-                                        $result = $conn->query("SELECT * FROM reservation_prof");
-                                        $reservations = $result->fetch_all(MYSQLI_ASSOC);
-                                        $stmt = $conn->prepare("SELECT count(*) AS total FROM reservation_prof WHERE Pseudo = ?");
-                                        $stmt->bind_param("s", $_SESSION['utilisateur']['Pseudo']);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        $row = $result->fetch_assoc();
-                                        echo $row['total'];
-                                    }
+                                    $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
+                                    $stmt->execute();
+                                    $stmt->bind_result($total);
+                                    $stmt->fetch();
+                                    $stmt->close();
+                                    echo $total;
                                     ?>
                                 </h4>
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                             </div>
                             <p>Réservations effectuées</p>
                         </div>
-                        <div class="bg-light col-5 col-md-2 p-3 pb-1 m-2">
-                            <div class="d-flex justify-content-between align-items-baseline flex-wrap">
-                                <i class="fa-solid fa-calendar-minus fa-2xl p-2"></i>
-                                <h4>5</h4>
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </div>
-                            <p class="pt-2">Réservations annulées</p>
+                        <div class="bg-light col-5 col-md-2 p-3 pb-1 m-2 text-center">
+                            <a href="./ajouter-materiel.php">
+                                <h3>Ajouter un matériel</h3>
+                                <h3>+</h3>
+                            </a>
                         </div>
                     </div>
 
@@ -215,8 +189,12 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                             ☆☆☆☆☆
                                         </td>
                                         <td class="text-center">
-                                            <i class="fa-solid fa-pen-to-square fs-5"></i>
-                                            <i class="bi bi-three-dots-vertical fs-5"></i>
+                                            <form action="modifier-materiel.php" method="post">
+                                                <input type="hidden" name="materiel" value="<?= htmlspecialchars($user['Nom']) ?>">
+                                                <button type="submit" name="modif" class="btn">
+                                                    <i class="fa-solid fa-pen-to-square fs-5"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

@@ -3,172 +3,73 @@
 include('config.php');
 session_start();
 
-$tables = ['materiel'];
-$tableOrigine = $_POST['tableOrigine'] ?? '';
-$roles = [
-    'inscription_eleve' => 'Étudiant',
-    'inscription_prof' => 'Professeur',
-    'inscription_admin' => 'Admin',
-    'inscription_agent' => 'Agent'
-];
-
-
-if(isset($_GET['disponibilite'])){
-  $disponibilite = $_GET['disponibilite'];
-
-  // Chercher le materiel dans les tables
-  $found = false;  // Variable pour savoir si le materiel a été trouvé
-  foreach($tables as $table){
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE disponibilite = ?");
-    $stmt->bind_param("s", $disponibilite);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if($utilisateur = $result->fetch_assoc()){
-      $tableOrigine = $table;  // Table d'origine trouvée
-      $found = true;  // Utilisateur trouvé
-      break;
-    }
-  }
-
-  if(!$found) {
-    die("Le materiel n'a pas été trouvé dans la base de données.");
-  }
-}
-
-if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
-  $Nom = $_POST['Nom'];
-  $Prenom = $_POST['Prenom'];
-  $Anniv = $_POST['Anniv'];
-  $Email = $_POST['Email'];
-  $Tel = $_POST["Tel"];
-  $Adresse = $_POST['Adresse'];
-  $Pseudo = $_POST['Pseudo'];
-  $tableOrigine = $_POST['tableOrigine'];
-  if (!in_array($tableOrigine, $tables)) {
-    die("Table d'origine invalide.");
-  }
-
-  // Récupération de l'utilisateur depuis la bonne table
-  $stmt = $conn->prepare("SELECT * FROM `$tableOrigine` WHERE Pseudo = ?");
-  $stmt->bind_param("s", $Pseudo);
+if (isset($_POST['modif'])) {
+  // Récupération des matériaux depuis la bonne table
+  $stmt = $conn->prepare("SELECT * FROM `materiel` WHERE Nom = ?");
+  $stmt->bind_param("s", $_POST['materiel']);
   $stmt->execute();
   $result = $stmt->get_result();
-  $utilisateur = $result->fetch_assoc();
+  $materiel = $result->fetch_assoc();
 
-  if (!$utilisateur) {
-      die("Utilisateur introuvable pour mise à jour.");
-  }
-  $Statut = 'accepté';
-  $Role = $_POST['Role'];
-  $Mdp = $utilisateur['Mdp'];
+  if (isset($_POST['submit'])) {
+    $Nom = htmlspecialchars($_POST['Nom']);
+    $Description = htmlspecialchars($_POST['description']);
+    $Categorie = htmlspecialchars($_POST['categorie']);
+    $Prix = htmlspecialchars($_POST['prix']);
+    $Quantite = htmlspecialchars($_POST['quantite']);
+    $Date_achat = htmlspecialchars($_POST['dateachat']);
+    $Disponibilite = htmlspecialchars($_POST['disponibilite']);
 
-
-  // Définir la nouvelle table en fonction du rôle
-  switch($Role){
-    case 'admin':
-          $table = 'inscription_admin';
-          break;
-    case 'agent':
-          $table = 'inscription_agent';
-          break;
-    case 'etudiant':
-          $table = 'inscription_eleve';
-          break;
-    case 'prof':
-          $table = 'inscription_prof';
-          break;
-    default:
-        $table = $tableOrigine;
-          break;
-  }
-
-  // Vérifier si la table d'origine est définie avant de supprimer
-  if ($tableOrigine && $table !== $tableOrigine) {
-    // Supprimer l'utilisateur de la table d'origine
-    $stmtDelete = $conn->prepare("DELETE FROM `$tableOrigine` WHERE Pseudo = ?");
-    $stmtDelete->bind_param("s", $Pseudo);
-    if (!$stmtDelete->execute()) {
-      die("Erreur de suppression dans la table d'origine.");
-    }
-
-    // Ajouter l'utilisateur dans la nouvelle table
-    $sql = "INSERT INTO `$table` (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmtInsert = $conn->prepare($sql);
-    $stmtInsert->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
-    if($stmtInsert->execute()){
-      echo "Le rôle a été mis à jour et l'utilisateur déplacé avec succès !";
-    } else {
-      echo "Erreur : " . $stmtInsert->error;
-    }
-
-    $stmtDelete->close();
-    $stmtInsert->close();
-  } elseif ($tableOrigine && $table === $tableOrigine) {
-    // Cas : rôle inchangé → mise à jour dans la même table
-    $sql = "UPDATE `$tableOrigine` SET nom = ?, prenom = ?, date_naissance = ?, adresse_email = ?, numero_tel = ?, adresse = ?, statut = ? WHERE pseudo = ?";
-    $stmtUpdate = $conn->prepare($sql);
-    $stmtUpdate->bind_param("ssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Statut, $Pseudo);
-    if($stmtUpdate->execute()){
-        echo "Informations mises à jour avec succès !";
-    } else {
-        echo "Erreur lors de la mise à jour : " . $stmtUpdate->error;
-    }
-    $stmtUpdate->close();
-} else {
-    die("Table d'origine invalide ou non définie.");
-}
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['supprimer_compte'])) {
-    $Pseudo = $_POST['Pseudo'];
-    $tableOrigine = $_POST['tableOrigine'];
-
-    if (!in_array($tableOrigine, $tables)) {
-        die("Table d'origine invalide.");
-    }
-
-    // Supprimer l'utilisateur
-    $stmt = $conn->prepare("DELETE FROM `$tableOrigine` WHERE Pseudo = ?");
-    $stmt->bind_param("s", $Pseudo);
-
+    // Mise à jour du matériel
+    $stmt = $conn->prepare("UPDATE materiel SET Nom = ?, Description_materiel = ?, categorie = ?, date_achat = ?, prix = ?, quantite = ?, disponibilite = ? WHERE Nom = ?");
+    $stmt->bind_param("sssssssi", $Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite, $_POST['Nom-sauve']);
     if ($stmt->execute()) {
-        echo "Le compte a été supprimé avec succès.";
-        // Optionnel : rediriger ou afficher un message HTML
-        // header("Location: gest-comptes.php?success=suppression");
-        exit;
+      echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">Le matériel a été modifié</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+      exit;
     } else {
-        echo "Erreur lors de la suppression du compte : " . $stmt->error;
+      echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">Il y a eu une erreur, veuillez réessayer</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
     }
+  }
 
-    $stmt->close();
-    $conn->close();
-    exit;
+  if (isset($_POST['supprimer_materiel'])) {
+    $stmt = $conn->prepare("DELETE FROM materiel WHERE Nom = ?");
+    $stmt->bind_param("s", $_POST['materiel']);
+    if ($stmt->execute()) {
+      echo "Le matériel a été supprimé avec succès.";
+      exit;
+    } else {
+      echo "Une erreur s'est produite. Veuillez réessayer.";
+    }
+  }
+
+  $stmt->close();
+  $conn->close();
 }
-}
-
-
-
-$conn->close();
-
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
-    <script src="../JS/setting.js" defer></script>
-    <title>Réglages</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
+  <script src="../JS/setting.js" defer></script>
+  <title>Réglages</title>
 </head>
+
 <body>
 
-<header class="container-fluid px-0">
+  <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div>
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
@@ -180,7 +81,7 @@ $conn->close();
         <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
       </div>
     </div>
-  </header> 
+  </header>
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -188,105 +89,110 @@ $conn->close();
       <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
-  
+
             <li class="nav-item">
-              <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+              <a href="admin.php" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
-  
+
             <li>
-              <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
-  
+
             <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+              <a href="gest-comptes.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
               </a>
             </li>
-  
+
             <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
-  
+
             <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php#stats" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
-  
+
             <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php#consignes" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
           </ul>
-            <div class="mt-auto w-100">
-              <a href="../HTML/setting.html" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-              </a>
-            </div>
+          <div class="mt-auto w-100">
+            <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+              <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+            </a>
+          </div>
         </div>
       </div>
-  
+
       <!-- Main content -->
-    <div class="col py-3 custom-bg d-flex justify-content-lg-start">
-        <form class="mx-auto" method="post" action="modifier-compte.php">
-          <input type="hidden" name="Pseudo" value="<?= $utilisateur['Pseudo'] ?>">
-          <input type="hidden" name="tableOrigine" value="<?= htmlspecialchars($tableOrigine) ?>">
-          <input type="hidden" name="Anniv" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Date_naissance']) : '' ?>">
-          <input type="hidden" name="Adresse" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Adresse']) : '' ?>">
-            <h2>Modifier Le Matriel</h2>
-            <div class="photo-container">
-                <label for="photoUpload">
-                    <img src="../IMAGE/logo-iut.png" alt="Photo de profil" id="photo">
-                </label>
-                <input type="file" id="photoUpload" hidden>
-                <div class="button-container">
-                    <button type="button" id="changer">Changer</button>
-                    <button type="button" id="supp">Supprimer la photo</button>
-                    </div>
+      <div class="col py-3 custom-bg d-flex justify-content-lg-start">
+        <form class="mx-auto" method="post" action="modifier-materiel.php">
+          <input type="hidden" name="Nom-sauve" value="<?= htmlspecialchars($materiel['Nom']) ?>">
+          <input type="hidden" name="Description-sauve" value="<?= htmlspecialchars($materiel['Description_materiel']) ?>">
+          <input type="hidden" name="categorie-sauve" value="<?= htmlspecialchars($materiel['categorie']) ?>">
+          <input type="hidden" name="date_achat-sauve" value="<?= htmlspecialchars($materiel['date_achat']) ?>">
+          <input type="hidden" name="Prix-sauve" value="<?= htmlspecialchars($materiel['prix']) ?>">
+          <input type="hidden" name="Quantite-sauve" value="<?= htmlspecialchars($materiel['quantite']) ?>">
+          <input type="hidden" name="dispo-sauve" value="<?= htmlspecialchars($materiel['disponibilite']) ?>">
+          <h2>Modifier le matériel</h2>
+          <div class="photo-container">
+            <img src="../IMG/images/<?= isset($materiel) ? htmlspecialchars($materiel['Image_un']) : 'logo-iut.png' ?>" alt="Photo de profil" id="photo">
+          </div>
+          <div class="form-grid">
+            <div>
+              <label for="Nom">Nom *</label>
+              <input type="text" name="Nom" value="<?= isset($materiel) ? htmlspecialchars($materiel['Nom']) : '' ?>">
             </div>
-            <div class="form-grid">
-                <div>
-                    <label for="Nom">Nom *</label>
-                    <input type="text" name="Nom" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Nom']) : '' ?>">
-                </div>
-                <div>
-                    <label for="Categorie">Catégorie *</label>
-                    <input type="text" id="Categorie" name="Categorie"  value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Prenom']) : '' ?>">
-                </div>
-                <div>
-                    <label for="date_achat">Date d'achat *</label>
-                    <input type="text" id="date_achat" name="date_achat" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Adresse_email']) : '' ?>">
-                </div>
-                <div>
-                    <label for="Prix">Prix *</label>
-                    <input type="text" id="Prix" name="Prix" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Numero_tel']) : '' ?>">
-                </div>
-                <div>
-                    <label for="Disponibilite" class="me-3">Disponibilite</label>
-                
-                    <select class="border none" name="Disponibilite">
-                      <option selected><?= isset($utilisateur) && isset($roles[$tableOrigine]) ? $roles[$tableOrigine] : '' ?></option>
-                      <option value="etudiant" name="Disponibilite">Indisponible</option>
-                      <option value="prof" name="Disponibilite">Disponible</option>
-                    </select>
+            <div>
+              <label for="description">Description *</label>
+              <input type="text" id="description" name="description" value="<?= isset($materiel) ? htmlspecialchars($materiel['Description_materiel']) : '' ?>">
+            </div>
+            <div>
+              <label for="categorie">Catégorie *</label>
+              <input type="text" id="categorie" name="categorie" value="<?= isset($materiel) ? htmlspecialchars($materiel['categorie']) : '' ?>">
+            </div>
+            <div>
+              <label for="date-achat">Date d'achat *</label>
+              <input type="text" id="date-achat" name="dateachat" value="<?= isset($materiel) ? htmlspecialchars($materiel['date_achat']) : '' ?>">
+            </div>
+            <div>
+              <label for="prix">Prix *</label>
+              <input type="text" id="prix" name="prix" value="<?= isset($materiel) ? htmlspecialchars($materiel['prix']) : '' ?>">
+            </div>
+            <div>
+              <label for="quantite">Quantite *</label>
+              <input type="number" min="0" id="quantite" name="quantite" value="<?= isset($materiel) ? htmlspecialchars($materiel['quantite']) : '' ?>">
+            </div>
+            <div>
+              <label for="disponibilite" class="me-3">Disponibilité</label>
+
+              <select name="disponibilite" class="border none">
+                <option value="disponible" <?= (isset($materiel) && $materiel['disponibilite'] === 'disponible') ? 'selected' : '' ?>>Disponible</option>
+                <option value="indisponible" <?= (isset($materiel) && $materiel['disponibilite'] === 'indisponible') ? 'selected' : '' ?>>Indisponible</option>
+              </select>
+
             </div>
             <div class="button-container-1">
-                <button type="submit" id="submit">Enregistrer les changements</button>
-                <button type="button" id="submit2">Annuler</button>
+              <button type="submit" id="submit" name="submit">Enregistrer les changements</button>
+              <button type="button" id="submit2" onclick="window.location.href='../HTML/materiel.html'">Annuler</button>
             </div>
-            <button class="btn btn-danger text-white justify-content-center" type="button" id="supprimer-compte">Supprimer le materiel</button>
+            <button class="btn btn-danger text-white justify-content-center" type="submit" name="supprimer_materiel">Supprimer le materiel</button>
             <div id="container-supp"></div>
         </form>
- 
-    </div>
-  
-    
+
+      </div>
+
+
 </body>
+
 </html>

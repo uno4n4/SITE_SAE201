@@ -195,7 +195,7 @@ if (isset($_GET['id'])) {
             <div class="col-sm-7 ms-1 me-1">
                 <div class="row">
                     <h3 id="nomproduit"><?= htmlspecialchars($produit['Nom']) ?></h3>
-                    <p><?= htmlspecialchars($produit['Description']) ?></p>
+                    <p><?= htmlspecialchars($produit['Description_materiel']) ?></p>
                 </div>
 
                 <div class="row">
@@ -258,7 +258,8 @@ if (isset($_GET['id'])) {
             </div>
         </div>
         <?php
-        $result = $conn->query("SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_eleve UNION SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_prof;");
+        $materielcomment = $produit['Nom'];
+        $result = $conn->query("SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_eleve WHERE materiel = '$materielcomment' UNION SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_prof WHERE materiel = '$materielcomment';");
         $users = $result->fetch_all(MYSQLI_ASSOC);
         ?>
         <?php foreach ($users as $user): ?>

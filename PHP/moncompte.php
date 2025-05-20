@@ -8,10 +8,11 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
+$pseudo  = $_SESSION['utilisateur']['Pseudo'];
 if (isset($_SESSION['utilisateur']['Td'])){
-    $result = $conn->query("SELECT * FROM reservation_etudiant");
+    $result = $conn->query("SELECT * FROM reservation_etudiant WHERE Pseudo = '$pseudo'");
 }else{
-    $result = $conn->query("SELECT * FROM reservation_prof");
+    $result = $conn->query("SELECT * FROM reservation_prof WHERE Pseudo = '$pseudo'");
 }
 
 
@@ -106,6 +107,12 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                          <li>
                             <a href="moncompte.php" class="nav-link px-0 align-middle">
                                 <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mon compte</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="mesemprunts.php" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
                             </a>
                         </li>
 
@@ -239,7 +246,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <div><?= htmlspecialchars($commentaire['materiel']) ?></div>
-                                        <a class='icon-link link-dark' href='#'>
+                                        <a class='icon-link link-dark' href='produit.php?id=<?= htmlspecialchars($commentaire['materiel'])?>#com1'>
                                             Voir le commentaire
                                         </a>
                                     </div>

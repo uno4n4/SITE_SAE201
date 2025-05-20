@@ -1,33 +1,112 @@
 <?php
 include('config.php');
 
-if(isset($_POST['contenu'])) {
-    $contenu = $_POST['contenu'];
+if (isset($_POST['contenu'])) {
+  $contenu = $_POST['contenu'];
 
-    $check = $conn->query("SELECT id FROM consigne LIMIT 1");
-    if($check->num_rows > 0) {
-        $stmt = $conn->prepare("UPDATE consigne SET contenu = ? WHERE id = 1");
-        $stmt->bind_param("s", $contenu);
-        $stmt->execute();
-        $stmt->close();
-        echo "Consigne mise à jour.";
-    } else {
-        $stmt = $conn->prepare("INSERT INTO consigne (contenu) VALUES (?)");
-        $stmt->bind_param("s", $contenu);
-        $stmt->execute();
-        $stmt->close();
-        echo "Consigne enregistrée.";
-    }
-    $conn->close();
-    exit;  // <--- ça évite d'afficher le reste du HTML
+  $check = $conn->query("SELECT id FROM consigne LIMIT 1");
+  if ($check->num_rows > 0) {
+    $stmt = $conn->prepare("UPDATE consigne SET contenu = ? WHERE id = 1");
+    $stmt->bind_param("s", $contenu);
+    $stmt->execute();
+    $stmt->close();
+    echo "Consigne mise à jour.";
+  } else {
+    $stmt = $conn->prepare("INSERT INTO consigne (contenu) VALUES (?)");
+    $stmt->bind_param("s", $contenu);
+    $stmt->execute();
+    $stmt->close();
+    echo "Consigne enregistrée.";
+  }
+  $conn->close();
+  exit;  // <--- ça évite d'afficher le reste du HTML
 }
+
+if (isset($_POST["validmodif"])) {
+  // Met à jour reservation_etudiant
+  $stmt = $conn->prepare("UPDATE reservation_etudiant SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  // Met à jour reservation_prof
+  $stmt = $conn->prepare("UPDATE reservation_prof SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">La réservation a été modifiée</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+}
+
+if (isset($_POST["accepter"])) {
+  // Met à jour reservation_etudiant
+  $stmt = $conn->prepare("UPDATE reservation_etudiant SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  // Met à jour reservation_prof
+  $stmt = $conn->prepare("UPDATE reservation_prof SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">La réservation a été acceptée</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+}
+if (isset($_POST["refuser"])) {
+  // Met à jour reservation_etudiant
+  $stmt = $conn->prepare("UPDATE reservation_etudiant SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+
+  // Met à jour reservation_prof
+  $stmt = $conn->prepare("UPDATE reservation_prof SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
+  $stmt->execute();
+  echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">La réservation a été refusée</p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+            </div>';
+}
+
+if (isset($_POST["supprimer"])) {
+  $idResa = $_POST['id_resa'];
+  $pseudoResa = $_POST['pseudo_resa'];
+
+  echo '<div id="msg" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>Etes-vous sûr(e) de supprimer la réservation ?</p>
+        <form method="post">
+            <input type="hidden" name="id_resa" value="' . htmlspecialchars($idResa) . '">
+            <input type="hidden" name="pseudo_resa" value="' . htmlspecialchars($pseudoResa) . '">
+            <button type="submit" name="supprime" class="btn btn-primary">Supprimer</button>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById(\'msg\').style.display=\'none\'">Annuler</button>
+        </form>
+    </div>';
+}
+
+if (isset($_POST["supprime"])) {
+  $idResa = $_POST['id_resa'];
+  $pseudoResa = $_POST['pseudo_resa'];
+
+  // Prépare et exécute suppression en toute sécurité
+  $stmt = $conn->prepare("DELETE FROM reservation_etudiant WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $idResa, $pseudoResa);
+  $stmt->execute();
+
+  $stmt = $conn->prepare("DELETE FROM reservation_prof WHERE Id = ? AND Pseudo = ?");
+  $stmt->bind_param("is", $idResa, $pseudoResa);
+  $stmt->execute();
+
+  echo '<div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>La réservation a été supprimée</p>
+        <button class="btn btn-primary" onclick="this.parentElement.style.display=\'none\'">Fermer</button>
+    </div>';
+}
+
+
 ?>
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -43,66 +122,65 @@ if(isset($_POST['contenu'])) {
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
   <script src="../JS/consigne.js" defer></script>
+  <script src="../JS/reserve.js" defer></script>
+  <script src="../JS/checked.js" defer></script>
   <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
   <title>Gestion des réservations</title>
 </head>
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
-   
-<header class="container-fluid px-0">
+
+  <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <?php
+        if (isset($_SESSION['utilisateur']) && isset($conn)) {
+          $nom = $_SESSION['utilisateur']['Nom'];
 
-                // Étudiant
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+          // Étudiant
+          $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+          $stmt->bind_param("s", $nom);
+          $stmt->execute();
+          $result = $stmt->get_result();
+          $row = $result->fetch_assoc();
 
-                if ($row['total'] > 0) {
-                    echo '
+          if ($row['total'] > 0) {
+            echo '
                         <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                } else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+          } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                             ';
-                    }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
-        </div>
+          }
+        }
+        ?>
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
+      </div>
     </div>
-</header>
+  </header>
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
       <!-- Sidebar -->
-      <div class="col-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
             <li class="nav-item">
-              <a href="admin.php" class="nav-link align-middle px-0 mt-2 text-dark">
-                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de
-                  bord</span>
+              <a href="admin.php" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
 
             <li>
-              <a href="#" data-bs-toggle="collapse"
-                class="nav-link px-0 align-middle mt-2 text-dark">
-                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion
-                  des réservations</span>
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
+                <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
 
@@ -113,28 +191,28 @@ if(isset($_POST['contenu'])) {
             </li>
 
             <li>
-              <a href="materiel.php" 
-                class="nav-link px-0 align-middle mt-2 text-dark">
-                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du
-                  matériel</span>
-
+              <a href="materiel.php" class="nav-link px-0 align-middle">
+                <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
 
             <li>
-              <a href="#" 
-                class="nav-link px-0 align-middle mt-2 text-dark">
+              <a href="gest-reservation.php#stats" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
 
             <li>
-              <a href="#" class="nav-link px-0 align-middle mt-2 text-dark">
+              <a href="gest-reservation.php#consignes" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
           </ul>
-
+          <div class="mt-auto w-100">
+            <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+              <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -147,7 +225,6 @@ if(isset($_POST['contenu'])) {
               <div class="d-flex align-items-center flex-wrap">
                 <h2 class="mt-3">Gestion des réservations</h2>
               </div>
-              <h5 class="mt-3">3 Réservations en attente</h5>
             </div>
           </div>
           <!--Ton premier tableau-->
@@ -162,29 +239,31 @@ if(isset($_POST['contenu'])) {
                         <!-- Première ligne de ton tableau, tes boutons et tout alignés -->
                         <!-- Pour cocher décocher date -->
                         <p class="text-md-center mb-1 fw-semibold ">
-                          <input class="form-check-input mx-2" type="checkbox" value="" id="flexCheckChecked" checked>
-                          Aujourd'hui, 11 Mai 2025
+                          <input class="form-check-input mx-2" type="checkbox" value="" id="flexCheckChecked">
+                          Aujourd'hui, <input type="date" id="jour">
                         </p>
                         <!-- Réservation sélectionnée -->
                         <div class="row">
                           <div class="col-md-4"></div>
-                          <p class="text-center col-md-4 col-6 ms-5 ms-md-0 mb-1 fw-semibold text-dark p-2 rounded-3 mt-2 mt-sm-0"
-                            style="background-color: rgb(244, 244, 244);">2 Réservations sélectionnées</p>
+                          <p id="selection" class="text-center col-md-4 col-6 ms-5 ms-md-0 mb-1 fw-semibold text-dark p-2 rounded-3 mt-2 mt-sm-0"
+                            style="background-color: rgb(244, 244, 244);"> Réservations sélectionnées</p>
                           <div class="col-md-4"></div>
                         </div>
 
                         <div class="row gap-2 mt-2 ms-md-4 mt-sm-0">
-                          <button type="button" class="col-2 btn btn-light fw-medium">
-                            <i class="bi bi-pen-fill mx-1"></i><span class="d-none d-sm-inline">Signer</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium">
-                            <i class="bi bi-pencil-square mx-1"></i><span class="d-none d-sm-inline">Modifier</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium">
-                            <i class="bi bi-chat-left-text mx-1"></i><span class="d-none d-sm-inline">Commenter</span>
-                          </button>
-                          <button type="button" class="col-2 col-md-3 btn btn-light fw-medium text-danger">
-                            <i class="bi bi-trash-fill mx-1"></i><span class="d-none d-sm-inline">Supprimer</span>
+                          <form method="post">
+                            <button type="button" name="signer" class="col-2 btn btn-light fw-medium">
+                              <i class="bi bi-pen-fill mx-1"></i><span class="d-none d-sm-inline">Signer</span>
+                            </button>
+                            <button type="button" id="modifier" class="col-2 col-md-3 btn btn-light fw-medium">
+                              <i class="bi bi-pencil-square mx-1"></i><span class="d-none d-sm-inline">Modifier</span>
+                            </button>
+                            <button type="button" name="commenter" class="col-2 col-md-3 btn btn-light fw-medium">
+                              <i class="bi bi-chat-left-text mx-1"></i><span class="d-none d-sm-inline">Commenter</span>
+                            </button>
+                            <button type="button" name="" class="col-2 col-md-3 btn btn-light fw-medium text-danger">
+                              <i class="bi bi-trash-fill mx-1"></i><span class="d-none d-sm-inline">Supprimer</span>
+                          </form>
                           </button>
                         </div>
                       </th>
@@ -192,162 +271,73 @@ if(isset($_POST['contenu'])) {
                   </thead>
                   <!--Tout les autres lignes de ton tableau c'est toujours le meme code-->
                   <tbody>
-                    <!--Ligne 2-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-success mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
-                    <!--Ligne 3-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-danger mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
-                    <!--Ligne 4-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-success mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!--Ton tableau du bas la -->
-          <div class="row mt-3">
-            <div class="col-md-10 mt-3">
-              <div class="table-responsive rounded-3" style="border: 1px solid black;">
-                <table class="table mb-0">
-                  <thead>
-                    <!-- La premiere ligne avec juste le truc a cocher et tt -->
-                    <tr>
-                      <th colspan="5" class="p-3" style="background-color: #d9d9d9;">
-                        <div class="d-flex justify-content-between align-items-center">
-                          <p class="mb-1 fw-semibold">
-                            <input class="form-check-input mx-2" type="checkbox" value="" id="flexCheckChecked" checked>
-                            Aujourd'hui, 11 Mai 2025
+                    <?php
+                    $result = $conn->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet FROM reservation_etudiant UNION SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL FROM reservation_prof");
+                    $reservations = $result->fetch_all(MYSQLI_ASSOC);
+                    ?>
+                    <?php foreach ($reservations as $reservation): ?>
+                      <tr>
+                        <td>
+                          <p class="d-flex mt-3"><input class="form-check-input mx-2 reservation-checkbox" type="checkbox">Réservation de <?= htmlspecialchars($reservation['materiel']) ?></p>
+                        </td>
+                        <td class="mt-4">
+                          <p class="d-flex p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
+                            <i class="bi bi-circle-fill mx-2" style="<?php if ($reservation['nom_projet']) {
+                                                                        echo 'color: #12A19A;';
+                                                                      } else {
+                                                                        echo 'color: #8B1E3F;';
+                                                                      } ?>"></i><?= htmlspecialchars($reservation['Nom']) ?> <?= htmlspecialchars($reservation['Prenom']) ?>
                           </p>
-                        </div>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!--Ligne 2-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-success mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
-                    <!--Ligne 3-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-danger mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
-                    <!--Ligne 4-->
-                    <tr>
-                      <td>
-                        <p class="mt-3"><input class="form-check-input mx-2" type="checkbox" checked>Réservation de la
-                          salle 212</p>
-                      </td>
-                      <td class="mt-4">
-                        <p class="p-2 mt-2 rounded fw-semibold texte" style="background-color: #aedfdd;">
-                          <i class="bi bi-circle-fill text-success mx-2"></i>Domingues Clara
-                        </p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>13 : 30 - 15:00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-clock mx-2"></i>04 : 30 : 00</p>
-                      </td>
-                      <td>
-                        <p class="mt-3"><i class="bi bi-three-dots-vertical"></i></p>
-                      </td>
-                    </tr>
+                        </td>
+                        <form method="post">
+                          <td>
+                            <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i>
+                              <input type="time" name="heure_debut" value="<?= htmlspecialchars($reservation['heure_debut']) ?>" disabled>
+                              <span> - </span>
+                              <input type="time" name="heure_fin" value="<?= htmlspecialchars($reservation['heure_fin']) ?>" disabled>
+                            </p>
+                          </td>
+                          <td>
+                            <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i><input type="date" name="date_reservation" value="<?= htmlspecialchars($reservation['Date_reservation']) ?>" readonly>
+                              <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                              <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                              <button type="submit" id="valid" name="validmodif" class="mx-2" style="display:none;">Valider</button>
+                            </p>
+                          </td>
+                        </form>
+                        <td>
+                          <div class="dropdown">
+                            <button class="btn btn-light" data-bs-toggle="dropdown">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <form method="post">
+                                <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                                <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                                <input type="hidden" name="accepter" value="accepter">
+                                <button type="submit" class="dropdown-item">Accepter</button>
+                              </form>
+                              <form method="post">
+                                <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                                <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                                <input type="hidden" name="refuser" value="refuser">
+                                <button type="submit" class="dropdown-item">Refuser</button>
+                              </form>
+                              <form method="post">
+                                <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
+                                <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
+                                <input type="hidden" name="supprimer" value="supprimer">
+                                <button type="submit" class="dropdown-item">Supprimer</button>
+                              </form>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    <?php endforeach ?>
                   </tbody>
                 </table>
               </div>
             </div>
-
           </div>
           <!-- Bouton  -->
           <div class="row">
@@ -365,90 +355,138 @@ if(isset($_POST['contenu'])) {
 
           <div class=" mt-5 col-12">
             <h2 class="my-3 ms-3">Statistiques</h2>
-            <div class="row mb-5">
-              <input id="calendrier" class="col-auto col-md-2 btn border rounded ms-5 ms-md-4" type="month">
-            </div>
 
             <div class="row gap-2 ms-3">
               <div class="col-8 col-md-4 card p-2">
                 <p>Total des réservations : </p>
                 <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <h3 id="nb-reservation">10 réservations</h3>
+                    <h3 id="nb-reservation">
+                      <?php
+                      $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
+                      $stmt->execute();
+                      $stmt->bind_result($total);
+                      $stmt->fetch();
+                      $stmt->close();
+                      echo $total;
+                      ?> réservations</h3>
                   </div>
                 </div>
               </div>
 
               <div class="col-8 col-md-4 card p-2">
-                <p>Réservation à venir : </p>
+                <p>Réservation validées : </p>
                 <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <h3 id="nb-venir">15 réservations</h3>
+                    <h3 id="nb-venir">
+                      <?php
+                      $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total;");
+                      $stmt->execute();
+                      $stmt->bind_result($total);
+                      $stmt->fetch();
+                      $stmt->close();
+                      echo $total;
+                      ?> réservations</h3>
                   </div>
                 </div>
               </div>
 
-              <div class="col-8 col-md-2 card p-2">
+              <div id="stats" class="col-8 col-md-2 card p-2">
                 <p>Article le plus réservé : </p>
+                <?php
+                // le matériel le plus demandé
+                $stmt = $conn->prepare("SELECT materiel, COUNT(*) AS total FROM ( SELECT materiel FROM reservation_etudiant UNION ALL SELECT materiel FROM reservation_prof) AS reservations
+                      GROUP BY materiel ORDER BY total DESC LIMIT 1;");
+                $stmt->execute();
+                $stmt->bind_result($materiel, $total);
+                $stmt->fetch();
+                $stmt->close();
+
+                // Récupérer l'image du matériel obtenu
+                $stmt2 = $conn->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
+                $stmt2->bind_param("s", $materiel);
+                $stmt2->execute();
+                $stmt2->bind_result($Image_un);
+                $stmt2->fetch();
+                $stmt2->close();
+                ?>
+
                 <div class="card-body">
                   <div class="d-flex gap-1 align-items-center">
-                    <h3 id="nb-article"></h3>
-                    <img src="../IMG/images/IMG_0016.JPG" id="photo-article">
-                    <h4 id="nom-article">Micro</h4>
+                    <img src="../IMG/images/<?= htmlspecialchars($Image_un) ?>" id="photo-article" alt="<?= htmlspecialchars($materiel) ?>">
+                    <h4 id="nom-article"><?= htmlspecialchars($materiel) ?></h4>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="row ms-3 mt-5">
-              <div class="card col-11 col-md-8">
-                <div class="row">
-                  <h5 class="col-8 ms-2 mt-3">Statistiques des réservations ce mois-ci:</h5>
-                  <select class="col-3 p-1 mt-2">
-                    <option selected>Profil</option>
-                    <option value="Etu">Étudiants</option>
-                    <option value="Prof">Professeurs</option>
-                  </select>
+            <div class="col-12 rounded my-3 p-5">
+              <?php
+              // Récupération des réservations par mois
+              $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+              $reservationsParMois = array_fill(0, 12, 0);
+
+              $stmt = $conn->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total FROM (SELECT Date_reservation FROM reservation_etudiant UNION ALL SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
+              $stmt->execute();
+              $result = $stmt->get_result();
+              while ($row = $result->fetch_assoc()) {
+                $reservationsParMois[$row['mois'] - 1] = $row['total'];
+              }
+              $stmt->close();
+              ?>
+              <div class="row ms-3 mt-5">
+                <div class="card col-11 col-md-8">
+                  <div class="row align-items-center">
+                    <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
+                  </div>
+
+                  <div class="col-12 rounded my-3 p-4">
+                    <div class="text-center">
+                      <div class="d-flex gap-3 align-items-end justify-content-center" style="height: 300px;">
+                        <?php foreach ($reservationsParMois as $index => $total): ?>
+                          <div class="bar-vertical bg-primary rounded" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
+                            <small class="d-block mt-2"><?= $months[$index] ?></small>
+                          </div>
+                        <?php endforeach; ?>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="col-12 rounded my-3 p-5 bg-secondary">statistiques à faire en back
+                <div class="pdf col-auto col-md-3 mt-2 mt-md-0 text-end">
+                  <a href="#" download id="telecharger" class="text-black">
+                    Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
+                  </a>
                 </div>
-              </div>
-
-              <div class="pdf col-auto col-md-3 mt-2 mt-md-0">
-                <a href="#" download="" id="telecharger" class="text-black ">
-                  Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
-                </a>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="d-flex justify-content-between custom-bg-2 mt-5">
-          <h2 class="consigne">Gestions des consignes de sécurité</h2>
-          <div class="container">
-            <div class="d-flex custom-back m-0">
-              <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
-              <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
-              <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
-              <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
-              <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
-              <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
-              <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
-              <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
-              <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
-              <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
-              <button id="voir" class="visu">Visualiser</button>
-            </div>
-            <hr id="ligne">
-            <form action="gest-reservation.php" method="post">
-              <div contenteditable="true" id="zone-ecriture">
-                <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+          <div class="d-flex justify-content-between custom-bg-2 mt-5">
+            <h2 id="consignes" class="consigne">Gestions des consignes de sécurité</h2>
+            <div class="container">
+              <div class="d-flex custom-back m-0">
+                <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
+                <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
+                <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
+                <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
+                <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
+                <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
+                <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
+                <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
+                <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
+                <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
+                <button id="voir" class="visu">Visualiser</button>
               </div>
-              <button id="enregistrer">Enregistrer</button>
-              <div id="message"></div>
-            </form>
-          </div>
+              <hr id="ligne">
+              <form action="gest-reservation.php" method="post">
+                <div contenteditable="true" id="zone-ecriture">
+                  <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+                </div>
+                <button id="enregistrer">Enregistrer</button>
+                <div id="message"></div>
+              </form>
+            </div>
           </div>
       </section>
     </div>

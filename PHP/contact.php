@@ -1,8 +1,70 @@
 <?php
 
-include 'config.php';
+include('config.php');
 session_start();
+<<<<<<< HEAD
+=======
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
+// Vérification de la connexion utilisateur
+if (!isset($_SESSION['utilisateur'])) {
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
+}
+
+// Récupération de l'email de l'utilisateur connecté
+$email_utilisateur = $_SESSION['utilisateur']['Adresse_email'];
+
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nom = htmlspecialchars(trim($_POST['nom']));
+    $email = htmlspecialchars(trim($_POST['email']));
+    $message = htmlspecialchars(trim($_POST['message']));
+
+    // Validation des champs
+    if (empty($nom) || empty($email) || empty($message)) {
+        echo "Erreur : Tous les champs sont obligatoires.";
+        exit();
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "Erreur : Adresse email invalide.";
+        exit();
+    }
+
+    $mail = new PHPMailer(true);
+
+    try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'materiel.iut@gmail.com';
+        $mail->Password = 'obmv hoac gbrw ftwz'; // ⚠️ À remplacer par un mot de passe sécurisé
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+        $mail->addAddress($email_utilisateur);
+
+        $mail->Subject = 'Contact site réservation';
+        $mail->Body = "Nom : $nom\nEmail : $email\n\nMessage :\n$message";
+
+        if ($mail->send()) {
+            $success = "Votre message a été envoyé avec succès.";
+        } else {
+            $error = "Erreur lors de l'envoi de votre message. Veuillez réessayer.";
+        }
+    } catch (Exception $e) {
+        echo "Erreur : " . $mail->ErrorInfo;
+    }
+}
+>>>>>>> 42a77b16023d4d87c81ab35d31b4ebff692eaa20
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -33,21 +95,24 @@ session_start();
                 <div class="shadow-sm">
                     <div class="card-body p-4">
                         <h2 class="text-center mb-4">Contactez-nous</h2>
-                        <form>
+                        <?php if (isset($error)) { echo "<div class='alert alert-danger'>$error</div>"; } ?>
+                        <?php if (isset($success)) { echo "<div class='alert alert-success'>$success</div>"; } ?>
+
+                        <form method="post">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="name" placeholder="Votre nom" required>
+                                <input type="text" name="nom" class="form-control" id="name" value="<?= strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Adresse email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Votre adresse email" required>
+                                <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) ?>" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" rows="5" placeholder="Votre message" required></textarea>
+                                <textarea name="message" class="form-control" id="message" rows="5" required></textarea>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Envoyer</button>
+                                <button type="submit" class="btn btn-info">Envoyer</button>
                             </div>
                         </form>
                     </div>
