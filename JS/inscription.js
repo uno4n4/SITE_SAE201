@@ -79,7 +79,7 @@ document.getElementById("btn-etudiant").onclick = function() {
     
             <button type="submit" class="submit">Soumettre</button>
         </div>
-                <div id="formEleveError" style="color:red; display:none"></div>
+        <div id="formEleveError" style="color:red; display:none"></div>
     </form>`;
      const emailInput = document.getElementById('Email');
     const emailError = document.getElementById('emailError');

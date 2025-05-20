@@ -101,10 +101,6 @@ elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
   }
 }
 
-else {
-  echo "Aucun formulaire valide soumis.";
-}
-
 $conn->close();
 
 ?>
@@ -153,13 +149,13 @@ $conn->close();
           <!-- Bloc Informations -->
           <div>
             <div class="fw-bold mb-2">INFORMATIONS</div>
-            <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+            <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
           </div>
     
           <!-- Bloc Contactez-nous -->
           <div>
             <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-            <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+            <a href="contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
           </div>
         </div>
       </div>

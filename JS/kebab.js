@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   kebabIcon.addEventListener("click", function () {
     contentAccept.style.display = "block";
-    const pseudos = Array.from(check).filter(c => c.checked).map(c => c.getAttribute('data-pseudo'));
+    const pseudos = Array.from(check).filter(c => c.checked).map(c => c.getAttribute('data-nom'));
     contentAccept.innerHTML = `
       <form action="../PHP/gest-comptes.php" method="post">
         ${pseudos.map(pseudo => `<input type="hidden" name="choix[]" value="${pseudo}">`).join('')}
@@ -37,28 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /* CHECKBOX */
-
-document.addEventListener("DOMContentLoaded", function() {
-  const checkboxes = document.querySelectorAll('.compte-checkbox');  // Sélectionne toutes les checkboxes
-  const display = document.getElementById('selection'); // La div où on affiche le comptage
-  
-  // Fonction pour mettre à jour le nombre de comptes sélectionnés
-  function updateSelectionCount() {
-    const selectedCount = Array.from(checkboxes).filter(checkbox => checkbox.checked).length;
-    display.textContent = `${selectedCount} compte${selectedCount !== 1 ? 's' : ''} sélectionné${selectedCount !== 1 ? 's' : ''}`;
-  }
-
-  // Ajoute un événement sur chaque checkbox pour mettre à jour le comptage à chaque changement
-  checkboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateSelectionCount);
-  });
-});
-
-
-
-
-
-
 
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".kebab-icon").forEach(icon => {

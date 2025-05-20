@@ -228,7 +228,7 @@ foreach ($tables as $table) {
                             <div class="card-body">
                               <hr class="me-2">
                               <div class="d-flex justify-content-between gap-4">
-                                <input type="hidden" name="Nom" value="<?= htmlspecialchars($user['Nom']) ?>">
+                                <input type="hidden" name="Nom" data-nom="<?= htmlspecialchars($user['Nom']) ?>">
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 ms-2" id="accepter1" name="accepter1">
                                   <i class="fa-solid fa-circle-check"></i>
                                 </button>
@@ -310,8 +310,6 @@ foreach ($tables as $table) {
 
                   <!-- Partie droite : cwsv et ajouter un compte -->
                   <div class="d-flex align-items-center">
-                    <!-- Texte cwsv -->
-                    <div class="selection me-3 mx-3" id="selection">O compte(s) sélectionnés</div>
                     <!-- Ligne verticale -->
                     <div class="ligne-verticale d-none d-md-block mx-3"></div>
                     <!-- Bouton Ajouter un compte -->
@@ -363,7 +361,7 @@ foreach ($tables as $table) {
                             <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
                               <div class="input-group">
                                 <div class="input-group-prepend">
-                                  <input type="checkbox" name="choix[]" class="compte-checkbox">
+                                  <input type="hidden" name="choix[]">
                                 </div>
                               </div>
                               <span class="kebab-icon">

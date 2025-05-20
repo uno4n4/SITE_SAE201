@@ -95,7 +95,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
                 <input type="password" id="Mdp" name="Mdp" class="form-control" required><br>
       
                 <button type="submit" class="btn submit">Soumettre</button>
-                <a href="mdp-oublie.php">
+                <a href="mdp-oublie.php" class="text-decoration-none">
                   <button type="button" class="btn mdp">Mot de passe oublié ?</button>
                 </a>
               </div>
@@ -118,13 +118,13 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
             <!-- Bloc Informations -->
             <div>
               <div class="fw-bold mb-2">INFORMATIONS</div>
-              <a href="#" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
+              <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
             </div>
       
             <!-- Bloc Contactez-nous -->
             <div>
               <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-              <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
+              <a href="contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
             </div>
           </div>
         </div>

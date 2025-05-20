@@ -2,11 +2,6 @@
 
 include 'config.php';
 session_start();
-
-if (!isset($_SESSION['utilisateur'])) {
-    echo "Erreur : Utilisateur non connecté.";
-    exit();
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -16,6 +11,7 @@ if (!isset($_SESSION['utilisateur'])) {
     <meta name="description" content="Page de contact stylée avec Bootstrap">
     <title>Contact</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../CSS/parcours-user.css">
     <link rel="stylesheet" type="text/css" href="../CSS/style.css">
 </head>
@@ -26,59 +22,11 @@ if (!isset($_SESSION['utilisateur'])) {
                 <a class="navbar-brand" href="../PHP/accueil.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
-
-                <div class="d-flex align-items-center gap-2" id="navbar-nav">
-                    <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
-                        <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
-                                <img src="../IMG/boite.png" alt="boite mes emprunts">
-                                <span class="spantext">Mes Emprunts</span>
-                            </a>
-                        </li>
-                        <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
-                                <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
-                                <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
-                            </a>
-                            <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $row = $result->fetch_assoc();
-
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle bg-warning"></span>
-                                <span class="spantext">Etudiant(e)</span>
-                            </span>';
-                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
-
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
-                                <span class="spantext">Enseignant(e)</span>
-                            </span>';
-                                }
-                            }
-                            ?>
-
-                        </li>
-                    </ul>
-
-                    <a class="btn btn-primary bouton-co" id="deconnexion" href="../PHP/logout.php" role="button">Se déconnecter</a>
-                </div>
             </div>
         </nav>
         </section>
 
+          <a href="../index.html" class="btn border rounded text-white ms-3 mt-3 mb-3 bouton-co"><i class="fa-solid fa-arrow-left-long"></i> Retour en arrière</a>
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -124,7 +72,7 @@ if (!isset($_SESSION['utilisateur'])) {
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="#" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>
