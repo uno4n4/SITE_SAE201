@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 18 mai 2025 à 21:37
+-- Généré le : mer. 21 mai 2025 à 18:49
 -- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.1.25
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
-CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `utilisateur`;
 
 -- --------------------------------------------------------
 
@@ -29,6 +27,7 @@ USE `utilisateur`;
 -- Structure de la table `commentaires_eleve`
 --
 
+DROP TABLE IF EXISTS `commentaires_eleve`;
 CREATE TABLE `commentaires_eleve` (
   `id` int(11) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -51,6 +50,7 @@ INSERT INTO `commentaires_eleve` (`id`, `Pseudo`, `date_comment`, `commentaire`,
 -- Structure de la table `commentaires_prof`
 --
 
+DROP TABLE IF EXISTS `commentaires_prof`;
 CREATE TABLE `commentaires_prof` (
   `id` int(11) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -66,6 +66,7 @@ CREATE TABLE `commentaires_prof` (
 -- Structure de la table `consigne`
 --
 
+DROP TABLE IF EXISTS `consigne`;
 CREATE TABLE `consigne` (
   `id` int(11) NOT NULL,
   `contenu` text NOT NULL
@@ -76,7 +77,7 @@ CREATE TABLE `consigne` (
 --
 
 INSERT INTO `consigne` (`id`, `contenu`) VALUES
-(1, '\n                <p id=\"ecrire\" name=\"contenu\">bonjour</p>\n              ');
+(1, '\n                    <p id=\"ecrire\" name=\"contenu\" style=\"text-align: center;\">bonjour</p>\n                  ');
 
 -- --------------------------------------------------------
 
@@ -84,6 +85,7 @@ INSERT INTO `consigne` (`id`, `contenu`) VALUES
 -- Structure de la table `inscription_admin`
 --
 
+DROP TABLE IF EXISTS `inscription_admin`;
 CREATE TABLE `inscription_admin` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -96,12 +98,20 @@ CREATE TABLE `inscription_admin` (
   `Statut` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Déchargement des données de la table `inscription_admin`
+--
+
+INSERT INTO `inscription_admin` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
+('zaidi', 'fares', '0000-00-00', 'fares.zaidi@univ-eiffel.fr', '', '', 'zaidi.fares', '$2y$10$lfvm5F4jj4D12.RkA86uguBUkkMMW6HFpS9ChesJCE.z/g2xweUpS', 'accepté');
+
 -- --------------------------------------------------------
 
 --
 -- Structure de la table `inscription_agent`
 --
 
+DROP TABLE IF EXISTS `inscription_agent`;
 CREATE TABLE `inscription_agent` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -119,7 +129,8 @@ CREATE TABLE `inscription_agent` (
 --
 
 INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('prsn', 'test', '0000-00-00', 'testpersonne@gmail.com', '', '', 'prsn.test', '$2y$10$V1lWwcfDt1pjl5uaQQsFOeJDTFZEwijsNYqkxMOPAoT8BP8jXHeIS', 'accepté');
+('prsn', 'test', '0000-00-00', 'testpersonne@gmail.com', '', '', 'prsn.test', '$2y$10$V1lWwcfDt1pjl5uaQQsFOeJDTFZEwijsNYqkxMOPAoT8BP8jXHeIS', 'accepté'),
+('tomas', 'tom', '2025-05-01', 'tom@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', 'tom', '$2y$10$jxL02VcfFYEBIMSlvxrE9uMaSvsSm6KUuxC8o4OaYVCVbzYW5B4Nu', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -127,6 +138,7 @@ INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_eleve`
 --
 
+DROP TABLE IF EXISTS `inscription_eleve`;
 CREATE TABLE `inscription_eleve` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -148,11 +160,11 @@ CREATE TABLE `inscription_eleve` (
 --
 
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('alexandre', 'alexandre', '2025-05-01', 'alex@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI3', 'TD1', 'TPE', 'alex', '$2y$10$0T4CCQEHkapNdamRYx/O3uUXWRuZOJO6n9r/WkR/ggItJE5qH1rDC', 'accepté'),
 ('gilet', 'amel', '2025-05-01', 'Aamel2432@gmail.com', '060606076', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'amel', '$2y$10$AARSlK8gKWQeIkTOgK6mvOQS4EnV8NBYm1wKdmMECZcfhbwN/lUpa', 'accepté'),
-('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$hDTLctiXMONI1w0DmzyWQeCbHSszfhWIe7c8FFIR1nurE/mtTa9CW', 'accepté'),
+('clemence', 'clemence', '0000-00-00', 'clemence@edu.univ-eiffel.fr', '', '', '', '', '', '', 'clemence.clemence', '$2y$10$yffz5GIL1QkfJXT/7BnoEuem/nOquI4JR.SAXqAYC.o.Uo.Gq/HB6', 'accepté'),
+('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$bhq1GSF8dgwo3IUInzAKvO/LuduRB8EtNsI9mGmKfYDfnx3EsxWUm', 'accepté'),
 ('mathilda', 'mathile', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'mathilde', '$2y$10$QuTpBIhstDsLnbb1pgpN2./NiAeB5AJayVNuKxWvDj9N1GmSz0wEe', 'accepté'),
-('test', 'lool', '2025-05-05', 'test@gmail.com', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'test1234', '$2y$10$6B1WqWWvXBkS20GhI2x/yuuM7WvAij5W9ksbI/mw37gt0.ao4wyc2', 'accepté');
+('yacine', 'yacine', '2025-05-01', 'yacine@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD1', 'TPA', 'yacine1', '$2y$10$vnooSPuPIg1y0FLFraEQZ.Ey/m6JvE0M8Pq6Wq/5chpLx2qvYgsMa', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -160,6 +172,7 @@ INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_prof`
 --
 
+DROP TABLE IF EXISTS `inscription_prof`;
 CREATE TABLE `inscription_prof` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -180,8 +193,9 @@ INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_emai
 ('chloe', 'chloe', '2025-05-01', 'chloe@gmail.com', '0606060606', '1 rue de la rue', 'chloe', '$2y$10$IKs2ENJq9sZGJ9yaa7FxN.Mg7AcHVUrelMqCq6PHscQjijFMcLjya', 'accepté'),
 ('mathis', 'mathis', '2025-05-01', 'test@gmail.com', '0606060606', '1 rue de la rue', 'diabasmr', '$2y$10$b9Ix5AGRkhIKOdU1LH2zLe3nTMcilHgG9aplbwW1RwfbcwL79102i', 'accepté'),
 ('domingues', 'clara', '0000-00-00', 'clara@gmail.com', '', '', 'domingues.clara', '$2y$10$CccikOy/.mMjJADYChtpEerYfAv6xnVK4UK47cfGRx/thwnq5gQ8u', 'accepté'),
-('test', 'encoretest', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', 'encoretestettt', '$2y$10$CT8gys6jHuExo09suz52CebowSc9icTKtKscz8MP5GPpIHrCubvty', 'accepté'),
-('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé');
+('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé'),
+('tir', 'fouad', '2025-05-01', 'tir@univ-eiffel.fr', '0606060606', '1 rue de la rue', 'tir', '$2y$10$/aNGTHz1Za/W9wVYvFqqRebuAYWIEac9gNZ2BHKvffn6gMJep8nX6', 'accepté'),
+('yacine', 'yacine', '2025-05-01', 'yacine@univ-eiffel.fr', '0606060606', '1 rue de la rue', 'yacine', '$2y$10$NijuQ4MAGiCL.UbwLTk/2OLI/D/.dF1.5OzcrTdsVxEt0qJonXmsu', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -189,6 +203,7 @@ INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_emai
 -- Structure de la table `materiel`
 --
 
+DROP TABLE IF EXISTS `materiel`;
 CREATE TABLE `materiel` (
   `Nom` varchar(50) NOT NULL,
   `Description_materiel` varchar(500) DEFAULT NULL,
@@ -215,7 +230,7 @@ INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`,
 ('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Oculus cable link (PC VR)', 'Profitez d\'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.', 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Salle', 1),
@@ -235,6 +250,7 @@ INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`,
 -- Structure de la table `reservation_etudiant`
 --
 
+DROP TABLE IF EXISTS `reservation_etudiant`;
 CREATE TABLE `reservation_etudiant` (
   `Id` int(100) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -266,6 +282,7 @@ INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudia
 -- Structure de la table `reservation_prof`
 --
 
+DROP TABLE IF EXISTS `reservation_prof`;
 CREATE TABLE `reservation_prof` (
   `Id` int(100) NOT NULL,
   `Nom` varchar(50) DEFAULT NULL,
