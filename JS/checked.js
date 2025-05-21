@@ -7,6 +7,25 @@ function reservationSelect() {
     const Nbselection = document.getElementById('selection');
     Nbselection.textContent = checkedreserve.length + ' Réservations sélectionnées';
 }
+document.addEventListener('DOMContentLoaded', () => {
+    const table = document.querySelector('table'); // ou remplace par un ID si t’as
+
+    table.addEventListener('click', function (e) {
+        if (e.target.closest('.modifier-btn')) {
+            e.preventDefault();
+
+            const btn = e.target.closest('.modifier-btn');
+            const tr = btn.closest('.ligne-materiel');
+            const inputs = tr.querySelectorAll('.champ-input');
+
+            inputs.forEach(input => {
+                input.disabled = false;
+                $disabled = '';
+            });
+        }
+    });
+});
+
 
 document.getElementById('modifier').addEventListener('click', function (e) {
     e.preventDefault(); // Pour éviter un submit si c’est dans un form
@@ -15,6 +34,7 @@ document.getElementById('modifier').addEventListener('click', function (e) {
     const checkedBoxes = document.querySelectorAll('.reservation-checkbox:checked');
     const valid = document.getElementById('valid');
     valid.style.display = 'block';
+
 
     checkedBoxes.forEach(checkbox => {
         // Récupère la ligne <tr> parente
@@ -62,8 +82,5 @@ function aujourdhui() {
         }
     });
 }
-
-
-
 
 updateCheckedCount(); // Initialisation

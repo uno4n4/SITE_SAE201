@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 21 mai 2025 à 18:49
+-- Généré le : mer. 21 mai 2025 à 20:04
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
+CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `utilisateur`;
 
 -- --------------------------------------------------------
 
@@ -230,7 +232,7 @@ INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`,
 ('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Oculus cable link (PC VR)', 'Profitez d\'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.', 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Salle', 1),
@@ -265,16 +267,22 @@ CREATE TABLE `reservation_etudiant` (
   `participants` varchar(600) DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL,
-  `accepte` varchar(3) DEFAULT 'oui'
+  `signature_eleve` varchar(100) DEFAULT NULL,
+  `signature_admin` varchar(100) DEFAULT NULL,
+  `accepte` varchar(3) DEFAULT 'nnn'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `reservation_etudiant`
 --
 
-INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`, `accepte`) VALUES
-(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL, 'oui');
+INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature_eleve`, `signature_admin`, `accepte`) VALUES
+(2, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-07', '08:30:00', '17:00:00', 'Cornelio', 'Amel, Maxence, Isaac', 'Casque réalité virtuelle 1', 1, 'Samoura Diaba', NULL, 'nnn'),
+(3, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-14', '11:46:00', '13:50:00', 'Cours', '.', 'Salle 212', 1, 'Samoura Diaba', NULL, 'oui'),
+(4, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-07-17', '20:32:00', '22:32:00', 'Cours', '.', 'Drone', 1, 'Samoura Diaba', NULL, 'non'),
+(5, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-01-08', '11:33:00', '15:30:00', 'Jeu', '.', 'Set réalité virtuelle blanc', 1, 'Samoura Diaba', NULL, 'oui'),
+(6, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-21', '19:22:00', '22:28:00', 'Podcast', '.', 'Micro', 1, 'Samoura Diaba', NULL, 'oui'),
+(9, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-30', '08:33:00', '17:33:00', 'TEST', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, 'Samoura Diaba', NULL, 'oui');
 
 -- --------------------------------------------------------
 
@@ -294,7 +302,8 @@ CREATE TABLE `reservation_prof` (
   `heure_fin` time DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL,
+  `signature_prof` varchar(50) DEFAULT NULL,
+  `signature_admin` varchar(50) DEFAULT NULL,
   `accepte` varchar(3) DEFAULT 'oui'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

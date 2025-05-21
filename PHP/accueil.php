@@ -4,16 +4,24 @@ include 'config.php';
 
 session_start();
 
+$materiaux = []; // on initialise
+
 if (!isset($_SESSION['utilisateur'])) {
     echo "Erreur : Utilisateur non connecté.";
     exit();
 }
 
-// Exécution de la requête avec PDO
-$stmt = $pdo->query("SELECT * FROM materiel");
+if (isset($_POST['search'])) {
+    $motcle = '%' . $_POST['motcle'] . '%';
 
-// Utilisation de fetchAll pour récupérer les résultats
-$materiaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("SELECT * FROM materiel WHERE nom LIKE ? OR categorie LIKE ? OR Description_materiel LIKE ?");
+    $stmt->execute([$motcle, $motcle, $motcle]);
+
+    $materiaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $stmt = $pdo->query("SELECT * FROM materiel");
+    $materiaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 ?>
 
@@ -60,30 +68,30 @@ $materiaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-$stmt->execute([$_SESSION['utilisateur']['Nom']]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+                            $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                            $stmt->execute([$_SESSION['utilisateur']['Nom']]);
+                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($row['total'] > 0) {
-    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            if ($row['total'] > 0) {
+                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
         <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
         <span class="spantext">Étudiant(e)</span>
     </span>';
-// Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-} else {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-    $stmt->execute([$_SESSION['utilisateur']['Nom']]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                            } else {
+                                $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                                $stmt->execute([$_SESSION['utilisateur']['Nom']]);
+                                $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                if ($row['total'] > 0) {
+                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
             <span class="spantext">Enseignant(e)</span>
         </span>';
-    }
-}
-?>
+                                }
+                            }
+                            ?>
 
                         </li>
                     </ul>
@@ -106,16 +114,16 @@ if ($row['total'] > 0) {
                             </a>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" type="button">Action</button></li>
-                            <li><button class="dropdown-item" type="button">Another action</button></li>
-                            <li><button class="dropdown-item" type="button">Something else here</button></li>
+                            <li><button class="dropdown-item" type="button">Matériel</button></li>
+                            <li><button class="dropdown-item" type="button">Caméra</button></li>
+                            <li><button class="dropdown-item" type="button">Salle</button></li>
                         </ul>
                     </div>
                 </div>
 
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-info" type="submit">Search</button>
+                <form method="post" class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" name="motcle" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-info" name="search" type="submit">Search</button>
                 </form>
 
             </div>
@@ -145,7 +153,7 @@ if ($row['total'] > 0) {
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($materiel['Nom']) ?></h5>
                             <p class="card-text"><?= htmlspecialchars($materiel['Description_materiel']) ?></p>
-                            <a href="../PHP/reservation.php?id=<?= htmlspecialchars($materiel['Nom']) ?>&quantite=1" class="btn btn-info ms-2">Réserver</a>
+                            <a href="../PHP/reservation.php?id=<?= htmlspecialchars($materiel['Nom']) ?>&quantite=1" class="btn btn-info ms-2" <?php if ($materiel['disponibilite'] == 0) echo 'disabled'; ?>>Réserver</a>
                         </div>
                     </div>
                 </div>
@@ -153,15 +161,78 @@ if ($row['total'] > 0) {
         </div>
     </section>
     <?php
-    if (isset($_POST["valider"])) {
-        //un msg de confirmation + mail : voir tpsession
-        echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-                <b class="mb-2">MERCI POUR VOTRE RÉSERVATION</b>
-                <p class="mb-4">Vous pouvez la consulter dans la page Mes emprunts</p>
-                <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
-            </div>';
+if (isset($_POST["validerE"])) {
+    try {
+        $stmt = $pdo->prepare("INSERT INTO reservation_etudiant (
+                Pseudo, Nom, Prenom, Num_etudiant, Adresse_email,
+                Date_reservation, heure_debut, heure_fin, nom_projet,
+                participants, materiel, quantite, signature_eleve
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        $stmt->execute([
+            $_SESSION['utilisateur']['Pseudo'],
+            $_POST['nom'],
+            $_POST['prenom'],
+            $_POST['numcarteetud'],
+            $_POST['email'],
+            $_POST['date'],
+            $_POST['heureRetrait'],
+            $_POST['heureRetour'],
+            $_POST['nomProjet'],
+            $_POST['participants'],
+            $_POST['nom_produit'],
+            $_POST['quantite'],
+            $_POST['signature_eleve'] // à bien sécuriser selon le format
+        ]);
+
+        echo '
+        <div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <b class="mb-2">MERCI POUR VOTRE RÉSERVATION</b>
+            <p class="mb-4">Vous serez informé(e)s par mail lors de sa validation</p>
+            <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
+        </div>';
+    } catch (PDOException $e) {
+        echo "Erreur lors de l'insertion (étudiant) : " . $e->getMessage();
     }
-    ?>
+}
+
+if (isset($_POST["validerP"])) {
+    try {
+        $stmt = $pdo->prepare("INSERT INTO reservation_prof (
+                Nom, Prenom, Pseudo, Adresse_email,
+                Date_reservation, heure_debut, heure_fin,
+                materiel, quantite, signature_prof
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        $stmt->execute([
+            $_POST['nom'],
+            $_POST['prenom'],
+            $_SESSION['utilisateur']['Pseudo'],
+            $_POST['email'],
+            $_POST['date'],
+            $_POST['heureRetrait'],
+            $_POST['heureRetour'],
+            $_POST['nom_produit'],
+            $_POST['quantite'],
+            $_POST['signature_prof']
+        ]);
+
+        echo '
+        <div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <b class="mb-2">MERCI POUR VOTRE RÉSERVATION</b>
+            <p class="mb-4">Vous serez informé(e)s par mail lors de sa validation</p>
+            <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
+        </div>';
+    } catch (PDOException $e) {
+        echo "Erreur lors de l'insertion (professeur) : " . $e->getMessage();
+    }
+}
+?>
+
 </body>
 
 </html>

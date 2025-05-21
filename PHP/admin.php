@@ -182,9 +182,9 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                 <div class="col-12 col-lg-6 d-flex flex-column">
 
                  <?php
-$stmt = $pdo->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant 
+$stmt = $pdo->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant WHERE accepte = 'nnn'
                       UNION 
-                      SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_prof");
+                      SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_prof WHERE accepte = 'nnn'");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php foreach ($users as $user): ?>
@@ -214,7 +214,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </form>
 
                           </div>
-                          <a href="modifier-reservation.php?id=<?= $id_reservation ?>" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-reser">Modifier la réservation</a>
+                          <a href="gest-reservation.php?id=<?= $id_reservation ?>" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-reser">Modifier la réservation</a>
                         </div>
                       </div>
                     </div>
