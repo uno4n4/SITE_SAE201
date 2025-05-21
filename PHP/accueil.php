@@ -67,8 +67,8 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
 
                             if ($row['total'] > 0) {
                                 echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle bg-warning"></span>
-                                <span class="spantext">Etudiant(e)</span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
+                                <span class="spantext">Étudiant(e)</span>
                             </span>';
                             // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
                             } else {
@@ -80,7 +80,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
 
                                 if ($row['total'] > 0) {
                                     echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="rounded-circle" style="background-color: #8B1E3F;"></span>
                                 <span class="spantext">Enseignant(e)</span>
                             </span>';
                                 }
@@ -171,7 +171,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                 <!-- Bloc Contactez-nous -->
                 <div>
                     <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
+                    <a href="contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
                 </div>
             </div>
         </div>

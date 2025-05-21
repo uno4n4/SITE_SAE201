@@ -140,7 +140,7 @@ if (isset($_POST["supprime"])) {
         if (isset($_SESSION['utilisateur']) && isset($conn)) {
           $nom = $_SESSION['utilisateur']['Nom'];
 
-          // Étudiant
+          // ADMIN :
           $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
           $stmt->bind_param("s", $nom);
           $stmt->execute();
@@ -208,11 +208,6 @@ if (isset($_POST["supprime"])) {
               </a>
             </li>
           </ul>
-          <div class="mt-auto w-100">
-            <a href="../HTML/setting.html" class="nav-link align-middle px-0">
-              <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-            </a>
-          </div>
         </div>
       </div>
 

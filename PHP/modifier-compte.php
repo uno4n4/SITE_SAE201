@@ -96,7 +96,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
     $stmtInsert = $conn->prepare($sql);
     $stmtInsert->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
     if($stmtInsert->execute()){
-      echo "Le rôle a été mis à jour et l'utilisateur déplacé avec succès !";
+      echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Le rôle a été mis à jour et l'utilisateur déplacé avec succès !</b>
+          <div class="text-center mt-3">
+            <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
     } else {
       echo "Erreur : " . $stmtInsert->error;
     }
@@ -109,7 +116,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
     $stmtUpdate = $conn->prepare($sql);
     $stmtUpdate->bind_param("ssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Statut, $Pseudo);
     if($stmtUpdate->execute()){
-        echo "Informations mises à jour avec succès !";
+        echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Information mise à jour avec succès ! </b>
+          <div class="text-center mt-3">
+            <a href="modifier-compte.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
     } else {
         echo "Erreur lors de la mise à jour : " . $stmtUpdate->error;
     }
@@ -130,7 +144,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['supprimer_compte'])) {
     $stmt->bind_param("s", $Pseudo);
 
     if ($stmt->execute()) {
-        echo "Le compte a été supprimé avec succès.";
+        echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Le compte a été supprimé avec succès</b>
+          <div class="text-center mt-3">
+            <a href="gest-comptes.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
         // Optionnel : rediriger ou afficher un message HTML
         // header("Location: gest-comptes.php?success=suppression");
         exit;
@@ -146,7 +167,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['supprimer_compte'])) {
 
 
 
-$conn->close();
 
 ?>
 
@@ -170,15 +190,33 @@ $conn->close();
 
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-      <div>
-        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-      </div>
       <div class="d-flex align-items-center ms-auto gap-2">
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
-        </h6>
-        <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
-      </div>
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // ADMIN
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
     </div>
   </header> 
 
@@ -190,46 +228,41 @@ $conn->close();
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
   
             <li class="nav-item">
-              <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+              <a href="admin.php" class="nav-link align-middle px-0">
                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+              <a href="gest-comptes.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="materiel.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
               </a>
             </li>
   
             <li>
-              <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+              <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
               </a>
             </li>
           </ul>
-            <div class="mt-auto w-100">
-              <a href="../HTML/setting.html" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-              </a>
-            </div>
         </div>
       </div>
   
@@ -241,16 +274,6 @@ $conn->close();
           <input type="hidden" name="Anniv" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Date_naissance']) : '' ?>">
           <input type="hidden" name="Adresse" value="<?= isset($utilisateur) ? htmlspecialchars($utilisateur['Adresse']) : '' ?>">
             <h2>Modifier Le compte</h2>
-            <div class="photo-container">
-                <label for="photoUpload">
-                    <img src="../IMAGE/logo-iut.png" alt="Photo de profil" id="photo">
-                </label>
-                <input type="file" id="photoUpload" hidden>
-                <div class="button-container">
-                    <button type="button" id="changer">Changer</button>
-                    <button type="button" id="supp">Supprimer la photo</button>
-                    </div>
-            </div>
             <div class="form-grid">
                 <div>
                     <label for="Nom">Nom *</label>
@@ -281,7 +304,7 @@ $conn->close();
             </div>
             <div class="button-container-1">
                 <button type="submit" id="submit">Enregistrer les changements</button>
-                <button type="button" id="submit2">Annuler</button>
+                <a href="gest-comptes.php" class="btn" id="submit2">Annuler</a>
             </div>
             <button class="btn btn-danger text-white justify-content-center" type="button" id="supprimer-compte">Supprimer le compte</button>
             <div id="container-supp"></div>

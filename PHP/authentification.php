@@ -20,20 +20,41 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
     if($user){
       $trouve = true;
       if($user["Statut"] === "refusé"){
-        echo "Votre demande a été refusée.";
+        echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">VOTRE DEMANDE A ÉTÉ REFUSÉE</b>
+          <div class="text-center mt-3">
+            <a href="authentification.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
         break;
       } elseif($user["Statut"] === "en attente"){
-        echo "Votre demande est en attente.";
+         echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">VOTRE STATUT EST EN ATTENTE</b>
+          <div class="text-center mt-3">
+            <a href="authentification.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
         break;
-      } elseif (!password_verify($Mdp, $user["Mdp"])){
-        echo "Mot de passe incorrect.";
-        break;
+      } elseif (!password_verify($Mdp, $user["Mdp"])) {
+    echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">MOT DE PASSE INCORRECT</b>
+          <div class="text-center mt-3">
+            <a href="authentification.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
+      break;
       } else {
         $_SESSION["utilisateur"] = $user;
         $_SESSION["table"] = $table;
         if($table === "inscription_prof"){
           header("Location: accueil.php");
-        } elseif($table === "Inscription_eleve"){
+        } elseif($table === "inscription_eleve"){
           header("Location: accueil.php");
         } elseif($table === "inscription_agent"){
           header("Location: ../HTML/agent.html");
@@ -137,6 +158,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
           </div>
         </div>
       </footer>
+
     
 </body>
 </html>

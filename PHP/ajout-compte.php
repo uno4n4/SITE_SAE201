@@ -39,7 +39,14 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
   $stmt->bind_param("ssssss", $Nom, $Prenom, $Email, $Pseudo, $Mdp, $Statut);
 
   if($stmt->execute()){
-    echo "Inscription réussie !";
+    echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Inscription réussie ! </b>
+          <div class="text-center mt-3">
+            <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
   } else {
     echo "Erreur : " . $stmt->error;
   }
@@ -62,14 +69,33 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
 
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-      <div>
-        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-      </div>
       <div class="d-flex align-items-center ms-auto gap-2">
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-        </h6>
-      </div>
+            <?php
+            if (isset($_SESSION['utilisateur']) && isset($conn)) {
+                $nom = $_SESSION['utilisateur']['Nom'];
+
+                // ADMIN
+                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                $stmt->bind_param("s", $nom);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $row = $result->fetch_assoc();
+
+                if ($row['total'] > 0) {
+                    echo '
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+                } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                            ';
+                    }
+                  }
+            ?>
+            <h6 class="mb-0 text-nowrap text-end">
+                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+            </h6>
+        </div>
     </div>
   </header> 
     
@@ -81,46 +107,41 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
               <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
       
                 <li class="nav-item">
-                  <a href="../HTML/admin.html" class="nav-link align-middle px-0">
+                  <a href="admin.php" class="nav-link align-middle px-0">
                     <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                   </a>
                 </li>
       
                 <li>
-                  <a href="../HTML/reservation.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                  <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-calendar-days"></i><span class="ms-1 d-none d-sm-inline">Gestion des réservations</span>
                   </a>
                 </li>
       
                 <li>
-                  <a href="../HTML/gest-comptes.html" class="nav-link px-0 align-middle">
+                  <a href="gest-comptes.php" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-users"></i><span class="ms-1 d-none d-sm-inline">Gestion des comptes</span>
                   </a>
                 </li>
       
                 <li>
-                  <a href="../HTML/materiel.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                  <a href="materiel.php" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-camera"></i><span class="ms-1 d-none d-sm-inline">Gestion du matériel</span>
                   </a>
                 </li>
       
                 <li>
-                  <a href="../HTML/statistiques.html" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                  <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-chart-simple"></i><span class="ms-1 d-none d-sm-inline">Statistiques</span>
                   </a>
                 </li>
       
                 <li>
-                  <a href="../HTML/consignes.html" class="nav-link px-0 align-middle">
+                  <a href="gest-reservation.php" class="nav-link px-0 align-middle">
                     <i class="fa-solid fa-file-pen"></i><span class="ms-1 d-none d-sm-inline">Consigne de sécurité</span>
                   </a>
                 </li>
               </ul>
-                <div class="mt-auto w-100">
-                  <a href="../HTML/setting.html" class="nav-link align-middle px-0">
-                    <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-                  </a>
-                </div>
             </div>
           </div>
 

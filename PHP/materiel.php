@@ -108,11 +108,6 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                             </a>
                         </li>
                     </ul>
-                    <div class="mt-auto w-100">
-                        <a href="../HTML/setting.html" class="nav-link align-middle px-0">
-                            <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
-                        </a>
-                    </div>
                 </div>
             </div>
 

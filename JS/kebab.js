@@ -21,19 +21,30 @@ document.addEventListener("DOMContentLoaded", function () {
   check.forEach((c) => c.addEventListener("change", updateSelectionCount));
 
   kebabIcon.addEventListener("click", function () {
+    // Crée un tableau des noms sélectionnés
+    const selectedNames = Array.from(check)
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.closest("form").querySelector("input[name='Nom']").value);
+
+    if (selectedNames.length === 0) return;
+
+    // Afficher le formulaire
     contentAccept.style.display = "block";
-    const pseudos = Array.from(check).filter(c => c.checked).map(c => c.getAttribute('data-nom'));
     contentAccept.innerHTML = `
       <form action="../PHP/gest-comptes.php" method="post">
-        ${pseudos.map(pseudo => `<input type="hidden" name="choix[]" value="${pseudo}">`).join('')}
+        <input type="hidden" name="noms" value="${selectedNames.join(',')}">
         <ul class="d-flex flex-column list-unstyled m-3 gap-2">
-          <li><button type="submit" class="btn btn-success text-white" name="accept">Accepter</button></li>
-          <li><button type="submit" class="btn btn-danger text-white" name="refuse">Refuser</button></li>
+          <li><button type="submit" class="btn btn-success text-white" name="accepter">Accepter</button></li>
+          <li><button type="submit" class="btn btn-danger text-white" name="refuser">Refuser</button></li>
         </ul>
       </form>
     `;
   });
+
+  // Initialisation du compteur au cas où des cases seraient déjà sélectionnées lors du chargement
+  updateSelectionCount();
 });
+
 
 
 /* CHECKBOX */

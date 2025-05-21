@@ -53,7 +53,14 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
           if(!$mail->send()) {
               echo "Erreur d'envoi : " . $mail->ErrorInfo;
           } else {
-              echo "Message envoyé avec succès.";
+              echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">MESSAGE ENVOYÉ AVEC SUCCÈS</b>
+          <div class="text-center mt-3">
+            <a href="mdp-oublie.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
           }
       } catch (Exception $e) {
           echo "Une erreur est survenue lors de l'envoi de l'email. Erreur : {$mail->ErrorInfo}";
@@ -64,7 +71,14 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 }
 
 if(!$trouve){
-    echo "Aucun compte n'a été trouvé sous ce pseudo ou cette adresse email.";
+    echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">AUCUN COMPTE N'A ÉTÉ TROUVÉ SOUS CETTE ADRESSE EMAIL / PSEUDO</b>
+          <div class="text-center mt-3">
+            <a href="mdp-oublie.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
 }
 }
 ?>

@@ -40,7 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $confirmPass = trim($_POST['new1']);
 
         if ($nouveauPass !== $confirmPass) {
-            echo "Les mots de passe ne correspondent pas.";
+            echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">LES MOTS DE PASSES NE CORRESPONDENT PAS.</b>
+          <div class="text-center mt-3">
+            <a href="setting.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
             exit();
         }
 
@@ -55,7 +62,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $utilisateur = $result->fetch_assoc();
 
         if (!$utilisateur || !password_verify($ancienPass, $utilisateur['Mdp'])) {
-            echo "Ancien mot de passe incorrect";
+            echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">ANCIEN MOT DE PASSE INCORRECT.</b>
+          <div class="text-center mt-3">
+            <a href="setting.php" class="btn btn-danger">Fermer</a>
+          </div>
+        </div>
+        HTML;
             exit();
         }
 
@@ -113,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 if ($row['total'] > 0) {
                     echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>';
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
                 } else {
                     // Professeur
                     $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
@@ -158,6 +172,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <li>
               <a href="moncompte.php" class="nav-link px-0 align-middle">
                 <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mon compte</span>
+              </a>
+            </li>
+
+            <li>
+              <a href="mesemprunts.php" class="nav-link px-0 align-middle">
+                <i class="fa-solid fa-box-open"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
               </a>
             </li>
             

@@ -3,27 +3,27 @@
 include 'config.php';
 session_start();
 
-
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
-foreach ($tables as $table) {
-  $stmt = $conn->prepare("SELECT * FROM `$table` WHERE statut = 'en attente'");
+foreach ($tables as $table){
+if (isset($_POST['noms'])) {
+    // Récupérer les noms envoyés
+    $noms = explode(',', $_POST['noms']);
+    $action = isset($_POST['accepter']) ? 'accepté' : (isset($_POST['refuser']) ? 'refusé' : '');
 
-  if (isset($_POST['accept'])) {
-    $Nom = $_POST['Nom'];
-    $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
-    $stmt->bind_param("s", $Nom);
-    $stmt->execute();
-  }
-
-  if (isset($_POST['refuse'])) {
-    $Nom = $_POST['Nom'];
-    $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
-    $stmt->bind_param("s", $Nom);
-    $stmt->execute();
-  }
+    // Mettre à jour le statut de chaque utilisateur
+    foreach ($noms as $nom) {
+        $nom = trim($nom);
+        $stmt = $conn->prepare("UPDATE `$table` SET Statut = ? WHERE Nom = ?");
+        $stmt->bind_param("ss", $action, $nom);
+        $stmt->execute();
+    }
 }
+}
+
+
 ?>
+
 
 
 <!DOCTYPE html>
@@ -52,7 +52,7 @@ foreach ($tables as $table) {
             if (isset($_SESSION['utilisateur']) && isset($conn)) {
                 $nom = $_SESSION['utilisateur']['Nom'];
 
-                // Étudiant
+                // ADMIN
                 $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
                 $stmt->bind_param("s", $nom);
                 $stmt->execute();
@@ -207,16 +207,12 @@ foreach ($tables as $table) {
                                   <input type="checkbox" name="choix[]" class="appro-checkbox">
                                 </div>
                               </div>
-                              <span class="icon-kebab">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                              </span>
-                              <div class="kebabs-menu"></div>
                             </div>
-                          <div class="d-flex align-items-center gap-1 ms-1">
+                          <div class="d-flex align-items-center justify-content-center gap-1 ms-1">
                             <!-- Pastille -->
                             <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
                             <!-- Nom et prénom -->
-                            <h6 class="text-nowrap mb-0" id="nom-prenom">
+                            <h6 class="text-nowrap mb-0 text-center" class="nom-prenom">
                               <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
                             </h6>
                           </div>
@@ -228,7 +224,7 @@ foreach ($tables as $table) {
                             <div class="card-body">
                               <hr class="me-2">
                               <div class="d-flex justify-content-between gap-4">
-                                <input type="hidden" name="Nom" data-nom="<?= htmlspecialchars($user['Nom']) ?>">
+                                <input type="hidden" name="Nom" value="<?= htmlspecialchars($user['Nom']) ?>">
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 ms-2" id="accepter1" name="accepter1">
                                   <i class="fa-solid fa-circle-check"></i>
                                 </button>
@@ -316,141 +312,83 @@ foreach ($tables as $table) {
                     <a href="ajout-compte.php" id="ajouter" class="btn border rounded bg-white p-2">+ Ajouter un compte</a>
                   </div>
                 </div>
-
-                <?php 
-
-                $perpage = 5;
-
-                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                $offset = ($page - 1) * $perpage;
-
-                $offset = max(0, $offset);
-
-                $query = "SELECT COUNT(*) AS total FROM `$table` WHERE statut = 'accepté'";
-                $result = $conn->query($query);
-                $row = $result->fetch_assoc();
-                $totalUsers = $row['total'];
-
-                $totalPages = ceil($totalUsers / $perpage);
-                $query = "SELECT * FROM `$table` WHERE statut = 'accepté' LIMIT $perpage OFFSET $offset";
-                $result = $conn->query($query);
-
-                ?>
                 <div class="d-flex flex-wrap justify-content-center gap-4">
-                  <?php foreach ($tables as $table): ?>
-                    <?php
-                    $query = "SELECT * FROM `$table` WHERE statut = 'accepté' LIMIT $perpage OFFSET $offset";
-                    $result = $conn->query($query);
-                    while ($user = $result->fetch_assoc()):
-                      $color = '';
-                    if($table === 'inscription_eleve'){
-                      $color = '#12A19A';
-                    } elseif ($table === 'inscription_prof'){
-                      $color = '#8B1E3F';
-                    } elseif ($table === 'inscription_agent'){
-                      $color = '#F4A261';
-                    } elseif ($table === 'inscription_admin'){
-                      $color = '#2F2A85';
-                    } else {
-                      $color = '#6c757d';
-                    }
-                    ?>
-                      <div class="card-wrapper">
-                        <form action="gest-comptes.php" method="post">
-                          <div class="card custom-card">
-                            <div class="card-top d-flex justify-content-between align-items-center mx-3 mt-2 position-relative">
-                              <div class="input-group">
-                                <div class="input-group-prepend">
-                                  <input type="hidden" name="choix[]">
-                                </div>
-                              </div>
-                              <span class="kebab-icon">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                              </span>
-                              <?php
-                              if (isset($_POST['Pseudo'])) {
+  <?php foreach ($tables as $table): ?>
+    <?php
+    $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
+    if ($result && $result->num_rows > 0):
+      while ($user = $result->fetch_assoc()):
+        // Couleur selon le type d'utilisateur
+        $color = match($table) {
+          'inscription_eleve' => '#12A19A',
+          'inscription_prof' => '#8B1E3F',
+          'inscription_agent' => '#F4A261',
+          'inscription_admin' => '#2F2A85',
+          default => '#6c757d',
+        };
+    ?>
+      <div class="card-wrapper">
+        <div class="card custom-card">
+          <div class="card-top d-flex justify-content-end align-items-start mx-3 mt-2 position-relative">
+            <span class="kebab-icon">
+              <i class="fa-solid fa-ellipsis-vertical justify-content-end"></i>
+            </span>
+            <div class="kebab-menu" data-pseudo="<?= htmlspecialchars($user['Pseudo']) ?>"></div>
+          </div>
 
-                                $pseudo = $_POST['Pseudo'];
+          <div class="d-flex justify-content-center align-items-center gap-2">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
+            <h6 class="text-nowrap mb-0 nom-prenom">
+              <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
+            </h6>
+          </div>
 
-                                $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ?");
-                                $stmt->bind_param("s", $pseudo); // Lie le pseudo à la requête
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                              }
-                              ?>
+          <p class="text-center classe">
+            <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
+            <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
+            <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
+          </p>
 
-                              <!-- Vérifie si $utilisateur est défini avant d'utiliser ses informations -->
-                              <?php if (isset($user) && $user !== null): ?>
-                                <div class="kebab-menu" data-pseudo="<?= $user['Pseudo'] ?>"></div>
-                              <?php else: ?>
-                                <div class="kebab-menu">Utilisateur introuvable</div>
-                              <?php endif; ?>
+          <div class="card-body p-2">
+            <div class="d-flex justify-content-between gap-4">
+              <p class="derniere-reservation">Dernière réservation</p>
+              <p class="date-reser">
+                <?php
+                  $reservation_table = isset($user['Td']) ? 'reservation_etudiant' : 'reservation_prof';
+                  $stmt = $conn->prepare("SELECT MAX(Date_reservation) AS last_date FROM $reservation_table WHERE Pseudo = ?");
+                  $stmt->bind_param("s", $user['Pseudo']);
+                  $stmt->execute();
+                  $res = $stmt->get_result();
+                  $row = $res->fetch_assoc();
+                  echo $row['last_date'] ?? '—';
+                ?>
+              </p>
+            </div>
 
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center gap-2">
-                              <!-- Pastille -->
-                              <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
-                              <!-- Nom et prénom -->
-                              <h6 class="text-nowrap mb-0" id="nom-prenom">
-                                <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
-                              </h6>
-                            </div>
-                            <p class="text-center" id="classe">
-                              <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
-                              <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
-                              <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
-                            </p>
-                            <div class="card-body p-2">
-                              <div class="d-flex justify-content-between gap-4">
-                                <p id="derniere-reservation">Dernière réservation</p>
-                                <p id="date-reser">
-                                  <?php
-                                  if (isset($user['Td'])) {
-                                    $stmt = $conn->prepare("SELECT max(Date_reservation) AS last_date FROM reservation_etudiant WHERE Pseudo = ?");
-                                    $stmt->bind_param("s", $user['Pseudo']);
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-                                    $row = $result->fetch_assoc();
-                                    echo $row['last_date'];
-                                  } else {
-                                    $stmt = $conn->prepare("SELECT max(Date_reservation) AS last_date FROM reservation_prof WHERE Pseudo = ?");
-                                    $stmt->bind_param("s", $user['Pseudo']);
-                                    $stmt->execute();
-                                    $result = $stmt->get_result();
-                                    $row = $result->fetch_assoc();
-                                    echo $row['last_date'];
-                                  }
+            <p class="text-left card-text"><strong>Email :</strong> <?= htmlspecialchars($user['Adresse_email']) ?></p>
+            <p class="text-left card-text"><strong>Numéro de téléphone :</strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
+            <p class="text-left card-text"><strong>Pseudo :</strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
 
-                                  ?>
-                                </p>
-                              </div>
-                              <p class="text-left card-text"> <strong>Email : </strong> <?= htmlspecialchars($user['Adresse_email']) ?></p>
-                              <p class="text-left card-text"> <strong>Numéro de téléphone : </strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
-                              <p class="text-left card-text"> <strong>Pseudo : </strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
-                              <p class="text-left card-text">
-                                <?php if ($table === 'inscription_eleve'): ?>
-                                  <strong>Numéro étudiant :</strong> <?= htmlspecialchars($user['Num_etudiant'] ?? '') ?>
-                                <?php endif; ?>
-                              </p>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    <?php endwhile; ?>
-                  <?php endforeach; ?>
-                </div>
+            <?php if ($table === 'inscription_eleve'): ?>
+              <p class="text-left card-text"><strong>Numéro étudiant :</strong> <?= htmlspecialchars($user['Num_etudiant'] ?? '') ?></p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    <?php
+      endwhile;
+    endif;
+    ?>
+  <?php endforeach; ?>
+</div>
 
-                <div class="pagination-wrapper d-flex justify-content-end align-items-center gap-3 mt-auto w-100 custom-page">
-                  <a href="?page=<?= max(1, $page - 1) ?>" class="button-class" id="avant-page"><i class="fa-solid fa-arrow-left"></i>Précédent</a>
-                  <p id="nb-pages"><?= $page ?> / <?= $totalPages ?></p>
-                  <a href="?page=<?= min($totalPages, $page + 1)?>" class="button-class" id="autre-page">Suivant <i class="fa-solid fa-arrow-right"></i></a>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
 
 </body>

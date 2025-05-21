@@ -63,7 +63,14 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom'])){
       $stmt->bind_param("sssssssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut);
 
       if($stmt->execute()){
-        echo "Inscription étudiant réussie !";
+        echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Inscription étudiant réussie !</b>
+          <div class="text-center mt-3">
+            <a href="inscription.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
       } else {
         echo "Erreur : " . $stmt->error;
       }
@@ -93,7 +100,14 @@ elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
       $stmt->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
 
     if ($stmt->execute()){
-      echo "Inscription professeur réussie !";
+      echo <<<HTML
+        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+          <b class="mb-2 d-block">Inscription professeur réussie !</b>
+          <div class="text-center mt-3">
+            <a href="inscription.php" class="btn btn-success">Fermer</a>
+          </div>
+        </div>
+        HTML;
     } else {
       echo "Erreur :" . $stmt->error;
     }

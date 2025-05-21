@@ -91,7 +91,7 @@ if (isset($_GET['id'])) {
 
                             if ($row['total'] > 0) {
                                 echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle bg-warning"></span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
                                 <span class="spantext">Etudiant(e)</span>
                             </span>';
                                 // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
@@ -234,7 +234,7 @@ if (isset($_GET['id'])) {
     </div>
 
     <div class="w-50 border border-dark mt-5 rounded consignes-eleve ms-5">
-        <h6 class="text-danger text-decoration-underline text-start">Les consignes de sécurité : </h6>
+        <h6 class="text-danger text-decoration-underline text-start p-3">Les consignes de sécurité : </h6>
         <div class="text-center">
         <?php
         

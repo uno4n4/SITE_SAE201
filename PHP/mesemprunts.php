@@ -61,7 +61,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                     if ($row['total'] > 0) {
                         echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>';
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
                     } else {
                         // Professeur
                         $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
@@ -109,8 +109,8 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                             </a>
                         </li>
                         <li>
-                            <a href="mesemprunts.php" class="nav-link px-0 align-middle">
-                                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fa-solid fa-box-open"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
                             </a>
                         </li>
 

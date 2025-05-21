@@ -61,7 +61,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                 if ($row['total'] > 0) {
                     echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>';
+                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
                 } else {
                     // Professeur
                     $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
@@ -112,7 +112,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                         <li>
                             <a href="mesemprunts.php" class="nav-link px-0 align-middle">
-                                <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
+                            <i class="fa-solid fa-box-open"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
                             </a>
                         </li>
 
@@ -158,8 +158,7 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
 
                                 if ($row) {
                                     echo '<span class="badge d-flex align-items-baseline gap-2 text-dark">
-                                            <i class="bi bi-circle-fill text-info mx-2"></i>
-                                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #ffc107;"></span>
+                                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
                                             <h6 class="spantext">Étudiant(e) ' . ' ' . htmlspecialchars($row['Formation'])  . ' ' . htmlspecialchars($row['Td']) . ' ' . htmlspecialchars($row['Tp']) . '</h6>
                                         </span>';
                                     // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
