@@ -2,6 +2,11 @@
 
 include('config.php');
 session_start();
+
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
 // Vérifie si la connexion fonctionne
 if ($conn->connect_error) {
     die("Connexion échouée : " . $conn->connect_error);

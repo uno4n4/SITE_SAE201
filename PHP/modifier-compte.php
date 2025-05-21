@@ -3,6 +3,11 @@
 include('config.php');
 session_start();
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
 $tableOrigine = $_POST['tableOrigine'] ?? '';
 $roles = [

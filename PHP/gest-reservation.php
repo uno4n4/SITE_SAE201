@@ -1,6 +1,11 @@
 <?php
 include('config.php');
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
 if (isset($_POST['contenu'])) {
   $contenu = $_POST['contenu'];
 

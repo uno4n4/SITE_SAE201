@@ -3,6 +3,11 @@
 include('config.php');
 session_start();
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
 if (isset($_POST['modif'])) {
   // Récupération des matériaux depuis la bonne table
   $stmt = $conn->prepare("SELECT * FROM `materiel` WHERE Nom = ?");

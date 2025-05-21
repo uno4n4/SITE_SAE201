@@ -3,6 +3,11 @@
 include 'config.php';
 session_start();
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
 foreach ($tables as $table){

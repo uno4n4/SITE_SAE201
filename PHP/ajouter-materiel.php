@@ -3,6 +3,11 @@
 include('config.php');
 session_start();
 
+if (!isset($_SESSION['utilisateur'])) {
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
+}
+
 if (isset($_POST['submit'])) {
     $Nom = htmlspecialchars($_POST['nom']);
     $Description = htmlspecialchars($_POST['description']);

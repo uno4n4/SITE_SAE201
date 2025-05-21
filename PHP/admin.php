@@ -9,7 +9,6 @@ if (!isset($_SESSION['utilisateur'])) {
 }
 
 
-
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 ?>
 
@@ -182,6 +181,7 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
 
                 <!-- RESERVATION -->
                 <div class="col-12 col-lg-6 d-flex flex-column">
+                  
                   <?php
                   $result = $conn->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant UNION SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_prof");
                   $users = $result->fetch_all(MYSQLI_ASSOC);

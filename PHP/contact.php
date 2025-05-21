@@ -2,8 +2,6 @@
 
 include('config.php');
 session_start();
-<<<<<<< HEAD
-=======
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -62,7 +60,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Erreur : " . $mail->ErrorInfo;
     }
 }
->>>>>>> 42a77b16023d4d87c81ab35d31b4ebff692eaa20
 ?>
 
 <!DOCTYPE html>
