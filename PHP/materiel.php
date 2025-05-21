@@ -9,6 +9,46 @@ if (!isset($_SESSION['utilisateur'])) {
 }
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
+
+if (isset($_POST["modifvalid"])) {
+    $stmt = $pdo->prepare("UPDATE materiel SET Nom = ?, date_achat = ?, prix = ?, categorie = ? WHERE Nom = ?");
+    $stmt->execute([
+        $_POST['Nommodif'],
+        $_POST['date_achatmodif'],
+        $_POST['prixmodif'],
+        $_POST['categoriemodif'],
+        $_POST['materiel']
+    ]);
+
+    echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+            <p class="mb-2">La réservation a été modifiée </p>
+            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+          </div>';
+}
+
+if (isset($_POST["supprimer"])) {
+    $materiel = $_POST['materiel'];
+
+    echo '<div id="msg" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>Es-tu sûre de vouloir supprimer ce matériel ?</p>
+        <form method="post">
+            <input type="hidden" name="materiel" value="' . htmlspecialchars($materiel) . '">
+            <button type="submit" name="supprime" class="btn btn-danger">Supprimer</button>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById(\'msg\').style.display=\'none\'">Annuler</button>
+        </form>
+    </div>';
+}
+
+if (isset($_POST["supprime"])) {
+    $stmt = $pdo->prepare("DELETE FROM materiel WHERE Nom = ?");
+    $stmt->execute([$_POST['materiel']]);
+
+    echo '<div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        <p>Le matériel a été supprimé </p>
+        <button class="btn btn-primary" onclick="this.parentElement.style.display=\'none\'">Fermer</button>
+    </div>';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +65,8 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
+    <script src="../JS/checked.js" defer></script>
+    <script src="../JS/reserve.js" defer></script>
     <title>Gestion du matériel</title>
 
 </head>
@@ -38,28 +80,28 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+                if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+                    $nom = $_SESSION['utilisateur']['Nom'];
 
-    // ADMIN :
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-    $stmt->execute([$nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    // ADMIN :
+                    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+                    $stmt->execute([$nom]);
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+                    if ($row['total'] > 0) {
+                        echo '
         <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-    } else {
-        // Aucun des deux trouvés
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                    } else {
+                        // Aucun des deux trouvés
+                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
             ';
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+                    }
+                }
+                ?>
+                <h6 class="mb-0 text-nowrap text-end">
+                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+                </h6>
 
             </div>
         </div>
@@ -123,12 +165,12 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                                 <i class="fa-solid fa-display fa-2xl p-2"></i>
                                 <h4>
                                     <?php
-$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-$total = $row['total'];
-echo $total;
-?>
+                                    $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
+                                    $stmt->execute();
+                                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                    $total = $row['total'];
+                                    echo $total;
+                                    ?>
 
                                 </h4>
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -150,47 +192,50 @@ echo $total;
                                 <tr>
                                     <th>Produit</th>
                                     <th>Catégorie</th>
-                                    <th>Avis</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody class="align-middle">
                                 <?php
-$stmt = $pdo->prepare("SELECT * FROM materiel WHERE Image_un LIKE '%.jpg'");
-$stmt->execute();
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<?php foreach ($users as $user): ?>
-   <tr>
+                                $stmt = $pdo->prepare("SELECT * FROM materiel");
+                                $stmt->execute();
+                                $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                ?>
+                                <?php foreach ($users as $user): ?>
+                                    <tr class="ligne-materiel">
+                                        <form method="post">
                                         <td>
                                             <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                                                 <img src="../IMG/images/<?= htmlspecialchars($user['Image_un']) ?>" alt="<?= htmlspecialchars($user['Nom']) ?>"
                                                     class="img-fluid rounded" style="max-height: 100px; width: auto;">
                                                 <div>
-                                                    <p class="mb-1 fw-semibold"><?= htmlspecialchars($user['Nom']) ?></p>
-                                                    <p class="mb-1">Date d'achat: <span class="fw-light"><?= htmlspecialchars($user['date_achat']) ?></span>
-                                                    </p>
-                                                    <p class="mb-0">Prix: <span class="fw-light"><?= htmlspecialchars($user['prix']) ?> €</span></p>
+                                                    <input type="text" name="Nommodif" style="width:80%; border: none;" class="mb-1 fw-semibold champ-input" value="<?= htmlspecialchars($user['Nom']) ?>" disabled>
+                                                        <div>Date d'achat: <input type="text" name="date_achatmodif" style="width:50%; border: none;" class="mb-1 champ-input" value="<?= htmlspecialchars($user['date_achat']) ?>" disabled></div>
+                                                        <div>Prix: <input type="number" name="prixmodif" style="width:80%; border: none;" class="mb-0 champ-input" value="<?= htmlspecialchars($user['prix']) ?>" disabled></div>
                                                 </div>
                                             </div>
                                         </td>
 
                                         <td class="text-center">
-                                            <span class="badge bg-dark text-light p-2 rounded">
-                                                <i class="me-2 fa-solid fa-camera"></i><?= htmlspecialchars($user['categorie']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="text-center">
-                                            ☆☆☆☆☆
-                                        </td>
-                                        <td class="text-center">
-                                            <form action="modifier-materiel.php" method="post">
-                                                <input type="hidden" name="materiel" value="<?= htmlspecialchars($user['Nom']) ?>">
-                                                <button type="submit" name="modif" class="btn">
+                                                <span class="badge bg-dark text-light p-2 rounded">
+                                                    <i class="me-2 fa-solid fa-camera"></i>
+                                                    <input class="champ-input" name="categoriemodif" style="width:80%; border: none; color:white; background-color: black;" type="text" value="<?= htmlspecialchars($user['categorie']) ?>" disabled>
+                                                </span>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <form method="post">
+                                                    <input type="hidden" name="materiel" value="<?= htmlspecialchars($user['Nom']) ?>">
+                                                    <button type="submit" name="supprimer" class="btn">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                                <button type="button" class="btn modifier-btn">
                                                     <i class="fa-solid fa-pen-to-square fs-5"></i>
                                                 </button>
-                                            </form>
+                                            <button type="submit" id="valid" name="modifvalid" class="mx-2">Valider</button>
                                         </td>
+                                        </form>
                                     </tr>
                                 <?php endforeach ?>
 

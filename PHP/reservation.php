@@ -1,6 +1,6 @@
 <?php
 
-include '../PHP/config.php';
+include 'config.php';
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
@@ -31,6 +31,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Pixelify+Sans:wght@400..700&display=swap"
         rel="stylesheet">
@@ -63,32 +64,32 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-$stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+                            $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                            $stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
+                            $stmt->execute();
+                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($row['total'] > 0) {
-    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                            if ($row['total'] > 0) {
+                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
             <span class="spantext">Etudiant(e)</span>
         </span>';
-    // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-} else {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-    $stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+                            } else {
+                                $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                                $stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
+                                $stmt->execute();
+                                $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                if ($row['total'] > 0) {
+                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                 <span class="spantext">Enseignant(e)</span>
             </span>';
-    }
-}
-?>
+                                }
+                            }
+                            ?>
 
 
                         </li>
@@ -100,30 +101,6 @@ if ($row['total'] > 0) {
         </nav>
 
         <div class="container-fluid text-center mt-5">
-            <div class="d-flex justify-content-center">
-                <div class="col-sm-1 dropdown me-5">
-                    <div class="dropdown">
-                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <a class="icon-link link-dark" href="#">
-                                <img src="../IMG/filtre.png" alt="boite mes emprunts">
-                                Filtres
-                            </a>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><button class="dropdown-item" type="button">Action</button></li>
-                            <li><button class="dropdown-item" type="button">Another action</button></li>
-                            <li><button class="dropdown-item" type="button">Something else here</button></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-info" type="submit">Search</button>
-                </form>
-
-            </div>
             <div class="row">
                 <div class="col-sm ms-5">
                     <nav id="fildariane" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -177,7 +154,7 @@ if ($row['total'] > 0) {
                     <li class="ms-4">
                         <h5 class="mb-4">Informations Personnelles</h5>
                     </li>
-                    <input type="hidden" name="nom_produit" value="<?php echo htmlspecialchars($_GET['id']); ?>">
+                    <input type="hidden" name="nom_produit" value="<?= htmlspecialchars($_GET['id']); ?>">
                     <input type="hidden" name="quantite" value="<?php echo htmlspecialchars($_GET['quantite']); ?>">
 
 
@@ -185,14 +162,14 @@ if ($row['total'] > 0) {
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
                         <div class="col-sm-10">
-                            <input name="nom" type="text" class="form-control" id="nom" placeholder="Ex: Domingues">
+                            <input name="nom" type="text" class="form-control" id="nom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
                         <div class="col-sm-10">
-                            <input name="prenom" type="text" class="form-control" id="prenom" placeholder="Ex: Clara">
+                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>">
                         </div>
                     </div>
 
@@ -200,7 +177,7 @@ if ($row['total'] > 0) {
                         <label for="numcarteetud" class="col-sm-2 col-form-label">Numéro étudiant :</label>
                         <div class="col-sm-10">
                             <input name="numcarteetud" type="text" class="form-control" id="numcarteetud"
-                                placeholder="Ex: 280000">
+                                value="<?= htmlspecialchars($_SESSION['utilisateur']['Num_etudiant']) ?>">
                         </div>
                     </div>
 
@@ -208,7 +185,7 @@ if ($row['total'] > 0) {
                         <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
                         <div class="col-sm-10">
                             <input name="email" type="email" class="form-control" id="email"
-                                placeholder="Ex: clara.domingues@edu.univ-eiffel.fr">
+                                value="<?= htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) ?>">
                         </div>
                     </div>
 
@@ -216,8 +193,7 @@ if ($row['total'] > 0) {
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -239,7 +215,7 @@ if ($row['total'] > 0) {
                         <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetrait" type="time" step="900" class="form-control" id="heureRetrait">
+                            <input name="heureRetrait" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetrait">
                         </div>
                     </div>
 
@@ -248,19 +224,17 @@ if ($row['total'] > 0) {
                             matériel
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
+                            <input name="heureRetour" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetour">
                         </div>
                     </div>
 
                     <div class="row mt-5">
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><i class="fa-solid fa-arrow-left" style="color: #FFF;"></i> Retour</button>
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -300,20 +274,18 @@ if ($row['total'] > 0) {
                     <div class="mb-3 row">
                         <label for="signature" class="col-sm-2 col-form-label">Signature :</label>
                         <div class="col-sm-10">
-                            <canvas id="signature" class="col-sm-8 rounded"></canvas>
-                            <button type="button" id="clear" class="btn btn-secondary col-sm-3 mx-2">Effacer</button>
+                            <input name="signature_eleve" type="text" class="form-control"
+                                id="signature" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom']))?>">
                         </div>
                     </div>
 
                     <div class="row mt-5">
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><i class="fa-solid fa-arrow-left" style="color: #FFF;"></i> Retour</button>
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-etud" class="btn btn-info">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="submit" name="submit-etud" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -331,20 +303,20 @@ if ($row['total'] > 0) {
                     <li class="ms-4">
                         <h5 class="mb-4">Informations Personnelles</h5>
                     </li>
-                    <input type="hidden" name="nom_produit" value="<? htmlspecialchars($id) ?>">
+                    <input type="hidden" name="nom_produit" value="<?= htmlspecialchars($id) ?>">
                     <input type="hidden" name="quantite" value="<? htmlspecialchars($quantite) ?>">
 
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
                         <div class="col-sm-10">
-                            <input name="nom" type="text" class="form-control" id="nom" placeholder="Ex: Domingues">
+                            <input name="nom" type="text" class="form-control" id="nom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
                         <div class="col-sm-10">
-                            <input name="prenom" type="text" class="form-control" id="prenom" placeholder="Ex: Clara">
+                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>">
                         </div>
                     </div>
 
@@ -352,7 +324,7 @@ if ($row['total'] > 0) {
                         <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
                         <div class="col-sm-10">
                             <input name="email" type="email" class="form-control" id="email"
-                                placeholder="Ex: clara.domingues@univ-eiffel.fr">
+                                value="<?= htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) ?>">
                         </div>
                     </div>
 
@@ -360,8 +332,7 @@ if ($row['total'] > 0) {
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -383,7 +354,7 @@ if ($row['total'] > 0) {
                         <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
+                            <input name="heureRetrait" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetrait">
                         </div>
                     </div>
 
@@ -392,19 +363,17 @@ if ($row['total'] > 0) {
                             matériel
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
+                            <input name="heureRetour" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetour">
                         </div>
                     </div>
 
                     <div class="row mt-5">
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><i class="fa-solid fa-arrow-left" style="color: #FFF;"></i> Retour</button>
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="button" class="btn btn-info" onclick="nextForm(event)">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -418,20 +387,18 @@ if ($row['total'] > 0) {
                     <div class="mb-3 row">
                         <label for="signature" class="col-sm-2 col-form-label">Signature :</label>
                         <div class="col-sm-10">
-                            <canvas id="signature" class="col-sm-8 rounded"></canvas>
-                            <button type="button" id="clear" class="btn btn-secondary col-sm-3 mx-2">Effacer</button>
+                           <input name="signature_prof" type="text" class="form-control"
+                                id="signature" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom']))?>">
                         </div>
                     </div>
 
                     <div class="row mt-5">
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><img
-                                    src="../IMG/fleche-gauche.png" alt="retour">Retour</button>
+                            <button type="button" class="btn btn-info" onclick="previousForm(event)"><i class="fa-solid fa-arrow-left" style="color: #FFF;"></i> Retour</button>
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-prof" class="btn btn-info">Suivant<img
-                                    src="../IMG/fleche-droite.png" alt="suivant"></button>
+                            <button type="submit" name="submit-prof" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>

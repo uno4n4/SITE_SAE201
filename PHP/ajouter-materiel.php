@@ -1,11 +1,11 @@
 <?php
 
-include('config.php');
+include 'config.php';
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
 if (isset($_POST['submit'])) {
@@ -76,16 +76,9 @@ if (isset($_POST['submit'])) {
         $nom = $_SESSION['utilisateur']['Nom'];
         $prenom = $_SESSION['utilisateur']['Prenom'];
 
-        // Requête PDO pour obtenir le nom et prénom de l'utilisateur depuis la base de données
-        $stmt = $pdo->prepare("SELECT Nom, Prenom FROM utilisateurs WHERE Nom = :nom AND Prenom = :prenom");
-        $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
-        $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Affichage du nom et prénom ou un message si l'utilisateur n'est pas connecté
-        echo isset($user) ? htmlspecialchars($user['Nom']) . ' ' . htmlspecialchars($user['Prenom']) : 'Utilisateur non connecté';
+        echo isset($_SESSION['utilisateur']) ? htmlspecialchars($nom) . ' ' . htmlspecialchars($prenom) : 'Utilisateur non connecté';
     } else {
         echo 'Utilisateur non connecté';
     }
