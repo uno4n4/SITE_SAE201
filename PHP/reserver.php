@@ -40,13 +40,13 @@ if (!isset($_SESSION['utilisateur'])) {
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
+                            <a class="icon-link link-dark" href=":esmeprunts.php">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
+                            <a class="icon-link link-dark" href="moncompte.php">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
@@ -73,7 +73,7 @@ if (!isset($_SESSION['utilisateur'])) {
 
                                 if ($row['total'] > 0) {
                                     echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                                 <span class="spantext">Enseignant(e)</span>
                             </span>';
                                 }
@@ -235,7 +235,7 @@ if (!isset($_SESSION['utilisateur'])) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                                <a href='../PHP/reservation.php' type='button' class='btn btn-primary col-3'><img
+                                <a href='../PHP/reservation.php?id=<?= htmlspecialchars($nom_produit) ?>&quantite=1' type='button' class='btn btn-primary col-3'><img
                                         src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                             </div>
                 <div class='clearfix'></div>
@@ -303,7 +303,7 @@ if (!isset($_SESSION['utilisateur'])) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                            <a href='../PHP/reservation.php' type='button' class='btn btn-primary col-3'><img
+                            <a href='../PHP/reservation.php?id=<?= htmlspecialchars($nom_produit) ?>&quantite=1' type='button' class='btn btn-primary col-3'><img
                                     src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                         </div>
             <div class='clearfix'></div>

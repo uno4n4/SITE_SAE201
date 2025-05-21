@@ -80,7 +80,7 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
 
                                 if ($row['total'] > 0) {
                                     echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                                 <span class="spantext">Enseignant(e)</span>
                             </span>';
                                 }
@@ -154,37 +154,6 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
             <?php endforeach; ?>
         </div>
     </section>
-
-    <footer class="container-fluid mt-5 text-white custom-bg">
-        <div class="my-3">
-            <img src="../IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left mt-3" alt="logo iut">
-        </div>
-
-        <div class="row px-5 mt-4">
-            <div class="col-12 d-flex flex-wrap gap-5">
-                <!-- Bloc Informations -->
-                <div>
-                    <div class="fw-bold mb-2">INFORMATIONS</div>
-                    <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
-                </div>
-
-                <!-- Bloc Contactez-nous -->
-                <div>
-                    <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
-                </div>
-            </div>
-        </div>
-
-        <hr class="mt-5 border-white opacity-50">
-
-        <div class="row px-5">
-            <div class="col-12 text-center text-white mb-3">
-                &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
-            </div>
-        </div>
-    </footer>
-
     <?php
     if (isset($_POST["valider"])) {
         //un msg de confirmation + mail : voir tpsession

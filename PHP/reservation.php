@@ -54,13 +54,13 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../HTML/mesemprunts.html">
+                            <a class="icon-link link-dark" href="mesemprunts.php">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
                         </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="../HTML/moncompte.html">
+                            <a class="icon-link link-dark" href="moncompte.php">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
@@ -87,7 +87,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
 
                                 if ($row['total'] > 0) {
                                     echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span id="roleicon" class="rounded-circle" style="background-color: #8B1E3F;"></span>
+                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                                 <span class="spantext">Enseignant(e)</span>
                             </span>';
                                 }
@@ -132,7 +132,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <nav id="fildariane" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../PHP/accueil.php">Home</a></li>
-                            <li class="breadcrumb-item"><a href="../PHP/produit.php">Drone</a></li>
+                            <li class="breadcrumb-item"><a href='produit.php?id=<?= htmlspecialchars($id) ?>&quantite=1' type='button'><?= htmlspecialchars($id) ?></a></li>
                             <li class="breadcrumb-item active" aria-current="page">Réservation</li>
                         </ol>
                     </nav>
@@ -173,7 +173,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     </div>
     <div id="formulaires-etudiant" class="container-fluid gx-3 my-5 <?= isset($_SESSION['utilisateur']['Td']) ? 'd-block' : 'd-none' ?>">
         <!-- Formulaire informations personnelles -->
-        <form action="../PHP/reserver.php" method="post"
+        <form action="reserver.php" method="post"
             class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
             <ol>
                 <section id="0">
@@ -242,7 +242,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
+                            <input name="heureRetrait" type="time" step="900" class="form-control" id="heureRetrait">
                         </div>
                     </div>
 
@@ -327,7 +327,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
 
     <div id="formulaires-prof" class="container-fluid gx-3 my-5 <?= isset($_SESSION['utilisateur']['Td']) ? 'd-none' : 'd-block' ?>">
         <!-- Formulaire informations personnelles -->
-        <form action="../PHP/reserver.php" method="post"
+        <form action="reserver.php" method="post"
             class="col-md-8 ms-2 float-start border border-secondary rounded p-4 shadow-sm mb-4">
             <ol>
                 <section id="0">
@@ -355,7 +355,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <label for="email" class="col-sm-2 col-form-label">Adresse email universitaire :</label>
                         <div class="col-sm-10">
                             <input name="email" type="email" class="form-control" id="email"
-                                placeholder="Ex: clara.domingues@edu.univ-eiffel.fr">
+                                placeholder="Ex: clara.domingues@univ-eiffel.fr">
                         </div>
                     </div>
 
@@ -445,35 +445,6 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     <div class="clearfix"></div>
     <div class="w-100"></div>
 
-    <footer class="container-fluid mt-5 text-white custom-bg">
-        <div class="my-3">
-            <img src="../IMAGE/logo-iut.png" id="logo-iut-foot" class="img-fluid float-left mt-3" alt="logo iut">
-        </div>
-
-        <div class="row px-5 mt-4">
-            <div class="col-12 d-flex flex-wrap gap-5">
-                <!-- Bloc Informations -->
-                <div>
-                    <div class="fw-bold mb-2">INFORMATIONS</div>
-                    <a href="../HTML/mentions_legales.html" class="text-white text-decoration-none d-block mb-1">Mentions légales</a>
-                </div>
-
-                <!-- Bloc Contactez-nous -->
-                <div>
-                    <div class="fw-bold mb-2">CONTACTEZ-NOUS</div>
-                    <a href="../PHP/contact.php" class="text-white text-decoration-none d-block mb-1">Contact</a>
-                </div>
-            </div>
-        </div>
-
-        <hr class="mt-5 border-white opacity-50">
-
-        <div class="row px-5">
-            <div class="col-12 text-center text-white mb-3">
-                &copy; Samoura Diaba et Gilet Amel | Tous droits réservés.
-            </div>
-        </div>
-    </footer>
 </body>
 
 </html>
