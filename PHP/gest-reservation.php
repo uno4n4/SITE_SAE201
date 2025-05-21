@@ -1,5 +1,6 @@
 <?php
-include('config.php');
+include 'config.php';
+session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
   echo "Erreur : Utilisateur non connecté.";
@@ -465,30 +466,34 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
           </div>
 
-          <div class="d-flex justify-content-between custom-bg-2 mt-5">
-            <h2 id="consignes" class="consigne">Gestions des consignes de sécurité</h2>
-            <div class="container">
-              <div class="d-flex custom-back m-0">
-                <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
-                <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
-                <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
-                <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
-                <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
-                <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
-                <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
-                <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
-                <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
-                <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
-                <button id="voir" class="visu">Visualiser</button>
+          <div class="container-fluid col-10 custom-bg-2 mt-5">
+            <div class="row">
+              <div class="col-12">
+                <h2 id="consignes" class="consigne mb-4">Gestions des consignes de sécurité</h2>
               </div>
-              <hr id="ligne">
-              <form action="gest-reservation.php" method="post">
-                <div contenteditable="true" id="zone-ecriture">
-                  <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+              <div class="col-12">
+                <div class="d-flex custom-back m-0">
+                  <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
+                  <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
+                  <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
+                  <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
+                  <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
+                  <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
+                  <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
+                  <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
+                  <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
+                  <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
+                  <button id="voir" class="visu">Visualiser</button>
                 </div>
-                <button id="enregistrer">Enregistrer</button>
-                <div id="message"></div>
-              </form>
+                <hr id="ligne">
+                <form action="gest-reservation.php" method="post">
+                  <div contenteditable="true" id="zone-ecriture">
+                    <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
+                  </div>
+                  <button id="enregistrer">Enregistrer</button>
+                  <div id="message"></div>
+                </form>
+              </div>
             </div>
           </div>
       </section>

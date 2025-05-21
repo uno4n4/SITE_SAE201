@@ -1,3 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
+    <script src="../JS/setting.js" defer></script>
+    <title>Réglages</title>
+</head>
+<body>
+
 <?php
 
 include('config.php');
@@ -105,8 +119,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
             echo "Erreur : " . $stmtInsert->errorInfo()[2];
         }
 
-        $stmtDelete->close();
-        $stmtInsert->close();
+        $stmtDelete = null;
+        $stmtInsert = null;
+
     } elseif ($tableOrigine && $table === $tableOrigine) {
         // Cas : rôle inchangé → mise à jour dans la même table
         $sql = "UPDATE `$tableOrigine` SET nom = ?, prenom = ?, date_naissance = ?, adresse_email = ?, numero_tel = ?, adresse = ?, statut = ? WHERE pseudo = ?";
@@ -123,7 +138,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
         } else {
             echo "Erreur lors de la mise à jour : " . $stmtUpdate->errorInfo()[2];
         }
-        $stmtUpdate->close();
+        $stmtUpdate = null;
     } else {
         die("Table d'origine invalide ou non définie.");
     }
@@ -152,31 +167,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['Pseudo'])){
             echo "Erreur lors de la suppression du compte : " . $stmt->errorInfo()[2];
         }
 
-        $stmt->close();
-        $pdo->close();
+        $stmt = null;
+        $pdo = null;
         exit;
     }
 }
 ?>
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
-    <script src="../JS/setting.js" defer></script>
-    <title>Réglages</title>
-</head>
-<body>
 
 <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">

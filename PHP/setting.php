@@ -1,16 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
+    <script src="../JS/setting.js" defer></script>
+    <title>Réglages</title>
+</head>
+<body>
+
 <?php
 include('config.php');
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
 $ancienPass = $_SESSION['utilisateur']['Mdp'];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
     // Vérification et mise à jour du mot de passe
     if (isset($_POST['update_pass'])) {
         $ancienPass = trim($_POST['old']);
@@ -31,20 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
 
-        // Récupérer l'ancien mot de passe pour la vérification
+        // Récupérer l'ancien mot de passe depuis la base
         $sql = "SELECT Mdp FROM inscription_eleve WHERE Pseudo = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $pseudoActuel);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $utilisateur = $result->fetch_assoc();
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$pseudoActuel]);
+        $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$utilisateur || !password_verify($ancienPass, $utilisateur['Mdp'])) {
             echo <<<HTML
         <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-          <b class="mb-2 d-block">ANCIEN MOT DE PASSE INCORRECT.</b>
+          <b class="mb-2 d-block">Changement de mot de passe enregistré !</b>
           <div class="text-center mt-3">
-            <a href="setting.php" class="btn btn-danger">Fermer</a>
+            <a href="setting.php" class="btn btn-success">Fermer</a>
           </div>
         </div>
         HTML;
@@ -55,38 +66,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $nouveauHash = password_hash($nouveauPass, PASSWORD_DEFAULT);
 
         $sqlUpdate = "UPDATE inscription_eleve SET Mdp = ? WHERE Pseudo = ?";
-        $stmt = $conn->prepare($sqlUpdate);
-        $stmt->bind_param("ss", $nouveauHash, $pseudoActuel);
+        $stmt = $pdo->prepare($sqlUpdate);
 
-        if ($stmt->execute()) {
+        if ($stmt->execute([$nouveauHash, $pseudoActuel])) {
             $_SESSION['utilisateur']['Mdp'] = $nouveauHash;
             header("Location: setting.php");
             exit();
         } else {
-            echo "Erreur lors de la mise à jour du mot de passe : " . $stmt->error;
+            echo "Erreur lors de la mise à jour du mot de passe : " . $stmt->errorInfo()[2];
         }
-        $stmt->close();
+
+        $stmt = null;
     }
 }
 ?>
 
-
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
-    <script src="../JS/setting.js" defer></script>
-    <title>Réglages</title>
-</head>
-<body>
-
-<<header class="container-fluid px-0">
+<header class="container-fluid px-0">
         <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
             <div>
                 <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">

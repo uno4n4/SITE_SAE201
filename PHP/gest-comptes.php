@@ -252,8 +252,19 @@ if (isset($_POST["accepter1"])) {
     $Nom = $_POST["Nom"];
     $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = :Nom");
     $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-    $stmt->execute();
-}
+    if($stmt->execute()){
+      echo <<<HTML
+                <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+                    <b class="mb-2 d-block">L'utilisateur a été accepté avec succès !</b>
+                    <div class="text-center mt-3">
+                        <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
+                    </div>
+                </div>
+            HTML;
+        } else {
+            echo "Erreur : " . $stmtInsert->errorInfo()[2];
+        }
+    };
 ?>
 
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
@@ -264,8 +275,20 @@ if (isset($_POST["refuser1"])) {
     $Nom = $_POST["Nom"];
     $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = :Nom");
     $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-    $stmt->execute();
-}
+    if($stmt->execute()){
+      echo <<<HTML
+                <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+                    <b class="mb-2 d-block">L'utilisateur a été refusé'</b>
+                    <div class="text-center mt-3">
+                        <a href="gest-comptes.php" class="btn btn-danger">Fermer</a>
+                    </div>
+                </div>
+            HTML;
+        } else {
+            echo "Erreur : " . $stmtInsert->errorInfo()[2];
+        }
+    };
+
 ?>
 
                               </div>
@@ -411,7 +434,7 @@ if ($table === 'inscription_eleve'):
         </div>
       </div>
     <?php
-      endwhile;
+      endforeach;
     endif;
     ?>
   <?php endforeach; ?>
