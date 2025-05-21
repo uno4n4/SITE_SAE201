@@ -290,7 +290,6 @@ CREATE TABLE `reservation_prof` (
 --
 ALTER TABLE `commentaires_eleve`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `Pseudo` (`Pseudo`),
   ADD KEY `fk_materiel` (`materiel`);
 
 --
@@ -396,7 +395,6 @@ ALTER TABLE `reservation_prof`
 -- Contraintes pour la table `commentaires_eleve`
 --
 ALTER TABLE `commentaires_eleve`
-  ADD CONSTRAINT `commentaires_eleve_ibfk_1` FOREIGN KEY (`Pseudo`) REFERENCES `inscription_eleve` (`Pseudo`),
   ADD CONSTRAINT `fk_materiel` FOREIGN KEY (`materiel`) REFERENCES `materiel` (`Nom`);
 
 --

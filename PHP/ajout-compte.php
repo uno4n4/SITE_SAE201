@@ -1,63 +1,64 @@
 <?php
 
-include ('config.php');
+include('config.php');
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
-if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
-  $Nom=$_POST['Nom'];
-  $Prenom=$_POST['Prenom'];
-  $Email=$_POST['Email'];
-  $Role=$_POST['Role'];
-  $Pseudo = strtolower($Nom . '.' . $Prenom);
-  $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
-  $Statut = 'accepté';
+if (isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])) {
+    $Nom = $_POST['Nom'];
+    $Prenom = $_POST['Prenom'];
+    $Email = $_POST['Email'];
+    $Role = $_POST['Role'];
+    $Pseudo = strtolower($Nom . '.' . $Prenom);
+    $Mdp = password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
+    $Statut = 'accepté';
 
-  switch($Role){
-    case 'admin':
-      $table = 'inscription_admin';
-      break;
-    case 'agent':
-      $table = 'inscription_agent';
-      break;
-    case 'etudiant':
-      $table = 'inscription_eleve';
-      break;
-    case 'prof':
-      $table = 'inscription_prof';
-      break;
-    default:
-      die("Rôle invalide.");
-      
-  }
+    switch ($Role) {
+        case 'admin':
+            $table = 'inscription_admin';
+            break;
+        case 'agent':
+            $table = 'inscription_agent';
+            break;
+        case 'etudiant':
+            $table = 'inscription_eleve';
+            break;
+        case 'prof':
+            $table = 'inscription_prof';
+            break;
+        default:
+            die("Rôle invalide.");
+    }
 
-  $sql = "INSERT INTO $table (nom, prenom, adresse_email, pseudo, mdp, statut)
-        VALUES (?, ?, ?, ?, ?, ?)";
-  $stmt = $conn->prepare($sql);
-  if ($stmt === false){
-    die("Erreur préparation : " . $conn->error); 
-  }
-  $stmt->bind_param("ssssss", $Nom, $Prenom, $Email, $Pseudo, $Mdp, $Statut);
+    $sql = "INSERT INTO $table (nom, prenom, adresse_email, pseudo, mdp, statut)
+            VALUES (?, ?, ?, ?, ?, ?)";
 
-  if($stmt->execute()){
-    echo <<<HTML
-        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-          <b class="mb-2 d-block">Inscription réussie ! </b>
-          <div class="text-center mt-3">
-            <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
-          </div>
-        </div>
-        HTML;
-  } else {
-    echo "Erreur : " . $stmt->error;
-  }
-  $stmt->close();
+    try {
+        $stmt = $pdo->prepare($sql);
+        $success = $stmt->execute([$Nom, $Prenom, $Email, $Pseudo, $Mdp, $Statut]);
+
+        if ($success) {
+            echo <<<HTML
+            <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+              <b class="mb-2 d-block">Inscription réussie ! </b>
+              <div class="text-center mt-3">
+                <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
+              </div>
+            </div>
+            HTML;
+        } else {
+            echo "Erreur lors de l'exécution de la requête.";
+        }
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
+    }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -76,31 +77,30 @@ if(isset($_POST['Nom']) && isset($_POST['Prenom']) && isset($_POST['Role'])){
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
       <div class="d-flex align-items-center ms-auto gap-2">
             <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-                // ADMIN
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+    // ADMIN
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($row['total'] > 0) {
-                    echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                } else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            ';
-                    }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
-        </div>
+    if ($row['total'] > 0) {
+        echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+    } else {
+        // Aucun des deux trouvés
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                ';
+    }
+}
+?>
+<h6 class="mb-0 text-nowrap text-end">
+    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+</h6>
+</div>
+
     </div>
   </header> 
     

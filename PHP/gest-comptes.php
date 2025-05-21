@@ -10,24 +10,32 @@ if (!isset($_SESSION['utilisateur'])) {
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
-foreach ($tables as $table){
-if (isset($_POST['noms'])) {
-    // Récupérer les noms envoyés
-    $noms = explode(',', $_POST['noms']);
-    $action = isset($_POST['accepter']) ? 'accepté' : (isset($_POST['refuser']) ? 'refusé' : '');
+foreach ($tables as $table) {
+    if (isset($_POST['noms'])) {
+        // Récupérer les noms envoyés
+        $noms = explode(',', $_POST['noms']);
+        $action = isset($_POST['accepter']) ? 'accepté' : (isset($_POST['refuser']) ? 'refusé' : '');
 
-    // Mettre à jour le statut de chaque utilisateur
-    foreach ($noms as $nom) {
-        $nom = trim($nom);
-        $stmt = $conn->prepare("UPDATE `$table` SET Statut = ? WHERE Nom = ?");
-        $stmt->bind_param("ss", $action, $nom);
-        $stmt->execute();
+        // Mettre à jour le statut de chaque utilisateur
+        foreach ($noms as $nom) {
+            $nom = trim($nom);
+            
+            // Préparer la requête PDO pour la mise à jour
+            $sql = "UPDATE `$table` SET Statut = :statut WHERE Nom = :nom";
+            $stmt = $pdo->prepare($sql);
+            
+            // Lier les paramètres
+            $stmt->bindParam(':statut', $action, PDO::PARAM_STR);
+            $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+            
+            // Exécuter la requête
+            $stmt->execute();
+        }
     }
 }
-}
-
 
 ?>
+
 
 
 
@@ -54,30 +62,31 @@ if (isset($_POST['noms'])) {
         </div>
         <div class="d-flex align-items-center ms-auto gap-2">
             <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-                // ADMIN
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+    // ADMIN
+    $sql = "SELECT COUNT(*) as total FROM inscription_admin WHERE nom = :nom";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($row['total'] > 0) {
-                    echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                } else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            ';
-                    }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
+    if ($row['total'] > 0) {
+        echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+    } else {
+        // Aucun des deux trouvés
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+            ';
+    }
+}
+?>
+<h6 class="mb-0 text-nowrap text-end">
+    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+</h6>
+
         </div>
     </div>
 </header>
@@ -138,17 +147,19 @@ if (isset($_POST['noms'])) {
                   <h2>Approbation des comptes</h2>
                   <h6>
                     <?php
-                    $total = 0;
-                    foreach ($tables as $table) {
-                      $query = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'en attente'";
-                      $result = $conn->query($query);
-                      if ($result) {
-                        $row = $result->fetch_assoc();
-                        $total += (int)$row['count'];
-                      }
-                    }
-                    echo $total . " compte(s) en attente";
-                    ?>
+$total = 0;
+foreach ($tables as $table) {
+    $sql = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'en attente'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $total += (int)$row['count'];
+    }
+}
+echo $total . " compte(s) en attente";
+?>
+
                 </div>
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
                   <!-- Partie gauche : Filtrer par -->
@@ -191,18 +202,21 @@ if (isset($_POST['noms'])) {
                 <div class="d-flex flex-wrap justify-content-center gap-4">
                   <!-- Carte 1 -->
                   <?php foreach ($tables as $table): ?>
-                    <?php
-                    $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
-                    while ($user = $result->fetch_assoc()):
-                      $color = '';
-                    if($table === 'inscription_eleve'){
-                      $color = '#12A19A';
-                    } elseif ($table === 'inscription_prof'){
-                      $color = '#8B1E3F';
-                    } else {
-                      $color = '#6c757d';
-                    }
-                    ?>
+    <?php
+    $sql = "SELECT * FROM `$table` WHERE statut = 'en attente'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    while ($user = $stmt->fetch(PDO::FETCH_ASSOC)):
+        $color = '';
+        if ($table === 'inscription_eleve') {
+            $color = '#12A19A';
+        } elseif ($table === 'inscription_prof') {
+            $color = '#8B1E3F';
+        } else {
+            $color = '#6c757d';
+        }
+    ?>
+
                       <div class="card-wrapper">
                         <form action="gest-comptes.php" method="post">
                           <div class="card custom-card">
@@ -234,24 +248,26 @@ if (isset($_POST['noms'])) {
                                   <i class="fa-solid fa-circle-check"></i>
                                 </button>
                                 <?php
-                                if (isset($_POST["accepter1"])) {
-                                  $Nom = $_POST["Nom"];
-                                  $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
-                                  $stmt->bind_param("s", $Nom);
-                                  $stmt->execute();
-                                }
-                                ?>
+if (isset($_POST["accepter1"])) {
+    $Nom = $_POST["Nom"];
+    $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = :Nom");
+    $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+    $stmt->execute();
+}
+?>
+
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
                                   <i class="fa-solid fa-circle-xmark"></i>
                                 </button>
                                 <?php
-                                if (isset($_POST["refuser1"])) {
-                                  $Nom = $_POST["Nom"];
-                                  $stmt = $conn->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
-                                  $stmt->bind_param("s", $Nom);
-                                  $stmt->execute();
-                                }
-                                ?>
+if (isset($_POST["refuser1"])) {
+    $Nom = $_POST["Nom"];
+    $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = :Nom");
+    $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+    $stmt->execute();
+}
+?>
+
                               </div>
                             </div>
                           </div>
@@ -266,17 +282,18 @@ if (isset($_POST['noms'])) {
                   <h2>Gestions des comptes</h2>
                   <h6>
                     <?php
-                    $total = 0;
-                    foreach ($tables as $table) {
-                      $query = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'";
-                      $result = $conn->query($query);
-                      if ($result) {
-                        $row = $result->fetch_assoc();
-                        $total += (int)$row['count'];
-                      }
-                    }
-                    echo $total . " comptes accepté";
-                    ?>
+$total = 0;
+foreach ($tables as $table) {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'");
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $total += (int)$row['count'];
+    }
+}
+echo $total . " comptes acceptés";
+?>
+
                   </h6>
                 </div>
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
@@ -320,18 +337,22 @@ if (isset($_POST['noms'])) {
                 <div class="d-flex flex-wrap justify-content-center gap-4">
   <?php foreach ($tables as $table): ?>
     <?php
-    $result = $conn->query("SELECT * FROM `$table` WHERE statut = 'accepté'");
-    if ($result && $result->num_rows > 0):
-      while ($user = $result->fetch_assoc()):
-        // Couleur selon le type d'utilisateur
-        $color = match($table) {
-          'inscription_eleve' => '#12A19A',
-          'inscription_prof' => '#8B1E3F',
-          'inscription_agent' => '#F4A261',
-          'inscription_admin' => '#2F2A85',
-          default => '#6c757d',
-        };
+    $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE statut = 'accepté'");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($result && count($result) > 0):
+        foreach ($result as $user):
+            // Couleur selon le type d'utilisateur
+            $color = match($table) {
+                'inscription_eleve' => '#12A19A',
+                'inscription_prof' => '#8B1E3F',
+                'inscription_agent' => '#F4A261',
+                'inscription_admin' => '#2F2A85',
+                default => '#6c757d',
+            };
     ?>
+
       <div class="card-wrapper">
         <div class="card custom-card">
           <div class="card-top d-flex justify-content-end align-items-start mx-3 mt-2 position-relative">
@@ -359,14 +380,13 @@ if (isset($_POST['noms'])) {
               <p class="derniere-reservation">Dernière réservation</p>
               <p class="date-reser">
                 <?php
-                  $reservation_table = isset($user['Td']) ? 'reservation_etudiant' : 'reservation_prof';
-                  $stmt = $conn->prepare("SELECT MAX(Date_reservation) AS last_date FROM $reservation_table WHERE Pseudo = ?");
-                  $stmt->bind_param("s", $user['Pseudo']);
-                  $stmt->execute();
-                  $res = $stmt->get_result();
-                  $row = $res->fetch_assoc();
-                  echo $row['last_date'] ?? '—';
-                ?>
+$reservation_table = isset($user['Td']) ? 'reservation_etudiant' : 'reservation_prof';
+$stmt = $pdo->prepare("SELECT MAX(Date_reservation) AS last_date FROM $reservation_table WHERE Pseudo = ?");
+$stmt->execute([$user['Pseudo']]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+echo $row['last_date'] ?? '—';
+?>
+
               </p>
             </div>
 
@@ -374,9 +394,19 @@ if (isset($_POST['noms'])) {
             <p class="text-left card-text"><strong>Numéro de téléphone :</strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
             <p class="text-left card-text"><strong>Pseudo :</strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
 
-            <?php if ($table === 'inscription_eleve'): ?>
-              <p class="text-left card-text"><strong>Numéro étudiant :</strong> <?= htmlspecialchars($user['Num_etudiant'] ?? '') ?></p>
-            <?php endif; ?>
+            <?php
+if ($table === 'inscription_eleve'):
+
+    // Récupérer le numéro étudiant via PDO
+    $stmt = $pdo->prepare("SELECT Num_etudiant FROM $table WHERE Pseudo = ?");
+    $stmt->execute([$user['Pseudo']]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $num_etudiant = $result['Num_etudiant'] ?? '';
+?>
+    <p class="text-left card-text"><strong>Numéro étudiant :</strong> <?= htmlspecialchars($num_etudiant) ?></p>
+<?php endif; ?>
+
           </div>
         </div>
       </div>

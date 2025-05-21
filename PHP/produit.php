@@ -7,9 +7,10 @@ if (!isset($_SESSION['utilisateur'])) {
   echo "Erreur : Utilisateur non connecté.";
   exit();
 }
+
 // Vérifie si la connexion fonctionne
-if ($conn->connect_error) {
-    die("Connexion échouée : " . $conn->connect_error);
+if (!$pdo) {
+    die("Connexion échouée.");
 }
 
 // Vérifie si l'ID du produit est bien passé dans l'URL
@@ -17,16 +18,15 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Requête pour récupérer les détails du produit
-    $sql = "SELECT * FROM materiel WHERE Nom = ?";
+    $sql = "SELECT * FROM materiel WHERE Nom = :nom";
 
     // Prépare la requête
-    if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("s", $id); // Lie l'ID à la requête
-        $stmt->execute(); // Exécute la requête
+    $stmt = $pdo->prepare($sql);
+    if ($stmt) {
+        $stmt->execute([':nom' => $id]);
 
         // Récupère les résultats
-        $result = $stmt->get_result();
-        $produit = $result->fetch_assoc(); // Récupère les informations du produit
+        $produit = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Si le produit n'existe pas
         if (!$produit) {
@@ -41,9 +41,8 @@ if (isset($_GET['id'])) {
     echo "Aucun produit sélectionné.";
     exit;
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -86,35 +85,32 @@ if (isset($_GET['id'])) {
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
-                            <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $row = $result->fetch_assoc();
+                           <?php
+// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = :nom");
+$stmt->execute([':nom' => $_SESSION['utilisateur']['Nom']]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
-                                <span class="spantext">Etudiant(e)</span>
-                            </span>';
-                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
+if ($row['total'] > 0) {
+    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
+        <span class="spantext">Etudiant(e)</span>
+    </span>';
+    // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+} else {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = :nom");
+    $stmt->execute([':nom' => $_SESSION['utilisateur']['Nom']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
-                                <span class="spantext">Enseignant(e)</span>
-                            </span>';
-                                }
-                            }
-                            ?>
+    if ($row['total'] > 0) {
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
+            <span class="spantext">Enseignant(e)</span>
+        </span>';
+    }
+}
+?>
+
 
                         </li>
                     </ul>
@@ -242,16 +238,19 @@ if (isset($_GET['id'])) {
         <h6 class="text-danger text-decoration-underline text-start p-3">Les consignes de sécurité : </h6>
         <div class="text-center">
         <?php
-        
-            $sql = "SELECT contenu FROM consigne WHERE id = 1";
-            $result = $conn->query($sql);
 
-            if ($result && $row = $result->fetch_assoc()) {
-                echo $row['contenu'];  // Affiche le HTML enregistré
-            } else {
-                echo "<p>Aucune consigne disponible pour le moment.</p>";
-            }
-        ?>
+$sql = "SELECT contenu FROM consigne WHERE id = 1";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($row) {
+    echo $row['contenu'];  // Affiche le HTML enregistré
+} else {
+    echo "<p>Aucune consigne disponible pour le moment.</p>";
+}
+?>
+
         </div>
 
     </div>
@@ -263,10 +262,21 @@ if (isset($_GET['id'])) {
             </div>
         </div>
         <?php
-        $materielcomment = $produit['Nom'];
-        $result = $conn->query("SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_eleve WHERE materiel = '$materielcomment' UNION SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_prof WHERE materiel = '$materielcomment';");
-        $users = $result->fetch_all(MYSQLI_ASSOC);
-        ?>
+$materielcomment = $produit['Nom'];
+
+// Préparation de la requête avec UNION
+$sql = "SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_eleve WHERE materiel = :materiel
+        UNION 
+        SELECT Pseudo, date_comment, commentaire, reaction FROM commentaires_prof WHERE materiel = :materiel";
+
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':materiel', $materielcomment, PDO::PARAM_STR);
+$stmt->execute();
+
+// Récupération des résultats
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
         <?php foreach ($users as $user): ?>
             <div id="com1" class="row ms-5">
                 <div class="col-sm-10 mt-2 ms-5 border border-secondary rounded p-3">
@@ -294,49 +304,53 @@ if (isset($_GET['id'])) {
     </div>
 
     <?php
-        if (isset($_POST["submit"])) {
-            $commentaire = htmlspecialchars($_POST['commentaire']) ?? '';
-            $reaction = htmlspecialchars($_POST['reaction']) ?? '';
+if (isset($_POST["submit"])) {
+    $commentaire = htmlspecialchars($_POST['commentaire']) ?? '';
+    $reaction = htmlspecialchars($_POST['reaction']) ?? '';
 
-            if (!empty($commentaire) && !empty($reaction)) {
-                if ($_SESSION['utilisateur']['Td']) {
-                    //Preparer la requete
-                    $stmt = $conn->prepare("INSERT INTO commentaires_eleve(Pseudo, date_comment, commentaire, reaction) 
-    VALUES (?,DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'),?,?)");
-                    //Verifier si la preparation a echoue
-                    if ($stmt === false) {
-                        die("Erreur de preparation de la requete: " . $conn->error);
-                    }
+    if (!empty($commentaire) && !empty($reaction)) {
+        if ($_SESSION['utilisateur']['Td']) {
+            // Préparer la requête pour les élèves
+            $sql = "INSERT INTO commentaires_eleve(Pseudo, date_comment, commentaire, reaction) 
+                    VALUES (:pseudo, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'), :commentaire, :reaction)";
+            $stmt = $pdo->prepare($sql);
 
-                    //Lier les paramètres a la requete
-                    $stmt->bind_param("ssi", $_SESSION['utilisateur']['Pseudo'], $commentaire, $reaction);
-
-                    //Executer la requete
-                    $stmt->execute();
-
-                    //Fermer la declaration et la connexion
-                    $stmt->close();
-                }else {
-                    //Preparer la requete
-                    $stmt = $conn->prepare("INSERT INTO commentaires_prof(Pseudo, date_comment, commentaire, reaction) 
-    VALUES (?,NOW(),?,?)");
-                    //Verifier si la preparation a echoue
-                    if ($stmt === false) {
-                        die("Erreur de preparation de la requete: " . $conn->error);
-                    }
-
-                    //Lier les paramètres a la requete
-                    $stmt->bind_param("sssi", $_SESSION['utilisateur']['Pseudo'], $commentaire, $reaction);
-
-                    //Executer la requete
-                    $stmt->execute();
-
-                    //Fermer la declaration et la connexion
-                    $stmt->close();
-                }
+            // Vérifier si la préparation a échoué
+            if ($stmt === false) {
+                die("Erreur de préparation de la requête: " . $pdo->errorInfo());
             }
+
+            // Lier les paramètres à la requête
+            $stmt->bindParam(':pseudo', $_SESSION['utilisateur']['Pseudo'], PDO::PARAM_STR);
+            $stmt->bindParam(':commentaire', $commentaire, PDO::PARAM_STR);
+            $stmt->bindParam(':reaction', $reaction, PDO::PARAM_STR);
+
+            // Exécuter la requête
+            $stmt->execute();
+
+        } else {
+            // Préparer la requête pour les professeurs
+            $sql = "INSERT INTO commentaires_prof(Pseudo, date_comment, commentaire, reaction) 
+                    VALUES (:pseudo, NOW(), :commentaire, :reaction)";
+            $stmt = $pdo->prepare($sql);
+
+            // Vérifier si la préparation a échoué
+            if ($stmt === false) {
+                die("Erreur de préparation de la requête: " . $conn->errorInfo());
+            }
+
+            // Lier les paramètres à la requête
+            $stmt->bindParam(':pseudo', $_SESSION['utilisateur']['Pseudo'], PDO::PARAM_STR);
+            $stmt->bindParam(':commentaire', $commentaire, PDO::PARAM_STR);
+            $stmt->bindParam(':reaction', $reaction, PDO::PARAM_STR);
+
+            // Exécuter la requête
+            $stmt->execute();
         }
-    ?>
+    }
+}
+?>
+
 
 
 

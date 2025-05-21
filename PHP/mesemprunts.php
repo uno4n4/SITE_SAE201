@@ -10,16 +10,18 @@ if (!isset($_SESSION['utilisateur'])) {
 
 $pseudo  = $_SESSION['utilisateur']['Pseudo'];
 if (isset($_SESSION['utilisateur']['Td'])) {
-    $result = $conn->query("SELECT * FROM reservation_etudiant WHERE Pseudo = '$pseudo'");
+    $stmt = $pdo->prepare("SELECT * FROM reservation_etudiant WHERE Pseudo = ?");
 } else {
-    $result = $conn->query("SELECT * FROM reservation_prof WHERE Pseudo = '$pseudo'");
+    $stmt = $pdo->prepare("SELECT * FROM reservation_prof WHERE Pseudo = ?");
 }
 
+$stmt->execute([$pseudo]);
 
-// Utilisation de fetch_all pour récupérer les résultats
-$reservations = $result->fetch_all(MYSQLI_ASSOC);
+// Utilisation de fetchAll pour récupérer les résultats
+$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -49,39 +51,36 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <?php
-                if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                    $nom = $_SESSION['utilisateur']['Nom'];
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-                    // Étudiant
-                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                    $stmt->bind_param("s", $nom);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $row = $result->fetch_assoc();
+    // Étudiant
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                    if ($row['total'] > 0) {
-                        echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
-                    } else {
-                        // Professeur
-                        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                        $stmt->bind_param("s", $nom);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $row = $result->fetch_assoc();
+    if ($row['total'] > 0) {
+        echo '
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
+    } else {
+        // Professeur
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+        $stmt->execute([$nom]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        if ($row['total'] > 0) {
-                            echo '
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
-                        } else {
-                            // Aucun des deux trouvés
-                            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            <span class="spantext">Utilisateur</span>';
-                        }
-                    }
-                }
-                ?>
+        if ($row['total'] > 0) {
+            echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
+        } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+            <span class="spantext">Utilisateur</span>';
+        }
+    }
+}
+?>
+
                 <h6 class="mb-0 text-nowrap text-end">
                     <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
                 </h6>
@@ -130,13 +129,12 @@ $reservations = $result->fetch_all(MYSQLI_ASSOC);
                     <div class="row">
                         <div class="col-12 col-lg-8">
                             <?php foreach ($reservations as $reserve): ?>
-                                <?php
-                                $stmt = $conn->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
-                                $stmt->bind_param("s", $reserve['materiel']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
-                                ?>
+    <?php
+    $stmt = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
+    $stmt->execute([$reserve['materiel']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    ?>
+
                                 <div class="rounded bg-light border text-center p-3 m-2">
                                     <div class="d-flex justify-content-baseline">Vous avez effectué une réservation
                                         pour le <span class="text-black ms-1"><?= htmlspecialchars($reserve['Date_reservation']) ?></span></div>

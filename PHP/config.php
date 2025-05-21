@@ -5,12 +5,13 @@ $user = "root";
 $pass = "";
 $db = "utilisateur";
 
-// Créer la connexion
-$conn = new mysqli($host, $user, $pass, $db);
-
-// Vérifier la connexion
-if ($conn->connect_error) {
-    die("Échec de la connexion : " . $conn->connect_error);
+try {
+    // Créer la connexion avec PDO
+    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+    // Définir le mode d'erreur de PDO sur exception
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Échec de la connexion : " . $e->getMessage());
 }
 
 ?>

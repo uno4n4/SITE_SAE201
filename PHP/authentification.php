@@ -11,11 +11,11 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
   $trouve = false;
 
   foreach($tables as $table){
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ? OR Adresse_email = ?");
-    $stmt->bind_param("ss", $Pseudo, $Pseudo);
+    // Préparer la requête PDO
+    $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE Pseudo = :pseudo OR Adresse_email = :pseudo");
+    $stmt->bindParam(':pseudo', $Pseudo, PDO::PARAM_STR);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if($user){
       $trouve = true;
@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         HTML;
         break;
       } elseif (!password_verify($Mdp, $user["Mdp"])) {
-    echo <<<HTML
+        echo <<<HTML
         <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
           <b class="mb-2 d-block">MOT DE PASSE INCORRECT</b>
           <div class="text-center mt-3">
@@ -48,7 +48,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
           </div>
         </div>
         HTML;
-      break;
+        break;
       } else {
         $_SESSION["utilisateur"] = $user;
         $_SESSION["table"] = $table;
@@ -68,6 +68,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 }
 
 ?>
+
 
 
 

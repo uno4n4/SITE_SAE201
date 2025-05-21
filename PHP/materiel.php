@@ -1,6 +1,6 @@
 <?php
 
-include '../PHP/config.php';
+include 'config.php';
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
@@ -38,30 +38,29 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <?php
-                if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                    $nom = $_SESSION['utilisateur']['Nom'];
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-                    // ADMIN :
-                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-                    $stmt->bind_param("s", $nom);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $row = $result->fetch_assoc();
+    // ADMIN :
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                    if ($row['total'] > 0) {
-                        echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-                    } else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            ';
-                    }
-                }
-                ?>
-                <h6 class="mb-0 text-nowrap text-end">
-                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-                </h6>
+    if ($row['total'] > 0) {
+        echo '
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+    } else {
+        // Aucun des deux trouvés
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+            ';
+    }
+}
+?>
+<h6 class="mb-0 text-nowrap text-end">
+    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+</h6>
+
             </div>
         </div>
     </header>
@@ -124,13 +123,13 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                                 <i class="fa-solid fa-display fa-2xl p-2"></i>
                                 <h4>
                                     <?php
-                                    $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
-                                    $stmt->execute();
-                                    $stmt->bind_result($total);
-                                    $stmt->fetch();
-                                    $stmt->close();
-                                    echo $total;
-                                    ?>
+$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$total = $row['total'];
+echo $total;
+?>
+
                                 </h4>
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                             </div>
@@ -157,11 +156,12 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
                             </thead>
                             <tbody class="align-middle">
                                 <?php
-                                $result = $conn->query("SELECT * FROM materiel WHERE Image_un LIKE '%.jpg'");
-                                $users = $result->fetch_all(MYSQLI_ASSOC);
-                                ?>
-                                <?php foreach ($users as $user): ?>
-                                    <tr>
+$stmt = $pdo->prepare("SELECT * FROM materiel WHERE Image_un LIKE '%.jpg'");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+<?php foreach ($users as $user): ?>
+   <tr>
                                         <td>
                                             <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                                                 <img src="../IMG/images/<?= htmlspecialchars($user['Image_un']) ?>" alt="<?= htmlspecialchars($user['Nom']) ?>"

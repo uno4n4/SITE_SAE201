@@ -34,30 +34,29 @@ if (!isset($_SESSION['utilisateur'])) {
         </div>
         <div class="d-flex align-items-center ms-auto gap-2">
             <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-                // Étudiant
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_agent WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
+    // Étudiant
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_agent WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($row['total'] > 0) {
-                    echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #F4A261;"></span>';
-                } else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            ';
-                    }
-                  }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
+    if ($row['total'] > 0) {
+        echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #F4A261;"></span>';
+    } else {
+        // Aucun des deux trouvés
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+                ';
+    }
+}
+?>
+<h6 class="mb-0 text-nowrap text-end">
+    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+</h6>
+
         </div>
     </div>
 </header>

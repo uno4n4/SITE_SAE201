@@ -14,28 +14,25 @@ require '../PHPMailer-master/src/Exception.php';
 require '../PHPMailer-master/src/PHPMailer.php';
 require '../PHPMailer-master/src/SMTP.php';
 
-if($_SERVER["REQUEST_METHOD"] === "POST"){
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $Pseudo = $_POST['Pseudo'];
   $tables = ['inscription_eleve', 'inscription_prof', 'inscription_admin', 'inscription_agent'];
   $trouve = false;
 
-  foreach($tables as $table){
-    $stmt = $conn->prepare("SELECT * FROM `$table` WHERE Pseudo = ? OR Adresse_email = ?");
-    $stmt->bind_param("ss", $Pseudo, $Pseudo);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+  foreach ($tables as $table) {
+    $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE Pseudo = ? OR Adresse_email = ?");
+    $stmt->execute([$Pseudo, $Pseudo]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if($user){
+    if ($user) {
       $trouve = true;
       $email = $user['Adresse_email'];
       $Pseudo = $user['Pseudo'];
       $mdp_temporaire = bin2hex(random_bytes(4));
       $mdp_hash = password_hash($mdp_temporaire, PASSWORD_DEFAULT);
 
-      $update = $conn->prepare("UPDATE `$table` SET Mdp = ? WHERE Pseudo = ? OR Adresse_email = ?");
-      $update->bind_param("sss", $mdp_hash, $Pseudo, $email);
-      $update->execute();
+      $update = $pdo->prepare("UPDATE `$table` SET Mdp = ? WHERE Pseudo = ? OR Adresse_email = ?");
+      $update->execute([$mdp_hash, $Pseudo, $email]);
 
       $mail = new PHPMailer(true);
 
@@ -73,9 +70,9 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
 
       break;
     }
-}
+  }
 
-if(!$trouve){
+  if (!$trouve) {
     echo <<<HTML
         <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
           <b class="mb-2 d-block">AUCUN COMPTE N'A ÉTÉ TROUVÉ SOUS CETTE ADRESSE EMAIL / PSEUDO</b>
@@ -84,9 +81,10 @@ if(!$trouve){
           </div>
         </div>
         HTML;
-}
+  }
 }
 ?>
+
 
 
 

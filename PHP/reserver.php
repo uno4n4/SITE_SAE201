@@ -7,7 +7,13 @@ if (!isset($_SESSION['utilisateur'])) {
     echo "Erreur : Utilisateur non connecté.";
     exit();
 }
+
+// Vérification de la connexion PDO (optionnel mais recommandé)
+if ($pdo === null) {
+    die("Erreur de connexion à la base de données.");
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,34 +57,31 @@ if (!isset($_SESSION['utilisateur'])) {
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $row = $result->fetch_assoc();
+// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+$stmt->execute([$_SESSION['utilisateur']['Nom']]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
-                                <span class="spantext">Etudiant(e)</span>
-                            </span>';
-                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
+if ($row['total'] > 0) {
+    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+    <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
+    <span class="spantext">Etudiant(e)</span>
+    </span>';
+    // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+} else {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+    $stmt->execute([$_SESSION['utilisateur']['Nom']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
-                                <span class="spantext">Enseignant(e)</span>
-                            </span>';
-                                }
-                            }
-                            ?>
+    if ($row['total'] > 0) {
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
+        <span class="spantext">Enseignant(e)</span>
+        </span>';
+    }
+}
+?>
+
 
                         </li>
                     </ul>
@@ -119,7 +122,7 @@ if (!isset($_SESSION['utilisateur'])) {
                     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../PHP/accueil.php">Accueil</a></li>
-                            <li class="breadcrumb-item"><a href="../PHP/produit.php">Drone</a></li>
+                            <li class="breadcrumb-item"><a href='produit.php?id=<?= htmlspecialchars($_POST['nom_produit']) ?>&quantite=1' type='button'><?= htmlspecialchars($_POST['nom_produit']) ?></a></li>
                             <li class="breadcrumb-item active" aria-current="page">Réservation</li>
                         </ol>
                     </nav>
@@ -163,121 +166,51 @@ if (!isset($_SESSION['utilisateur'])) {
     <div class="w-100"></div>
 
     <?php
-    if (isset($_POST["submit-etud"])) {
-        $nom = htmlspecialchars($_POST['nom']) ?? '';
-        $prenom = htmlspecialchars($_POST['prenom']) ?? '';
-        $numcarteetud = htmlspecialchars($_POST['numcarteetud']) ?? '';
-        $email = htmlspecialchars($_POST['email']) ?? '';
-        $date = htmlspecialchars($_POST['date']) ?? '';
-        $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
-        $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
-        $nomProjet = htmlspecialchars($_POST['nomProjet']) ?? '';
-        $participants = htmlspecialchars($_POST['participants']) ?? '';
-        $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
-        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
-        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
-        /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
+if (isset($_POST["submit-etud"])) {
+    $nom = htmlspecialchars($_POST['nom']) ?? '';
+    $prenom = htmlspecialchars($_POST['prenom']) ?? '';
+    $numcarteetud = htmlspecialchars($_POST['numcarteetud']) ?? '';
+    $email = htmlspecialchars($_POST['email']) ?? '';
+    $date = htmlspecialchars($_POST['date']) ?? '';
+    $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
+    $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
+    $nomProjet = htmlspecialchars($_POST['nomProjet']) ?? '';
+    $participants = htmlspecialchars($_POST['participants']) ?? '';
+    $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
+    $nom_produit = urldecode($_POST['nom_produit']) ?? '';
+    $quantite = htmlspecialchars($_POST['quantite']) ?? '';
+    /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
 
-        if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
-            //Preparer la requete
-            $stmt = $conn->prepare("INSERT INTO reservation_etudiant(Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participants, materiel, quantite) /*penser à ajouter signature*/
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-            //Verifier si la preparation a echoue
-            if ($stmt === false) {
-                die("Erreur de preparation de la requete: " . $conn->error);
-            }
+    if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable)) {
+        // Préparer la requête
+        $stmt = $pdo->prepare("INSERT INTO reservation_etudiant(Pseudo, Nom, Prenom, Num_etudiant, Adresse_email, Date_reservation, heure_debut, heure_fin, nom_projet, participants, materiel, quantite) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 
-            //Lier les paramètres a la requete
-            $stmt->bind_param("sssssssssssi", $_SESSION['utilisateur']['Pseudo'], $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $nom_produit, $quantite);/*penser à ajouter signature*/
-
-            //Executer la requete
-            $stmt->execute();
-
-            //Fermer la declaration et la connexion
-            $stmt->close();
-            $conn->close();
-
-            // formulaire de reçu redirigé vers page accueil à la validation
-            echo "<section id='3'>
-                    <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
-                        <h5 class='mb-4 ms-4'>Votre Réservation</h5>
-                        <div>Nom : {$nom}</div>
-                        <div class='mb-4'>Prénom : {$prenom}</div>
-                        <div>Numéro étudiant : {$numcarteetud}</div>
-                        <div>Adresse email universitaire : {$email}</div>
-                        <div class='mb-4'>Date de réservation : {$date}</div>
-                        <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
-                        <div class='mb-4'>Nom du projet : {$nomProjet}</div>
-                        <div>Etudiants participants : {$participants}</div> 
-                        <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
-                        <p>Matériel : {$nom_produit} x{$quantite}</p>
-                        <p>Signature : A TROUVER</p>
-                        <div class='col-4 ms-auto mb-3 mb-lg-0'>
-                            <div class='me-5 mt-3'>
-                                <a class='icon-link link-dark' href='#'>
-                                    Télécharger le PDF
-                                    <img src='../IMG/google-docs.png' alt='google-docs'>
-                                </a>
-                            </div>
-                        </div>
-                        <div class='row mt-5'>
-                            <div class='col-sm-4'>
-                                <button type='button' class='btn btn-info' onclick='previousForm(event)'><img
-                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour</button>
-                            </div>
-                            <div class='col-sm-4'></div>
-                            <div class='col-sm-4'>
-                                <button type='submit' name='valider' class='btn btn-info'>Valider</button>
-                            </div>
-                        </div>
-                    </form>
-                </section>";
-        } else {
-            echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
-            echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                                <a href='../PHP/reservation.php?id=<?= htmlspecialchars($nom_produit) ?>&quantite=1' type='button' class='btn btn-primary col-3'><img
-                                        src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
-                            </div>
-                <div class='clearfix'></div>
-                <div class='w-100'></div>";
+        // Vérifier si la préparation a échoué
+        if ($stmt === false) {
+            die("Erreur de préparation de la requête: " . $pdo->error);
         }
-    }
 
+        // Lier les paramètres à la requête
+        $stmt->execute([$_SESSION['utilisateur']['Pseudo'], $nom, $prenom, $numcarteetud, $email, $date, $heureRetrait, $heureRetour, $nomProjet, $participants, $nom_produit, $quantite]);
 
+        // Fermer la déclaration et la connexion
+        $stmt = null;
+        $pdo = null;
 
-    if (isset($_POST["submit-prof"])) {
-        $nom = htmlspecialchars($_POST['nom']) ?? '';
-        $prenom = htmlspecialchars($_POST['prenom']) ?? '';
-        $email = htmlspecialchars($_POST['email']) ?? '';
-        $date = htmlspecialchars($_POST['date']) ?? '';
-        $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
-        $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
-        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
-        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
-        /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
-
-        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
-            $stmt = $conn->prepare("INSERT INTO reservation_prof(Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite)/*penser à ajouter signature*/
-    VALUES (?,?,?,?,?,?,?,?,?)");
-
-            //Lier les paramètres a la requete
-            $stmt->bind_param("ssssssssi", $nom, $prenom, $_SESSION['utilisateur']['Nom'], $email, $date, $heureRetrait, $heureRetour, $nom_produit, $quantite); /*penser à ajouter signature*/
-
-            $stmt->execute();
-
-            //Fermer la declaration et la connexion
-            $stmt->close();
-            $conn->close();
-
-            // formulaire de reçu redirigé vers page accueil à la validation
-            echo "<section id='3'>
+        // Formulaire de reçu redirigé vers page accueil à la validation
+        echo "<section id='3'>
                 <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
                     <h5 class='mb-4 ms-4'>Votre Réservation</h5>
                     <div>Nom : {$nom}</div>
                     <div class='mb-4'>Prénom : {$prenom}</div>
+                    <div>Numéro étudiant : {$numcarteetud}</div>
                     <div>Adresse email universitaire : {$email}</div>
                     <div class='mb-4'>Date de réservation : {$date}</div>
                     <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
+                    <div class='mb-4'>Nom du projet : {$nomProjet}</div>
+                    <div>Etudiants participants : {$participants}</div> 
+                    <div class='mb-4'>Enseignant responsable du projet : {$enseignantResponsable}</div>
                     <p>Matériel : {$nom_produit} x{$quantite}</p>
                     <p>Signature : A TROUVER</p>
                     <div class='col-4 ms-auto mb-3 mb-lg-0'>
@@ -300,17 +233,82 @@ if (!isset($_SESSION['utilisateur'])) {
                     </div>
                 </form>
             </section>";
-        } else {
-            echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
-            echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                            <a href='../PHP/reservation.php?id=<?= htmlspecialchars($nom_produit) ?>&quantite=1' type='button' class='btn btn-primary col-3'><img
+    } else {
+        echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
+        echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
+                            <a href='../PHP/reservation.php?id={$nom_produit}&quantite=1' type='button' class='btn btn-primary col-3'><img
                                     src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                         </div>
             <div class='clearfix'></div>
             <div class='w-100'></div>";
-        }
     }
-    ?>
+}
+
+if (isset($_POST["submit-prof"])) {
+    $nom = htmlspecialchars($_POST['nom']) ?? '';
+    $prenom = htmlspecialchars($_POST['prenom']) ?? '';
+    $email = htmlspecialchars($_POST['email']) ?? '';
+    $date = htmlspecialchars($_POST['date']) ?? '';
+    $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
+    $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
+    $nom_produit = urldecode($_POST['nom_produit']) ?? '';
+    $quantite = htmlspecialchars($_POST['quantite']) ?? '';
+    /*$signature = htmlspecialchars($_POST['signature']) ?? '';*/
+
+    if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour)) {
+        // Préparer la requête
+        $stmt = $pdo->prepare("INSERT INTO reservation_prof(Nom, Prenom, Pseudo, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite) 
+        VALUES (?,?,?,?,?,?,?,?,?)");
+
+        // Lier les paramètres à la requête
+        $stmt->execute([$nom, $prenom, $_SESSION['utilisateur']['Nom'], $email, $date, $heureRetrait, $heureRetour, $nom_produit, $quantite]);
+
+        // Fermer la déclaration et la connexion
+        $stmt = null;
+        $pdo = null;
+
+        // Formulaire de reçu redirigé vers page accueil à la validation
+        echo "<section id='3'>
+            <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
+                <h5 class='mb-4 ms-4'>Votre Réservation</h5>
+                <div>Nom : {$nom}</div>
+                <div class='mb-4'>Prénom : {$prenom}</div>
+                <div>Adresse email universitaire : {$email}</div>
+                <div class='mb-4'>Date de réservation : {$date}</div>
+                <div>Horaire de réservation : {$heureRetrait} - {$heureRetour}</div>
+                <p>Matériel : {$nom_produit} x{$quantite}</p>
+                <p>Signature : A TROUVER</p>
+                <div class='col-4 ms-auto mb-3 mb-lg-0'>
+                    <div class='me-5 mt-3'>
+                        <a class='icon-link link-dark' href='#'>
+                            Télécharger le PDF
+                            <img src='../IMG/google-docs.png' alt='google-docs'>
+                        </a>
+                    </div>
+                </div>
+                <div class='row mt-5'>
+                    <div class='col-sm-4'>
+                        <button type='button' class='btn btn-info' onclick='previousForm(event)'><img
+                                src='../IMG/fleche-gauche.png' alt='retour'>Retour</button>
+                    </div>
+                    <div class='col-sm-4'></div>
+                    <div class='col-sm-4'>
+                        <button type='submit' name='valider' class='btn btn-info'>Valider</button>
+                    </div>
+                </div>
+            </form>
+        </section>";
+    } else {
+        echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
+        echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
+                        <a href='../PHP/reservation.php?id=<?= htmlspecialchars($nom_produit) ?>&quantite=1' type='button' class='btn btn-primary col-3'><img
+                                src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
+                    </div>
+        <div class='clearfix'></div>
+        <div class='w-100'></div>";
+    }
+}
+?>
 
     <div class="clearfix"></div>
     <div class="w-100"></div>

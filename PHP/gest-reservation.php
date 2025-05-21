@@ -9,34 +9,28 @@ if (!isset($_SESSION['utilisateur'])) {
 if (isset($_POST['contenu'])) {
   $contenu = $_POST['contenu'];
 
-  $check = $conn->query("SELECT id FROM consigne LIMIT 1");
-  if ($check->num_rows > 0) {
-    $stmt = $conn->prepare("UPDATE consigne SET contenu = ? WHERE id = 1");
-    $stmt->bind_param("s", $contenu);
-    $stmt->execute();
-    $stmt->close();
+  $stmt = $pdo->prepare("SELECT id FROM consigne LIMIT 1");
+  $stmt->execute();
+  if ($stmt->rowCount() > 0) {
+    $updateStmt = $pdo->prepare("UPDATE consigne SET contenu = ? WHERE id = 1");
+    $updateStmt->execute([$contenu]);
     echo "Consigne mise à jour.";
   } else {
-    $stmt = $conn->prepare("INSERT INTO consigne (contenu) VALUES (?)");
-    $stmt->bind_param("s", $contenu);
-    $stmt->execute();
-    $stmt->close();
+    $insertStmt = $pdo->prepare("INSERT INTO consigne (contenu) VALUES (?)");
+    $insertStmt->execute([$contenu]);
     echo "Consigne enregistrée.";
   }
-  $conn->close();
   exit;  // <--- ça évite d'afficher le reste du HTML
 }
 
 if (isset($_POST["validmodif"])) {
   // Met à jour reservation_etudiant
-  $stmt = $conn->prepare("UPDATE reservation_etudiant SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_etudiant SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']]);
 
   // Met à jour reservation_prof
-  $stmt = $conn->prepare("UPDATE reservation_prof SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("sssis", $_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_prof SET Date_reservation = ?, heure_debut = ?, heure_fin = ? WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['date_reservation'], $_POST['heure_debut'], $_POST['heure_fin'], $_POST['id_resa'], $_POST['pseudo_resa']]);
 
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">La réservation a été modifiée</p>
@@ -46,30 +40,28 @@ if (isset($_POST["validmodif"])) {
 
 if (isset($_POST["accepter"])) {
   // Met à jour reservation_etudiant
-  $stmt = $conn->prepare("UPDATE reservation_etudiant SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_etudiant SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
 
   // Met à jour reservation_prof
-  $stmt = $conn->prepare("UPDATE reservation_prof SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_prof SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
 
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">La réservation a été acceptée</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
             </div>';
 }
+
 if (isset($_POST["refuser"])) {
   // Met à jour reservation_etudiant
-  $stmt = $conn->prepare("UPDATE reservation_etudiant SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_etudiant SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
 
   // Met à jour reservation_prof
-  $stmt = $conn->prepare("UPDATE reservation_prof SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $_POST['id_resa'], $_POST['pseudo_resa']);
-  $stmt->execute();
+  $stmt = $pdo->prepare("UPDATE reservation_prof SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
+
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">La réservation a été refusée</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
@@ -96,22 +88,19 @@ if (isset($_POST["supprime"])) {
   $pseudoResa = $_POST['pseudo_resa'];
 
   // Prépare et exécute suppression en toute sécurité
-  $stmt = $conn->prepare("DELETE FROM reservation_etudiant WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $idResa, $pseudoResa);
-  $stmt->execute();
+  $stmt = $pdo->prepare("DELETE FROM reservation_etudiant WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$idResa, $pseudoResa]);
 
-  $stmt = $conn->prepare("DELETE FROM reservation_prof WHERE Id = ? AND Pseudo = ?");
-  $stmt->bind_param("is", $idResa, $pseudoResa);
-  $stmt->execute();
+  $stmt = $pdo->prepare("DELETE FROM reservation_prof WHERE Id = ? AND Pseudo = ?");
+  $stmt->execute([$idResa, $pseudoResa]);
 
   echo '<div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
         <p>La réservation a été supprimée</p>
         <button class="btn btn-primary" onclick="this.parentElement.style.display=\'none\'">Fermer</button>
     </div>';
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -141,31 +130,30 @@ if (isset($_POST["supprime"])) {
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
       <div class="d-flex align-items-center ms-auto gap-2">
-        <?php
-        if (isset($_SESSION['utilisateur']) && isset($conn)) {
-          $nom = $_SESSION['utilisateur']['Nom'];
+       <?php
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
 
-          // ADMIN :
-          $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-          $stmt->bind_param("s", $nom);
-          $stmt->execute();
-          $result = $stmt->get_result();
-          $row = $result->fetch_assoc();
+    // ADMIN :
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-          if ($row['total'] > 0) {
-            echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-          } else {
-            // Aucun des deux trouvés
-            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            ';
-          }
-        }
-        ?>
-        <h6 class="mb-0 text-nowrap text-end">
-          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-        </h6>
+    if ($row['total'] > 0) {
+        echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
+    } else {
+        // Aucun des deux trouvés
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+              ';
+    }
+}
+?>
+<h6 class="mb-0 text-nowrap text-end">
+    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+</h6>
+
       </div>
     </div>
   </header>
@@ -272,10 +260,16 @@ if (isset($_POST["supprime"])) {
                   <!--Tout les autres lignes de ton tableau c'est toujours le meme code-->
                   <tbody>
                     <?php
-                    $result = $conn->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet FROM reservation_etudiant UNION SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL FROM reservation_prof");
-                    $reservations = $result->fetch_all(MYSQLI_ASSOC);
-                    ?>
-                    <?php foreach ($reservations as $reservation): ?>
+$stmt = $pdo->prepare("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet 
+                        FROM reservation_etudiant 
+                        UNION 
+                        SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL 
+                        FROM reservation_prof");
+$stmt->execute();
+$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<?php foreach ($reservations as $reservation): ?>
                       <tr>
                         <td>
                           <p class="d-flex mt-3"><input class="form-check-input mx-2 reservation-checkbox" type="checkbox">Réservation de <?= htmlspecialchars($reservation['materiel']) ?></p>
@@ -363,13 +357,12 @@ if (isset($_POST["supprime"])) {
                   <div class="d-flex align-items-center">
                     <h3 id="nb-reservation">
                       <?php
-                      $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total;");
-                      $stmt->execute();
-                      $stmt->bind_result($total);
-                      $stmt->fetch();
-                      $stmt->close();
-                      echo $total;
-                      ?> réservations</h3>
+$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total");
+$stmt->execute();
+$total = $stmt->fetchColumn();
+echo $total;
+?>
+ réservations</h3>
                   </div>
                 </div>
               </div>
@@ -380,13 +373,12 @@ if (isset($_POST["supprime"])) {
                   <div class="d-flex align-items-center">
                     <h3 id="nb-venir">
                       <?php
-                      $stmt = $conn->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total;");
-                      $stmt->execute();
-                      $stmt->bind_result($total);
-                      $stmt->fetch();
-                      $stmt->close();
-                      echo $total;
-                      ?> réservations</h3>
+$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total");
+$stmt->execute();
+$total = $stmt->fetchColumn();
+echo $total;
+?>
+ réservations</h3>
                   </div>
                 </div>
               </div>
@@ -394,22 +386,25 @@ if (isset($_POST["supprime"])) {
               <div id="stats" class="col-8 col-md-2 card p-2">
                 <p>Article le plus réservé : </p>
                 <?php
-                // le matériel le plus demandé
-                $stmt = $conn->prepare("SELECT materiel, COUNT(*) AS total FROM ( SELECT materiel FROM reservation_etudiant UNION ALL SELECT materiel FROM reservation_prof) AS reservations
-                      GROUP BY materiel ORDER BY total DESC LIMIT 1;");
-                $stmt->execute();
-                $stmt->bind_result($materiel, $total);
-                $stmt->fetch();
-                $stmt->close();
+// le matériel le plus demandé
+$stmt = $pdo->prepare("SELECT materiel, COUNT(*) AS total FROM ( 
+                          SELECT materiel FROM reservation_etudiant 
+                          UNION ALL 
+                          SELECT materiel FROM reservation_prof) AS reservations
+                          GROUP BY materiel ORDER BY total DESC LIMIT 1;");
+$stmt->execute();
+$materielData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                // Récupérer l'image du matériel obtenu
-                $stmt2 = $conn->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
-                $stmt2->bind_param("s", $materiel);
-                $stmt2->execute();
-                $stmt2->bind_result($Image_un);
-                $stmt2->fetch();
-                $stmt2->close();
-                ?>
+// Récupérer l'image du matériel obtenu
+$stmt2 = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
+$stmt2->execute([$materielData['materiel']]);
+$imageData = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+$materiel = $materielData['materiel'];
+$total = $materielData['total'];
+$Image_un = $imageData['Image_un'];
+?>
+
 
                 <div class="card-body">
                   <div class="d-flex gap-1 align-items-center">
@@ -422,18 +417,26 @@ if (isset($_POST["supprime"])) {
 
             <div class="col-12 rounded my-3 p-5">
               <?php
-              // Récupération des réservations par mois
-              $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-              $reservationsParMois = array_fill(0, 12, 0);
+// Récupération des réservations par mois
+$months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+$reservationsParMois = array_fill(0, 12, 0);
 
-              $stmt = $conn->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total FROM (SELECT Date_reservation FROM reservation_etudiant UNION ALL SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
-              $stmt->execute();
-              $result = $stmt->get_result();
-              while ($row = $result->fetch_assoc()) {
-                $reservationsParMois[$row['mois'] - 1] = $row['total'];
-              }
-              $stmt->close();
-              ?>
+$stmt = $pdo->prepare("
+    SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total 
+    FROM (
+        SELECT Date_reservation FROM reservation_etudiant 
+        UNION ALL 
+        SELECT Date_reservation FROM reservation_prof
+    ) AS reservations 
+    GROUP BY mois
+");
+$stmt->execute();
+
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $reservationsParMois[$row['mois'] - 1] = $row['total'];
+}
+?>
+
               <div class="row ms-3 mt-5">
                 <div class="card col-11 col-md-8">
                   <div class="row align-items-center">

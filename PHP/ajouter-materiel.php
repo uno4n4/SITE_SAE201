@@ -17,25 +17,35 @@ if (isset($_POST['submit'])) {
     $Date_achat = htmlspecialchars($_POST['dateachat']);
     $Disponibilite = htmlspecialchars($_POST['disponibilite']) === 'disponible' ? 1 : 0;
 
-    // Mise à jour du matériel
-    $stmt = $conn->prepare("INSERT INTO materiel(Nom, Description_materiel, categorie, date_achat, prix, quantite, disponibilite) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssdii", $Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite);
-    if ($stmt->execute()) {
+    // Mise à jour du matériel avec PDO
+    $sql = "INSERT INTO materiel(Nom, Description_materiel, categorie, date_achat, prix, quantite, disponibilite) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    try {
+        $stmt = $pdo->prepare($sql);
+        $success = $stmt->execute([$Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite]);
+
+        if ($success) {
+            echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+                <p class="mb-2">Le matériel a été ajouté</p>
+                <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+                </div>';
+            exit;
+        } else {
+            echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+                <p class="mb-2">Il y a eu une erreur, veuillez réessayer</p>
+                <button class="btn btn-primary" onclick="fermer()">Fermer</button>
+                </div>';
+        }
+    } catch (PDOException $e) {
         echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">Le matériel a été ajouté</p>
-            <button class="btn btn-primary" onclick="fermer()">Fermer</button>
-            </div>';
-        exit;
-    } else {
-        echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">Il y a eu une erreur, veuillez réessayer</p>
+            <p class="mb-2">Erreur PDO : ' . htmlspecialchars($e->getMessage()) . '</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
             </div>';
     }
-    $stmt->close();
-    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -60,8 +70,28 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <h6 class="mb-0 text-nowrap text-end">
-                    <?= isset($_SESSION['utilisateur']) ? htmlspecialchars($_SESSION['utilisateur']['Nom']) . ' ' . htmlspecialchars($_SESSION['utilisateur']['Prenom']) : 'Utilisateur non connecté' ?>
-                </h6>
+    <?php
+    if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+        // Utilisation de PDO pour récupérer le nom et prénom de l'utilisateur
+        $nom = $_SESSION['utilisateur']['Nom'];
+        $prenom = $_SESSION['utilisateur']['Prenom'];
+
+        // Requête PDO pour obtenir le nom et prénom de l'utilisateur depuis la base de données
+        $stmt = $pdo->prepare("SELECT Nom, Prenom FROM utilisateurs WHERE Nom = :nom AND Prenom = :prenom");
+        $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+        $stmt->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Affichage du nom et prénom ou un message si l'utilisateur n'est pas connecté
+        echo isset($user) ? htmlspecialchars($user['Nom']) . ' ' . htmlspecialchars($user['Prenom']) : 'Utilisateur non connecté';
+    } else {
+        echo 'Utilisateur non connecté';
+    }
+    ?>
+</h6>
+
                 <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
             </div>
         </div>
@@ -111,7 +141,7 @@ if (isset($_POST['submit'])) {
                         </li>
                     </ul>
                     <div class="mt-auto w-100">
-                        <a href="../HTML/setting.html" class="nav-link align-middle px-0">
+                        <a href="setting.php" class="nav-link align-middle px-0">
                             <i class="fa-solid fa-cogs"></i><span class="ms-1 d-none d-sm-inline">Réglages</span>
                         </a>
                     </div>

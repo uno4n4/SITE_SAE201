@@ -2,122 +2,106 @@
 
 include('config.php');
 
-function pseudoExiste($conn, $pseudo) {
+function pseudoExiste($pdo, $pseudo) {
     // Vérifie dans inscription_eleve
     $sql1 = "SELECT 1 FROM inscription_eleve WHERE pseudo = ?";
-    $stmt1 = $conn->prepare($sql1);
-    $stmt1->bind_param("s", $pseudo);
-    $stmt1->execute();
-    $stmt1->store_result();
-    $existeDansEleve = $stmt1->num_rows > 0;
-    $stmt1->close();
+    $stmt1 = $pdo->prepare($sql1);
+    $stmt1->execute([$pseudo]);
+    $existeDansEleve = $stmt1->fetchColumn() !== false;
 
     // Vérifie dans inscription_prof
     $sql2 = "SELECT 1 FROM inscription_prof WHERE pseudo = ?";
-    $stmt2 = $conn->prepare($sql2);
-    $stmt2->bind_param("s", $pseudo);
-    $stmt2->execute();
-    $stmt2->store_result();
-    $existeDansProf = $stmt2->num_rows > 0;
-    $stmt2->close();
+    $stmt2 = $pdo->prepare($sql2);
+    $stmt2->execute([$pseudo]);
+    $existeDansProf = $stmt2->fetchColumn() !== false;
 
     return $existeDansEleve || $existeDansProf;
 }
-if(isset($_GET['Pseudo'])){
-  $pseudo = trim(strtolower($_GET['Pseudo']));
 
-  if(pseudoExiste($conn, $pseudo)){
-    echo "pris";
-  } else {
-    echo "dispo";
-  }
-  exit();
-}
+if (isset($_GET['Pseudo'])) {
+    $pseudo = trim(strtolower($_GET['Pseudo']));
 
-
-
-
-//ETUDIANT : 
-
-if(isset($_POST['Nom']) && isset($_POST['Prenom'])){
-  $Nom=$_POST['Nom'];
-  $Prenom=$_POST['Prenom'];
-  $Anniv=$_POST['Anniv'];
-  $Email=$_POST['Email'];
-  $Tel=$_POST['Tel'];
-  $Adresse=$_POST['Adresse'];
-  $Numetu=$_POST['Numetu'];
-  $Formation =$_POST['Formations'];
-  $TD=$_POST['TD'];
-  $TP=$_POST['TP'];
-  $Pseudo= trim(strtolower($_POST['Pseudo']));
-  $Mdp=password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
-
-  if(pseudoExiste($conn, $Pseudo)){
-    exit;
-  } else {
-      $sql = "INSERT INTO inscription_eleve (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, num_etudiant, formation, td, tp, pseudo, mdp, statut)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      $stmt = $conn->prepare($sql);
-      $Statut = "en attente";
-      $stmt->bind_param("sssssssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut);
-
-      if($stmt->execute()){
-        echo <<<HTML
-        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-          <b class="mb-2 d-block">Inscription étudiant réussie !</b>
-          <div class="text-center mt-3">
-            <a href="inscription.php" class="btn btn-success">Fermer</a>
-          </div>
-        </div>
-        HTML;
-      } else {
-        echo "Erreur : " . $stmt->error;
-      }
-      $stmt->close();
-  }
-}
-
-//PROF : 
-
-elseif(isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
-  $Nom=$_POST['Nomprof'];
-  $Prenom=$_POST['Prenomprof'];
-  $Anniv=$_POST['Annivprof'];
-  $Email=$_POST['Emailprof'];
-  $Tel=$_POST['Numprof'];
-  $Adresse=$_POST['Adresseprof'];
-  $Pseudo= trim(strtolower($_POST['Pseudoprof']));
-  $Mdp = password_hash($_POST['Mdpprof'], PASSWORD_DEFAULT);
-
-  if(pseudoExiste($conn, $Pseudo)){
-    exit;
-  } else {
-      $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-      $stmt = $conn->prepare($sql);
-      $Statut = "en attente";
-      $stmt->bind_param("sssssssss", $Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut);
-
-    if ($stmt->execute()){
-      echo <<<HTML
-        <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-          <b class="mb-2 d-block">Inscription professeur réussie !</b>
-          <div class="text-center mt-3">
-            <a href="inscription.php" class="btn btn-success">Fermer</a>
-          </div>
-        </div>
-        HTML;
+    if (pseudoExiste($pdo, $pseudo)) {
+        echo "pris";
     } else {
-      echo "Erreur :" . $stmt->error;
+        echo "dispo";
     }
-    $stmt->close();
-  }
+    exit();
 }
 
-$conn->close();
+// ETUDIANT :
+if (isset($_POST['Nom']) && isset($_POST['Prenom'])) {
+    $Nom = $_POST['Nom'];
+    $Prenom = $_POST['Prenom'];
+    $Anniv = $_POST['Anniv'];
+    $Email = $_POST['Email'];
+    $Tel = $_POST['Tel'];
+    $Adresse = $_POST['Adresse'];
+    $Numetu = $_POST['Numetu'];
+    $Formation = $_POST['Formations'];
+    $TD = $_POST['TD'];
+    $TP = $_POST['TP'];
+    $Pseudo = trim(strtolower($_POST['Pseudo']));
+    $Mdp = password_hash($_POST['Mdp'], PASSWORD_DEFAULT);
 
+    if (pseudoExiste($pdo, $Pseudo)) {
+        exit;
+    } else {
+        $sql = "INSERT INTO inscription_eleve (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, num_etudiant, formation, td, tp, pseudo, mdp, statut)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $Statut = "en attente";
+
+        if ($stmt->execute([$Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut])) {
+            echo <<<HTML
+            <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+              <b class="mb-2 d-block">Inscription étudiant réussie !</b>
+              <div class="text-center mt-3">
+                <a href="inscription.php" class="btn btn-success">Fermer</a>
+              </div>
+            </div>
+            HTML;
+        } else {
+            echo "Erreur : " . $stmt->errorInfo()[2];
+        }
+    }
+}
+
+// PROF :
+elseif (isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
+    $Nom = $_POST['Nomprof'];
+    $Prenom = $_POST['Prenomprof'];
+    $Anniv = $_POST['Annivprof'];
+    $Email = $_POST['Emailprof'];
+    $Tel = $_POST['Numprof'];
+    $Adresse = $_POST['Adresseprof'];
+    $Pseudo = trim(strtolower($_POST['Pseudoprof']));
+    $Mdp = password_hash($_POST['Mdpprof'], PASSWORD_DEFAULT);
+
+    if (pseudoExiste($pdo, $Pseudo)) {
+        exit;
+    } else {
+        $sql = "INSERT INTO inscription_prof (nom, prenom, date_naissance, adresse_email, numero_tel, adresse, pseudo, mdp, statut)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $Statut = "en attente";
+
+        if ($stmt->execute([$Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut])) {
+            echo <<<HTML
+            <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+              <b class="mb-2 d-block">Inscription professeur réussie !</b>
+              <div class="text-center mt-3">
+                <a href="inscription.php" class="btn btn-success">Fermer</a>
+              </div>
+            </div>
+            HTML;
+        } else {
+            echo "Erreur : " . $stmt->errorInfo()[2];
+        }
+    }
+}
 ?>
+
 
 
 

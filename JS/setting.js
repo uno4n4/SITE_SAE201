@@ -40,12 +40,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
                 <div>
                     <label for="Pseudo">Pseudo *</label>
-                    <input type="text" id="Pseudo" name="Pseudo" value = "${pseudo}">
+                    <input type="text" id="Pseudo" name="Pseudo" value = "${pseudo}" disabled>
                 </div>
-            </div>
-            <div class="button-container-1">
-                <button type="submit" id="submit" name="update_pseudo">Enregistrer les changements</button>
-                <button onclick="../PHP/admin.php" id="submit2">Annuler</button>
             </div>
             <hr>
             <h2>Changer son mot de passe</h2>

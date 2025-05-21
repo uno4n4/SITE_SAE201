@@ -9,12 +9,14 @@ if (!isset($_SESSION['utilisateur'])) {
     exit();
 }
 
-$result = $conn->query("SELECT * FROM materiel");
+// Exécution de la requête avec PDO
+$stmt = $pdo->query("SELECT * FROM materiel");
 
-// Utilisation de fetch_all pour récupérer les résultats
-$materiaux = $result->fetch_all(MYSQLI_ASSOC);
+// Utilisation de fetchAll pour récupérer les résultats
+$materiaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -58,39 +60,35 @@ $materiaux = $result->fetch_all(MYSQLI_ASSOC);
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $row = $result->fetch_assoc();
+// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+$stmt->execute([$_SESSION['utilisateur']['Nom']]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
-                                <span class="spantext">Étudiant(e)</span>
-                            </span>';
-                            // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
+if ($row['total'] > 0) {
+    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
+        <span class="spantext">Étudiant(e)</span>
+    </span>';
+// Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+} else {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+    $stmt->execute([$_SESSION['utilisateur']['Nom']]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
-                                <span class="spantext">Enseignant(e)</span>
-                            </span>';
-                                }
-                            }
-                            ?>
+    if ($row['total'] > 0) {
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
+            <span class="spantext">Enseignant(e)</span>
+        </span>';
+    }
+}
+?>
 
                         </li>
                     </ul>
 
-                    <a class="btn btn-primary bouton-co" id="deconnexion" href="../PHP/logout.php" role="button">Se déconnecter</a>
+                    <a class="btn btn-primary bouton-co" id="deconnexion" href="logout.php" role="button">Se déconnecter</a>
                 </div>
             </div>
         </nav>

@@ -10,11 +10,9 @@ if (!isset($_SESSION['utilisateur'])) {
 
 if (isset($_POST['modif'])) {
   // Récupération des matériaux depuis la bonne table
-  $stmt = $conn->prepare("SELECT * FROM `materiel` WHERE Nom = ?");
-  $stmt->bind_param("s", $_POST['materiel']);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $materiel = $result->fetch_assoc();
+  $stmt = $pdo->prepare("SELECT * FROM `materiel` WHERE Nom = ?");
+  $stmt->execute([$_POST['materiel']]);
+  $materiel = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if (isset($_POST['submit'])) {
     $Nom = htmlspecialchars($_POST['Nom']);
@@ -26,9 +24,10 @@ if (isset($_POST['modif'])) {
     $Disponibilite = htmlspecialchars($_POST['disponibilite']);
 
     // Mise à jour du matériel
-    $stmt = $conn->prepare("UPDATE materiel SET Nom = ?, Description_materiel = ?, categorie = ?, date_achat = ?, prix = ?, quantite = ?, disponibilite = ? WHERE Nom = ?");
-    $stmt->bind_param("sssssssi", $Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite, $_POST['Nom-sauve']);
-    if ($stmt->execute()) {
+    $stmt = $pdo->prepare("UPDATE materiel SET Nom = ?, Description_materiel = ?, categorie = ?, date_achat = ?, prix = ?, quantite = ?, disponibilite = ? WHERE Nom = ?");
+    $stmt->execute([$Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite, $_POST['Nom-sauve']]);
+
+    if ($stmt->rowCount() > 0) {
       echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">Le matériel a été modifié</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
@@ -43,9 +42,10 @@ if (isset($_POST['modif'])) {
   }
 
   if (isset($_POST['supprimer_materiel'])) {
-    $stmt = $conn->prepare("DELETE FROM materiel WHERE Nom = ?");
-    $stmt->bind_param("s", $_POST['materiel']);
-    if ($stmt->execute()) {
+    $stmt = $pdo->prepare("DELETE FROM materiel WHERE Nom = ?");
+    $stmt->execute([$_POST['materiel']]);
+    
+    if ($stmt->rowCount() > 0) {
       echo "Le matériel a été supprimé avec succès.";
       exit;
     } else {
@@ -53,10 +53,10 @@ if (isset($_POST['modif'])) {
     }
   }
 
-  $stmt->close();
-  $conn->close();
+  $stmt->closeCursor();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">

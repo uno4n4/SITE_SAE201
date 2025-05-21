@@ -7,31 +7,9 @@ if (!isset($_SESSION['utilisateur'])) {
   exit();
 }
 
-$pseudoActuel = $_SESSION['utilisateur']['Pseudo'];
 $ancienPass = $_SESSION['utilisateur']['Mdp'];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Vérification et mise à jour du pseudo
-    if (isset($_POST['update_pseudo'])) {
-        $nouveauPseudo = trim($_POST['Pseudo']);
-        $sql = "UPDATE inscription_eleve SET Pseudo = ? WHERE Pseudo = ?";
-        $stmt = $conn->prepare($sql);
-
-        if (!$stmt) {
-            die("Erreur de préparation : " . $conn->error);
-        }
-
-        $stmt->bind_param("ss", $nouveauPseudo, $pseudoActuel);
-
-        if ($stmt->execute()) {
-            $_SESSION['utilisateur']['Pseudo'] = $nouveauPseudo;
-            header("Location: admin.php");
-            exit();
-        } else {
-            echo "Erreur lors de la mise à jour du pseudo : " . $stmt->error;
-        }
-        $stmt->close();
-    }
 
     // Vérification et mise à jour du mot de passe
     if (isset($_POST['update_pass'])) {
@@ -108,53 +86,49 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 
-<header class="container-fluid px-0">
-    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+<<header class="container-fluid px-0">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+            <div>
+                <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+            </div>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <?php
+if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+    $nom = $_SESSION['utilisateur']['Nom'];
+
+    // Étudiant
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+    $stmt->execute([$nom]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row['total'] > 0) {
+        echo '
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
+    } else {
+        // Professeur
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+        $stmt->execute([$nom]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($row['total'] > 0) {
+            echo '
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
+        } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
+            <span class="spantext">Utilisateur</span>';
+        }
+    }
+}
+?>
+
+                <h6 class="mb-0 text-nowrap text-end">
+                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+                </h6>
+            </div>
         </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-            if (isset($_SESSION['utilisateur']) && isset($conn)) {
-                $nom = $_SESSION['utilisateur']['Nom'];
-
-                // Étudiant
-                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                $stmt->bind_param("s", $nom);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $row = $result->fetch_assoc();
-
-                if ($row['total'] > 0) {
-                    echo '
-                        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
-                } else {
-                    // Professeur
-                    $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                    $stmt->bind_param("s", $nom);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    $row = $result->fetch_assoc();
-
-                    if ($row['total'] > 0) {
-                        echo '
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
-                    }
-                    else {
-                        // Aucun des deux trouvés
-                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
-                            <span class="spantext">Utilisateur</span>';
-                    }
-                }
-            }
-            ?>
-            <h6 class="mb-0 text-nowrap text-end">
-                <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-            </h6>
-        </div>
-    </div>
-</header>
+    </header>
 
   <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -205,7 +179,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div id="form-container" class="mt-5" 
                                             data-nom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>"
                                             data-prenom ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>"
-                                            data-email ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Adresse_email'])) ?>"                                            data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
+                                            data-email ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Adresse_email'])) ?>"             
+                                            data-pseudo ="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Pseudo'])) ?>"></div>
       </div>   
     </div>
   </div>
@@ -214,8 +189,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </body>
 </html>
 
-<?php
-
-$conn->close();
-
-?>

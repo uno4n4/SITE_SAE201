@@ -4,12 +4,8 @@ include '../PHP/config.php';
 session_start();
 
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
-}
-// Vérifie si la connexion fonctionne
-if ($conn->connect_error) {
-    die("Connexion échouée : " . $conn->connect_error);
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
 // Vérifie si l'ID du produit est bien passé dans l'URL
@@ -20,7 +16,9 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
     echo "Aucun produit sélectionné.";
     exit;
 }
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -65,34 +63,33 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $row = $result->fetch_assoc();
+// Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
+$stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+$stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
-                                <span class="spantext">Etudiant(e)</span>
-                            </span>';
-                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $conn->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->bind_param("s", $_SESSION['utilisateur']['Nom']);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-                                $row = $result->fetch_assoc();
+if ($row['total'] > 0) {
+    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+            <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
+            <span class="spantext">Etudiant(e)</span>
+        </span>';
+    // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
+} else {
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+    $stmt->bindParam(1, $_SESSION['utilisateur']['Nom'], PDO::PARAM_STR);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-                                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
-                                <span class="spantext">Enseignant(e)</span>
-                            </span>';
-                                }
-                            }
-                            ?>
+    if ($row['total'] > 0) {
+        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
+                <span class="spantext">Enseignant(e)</span>
+            </span>';
+    }
+}
+?>
+
 
                         </li>
                     </ul>
