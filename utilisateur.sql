@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 21 mai 2025 à 18:49
+-- Généré le : jeu. 22 mai 2025 à 20:18
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `utilisateur`
 --
+CREATE DATABASE IF NOT EXISTS `utilisateur` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `utilisateur`;
 
 -- --------------------------------------------------------
 
@@ -27,7 +29,6 @@ SET time_zone = "+00:00";
 -- Structure de la table `commentaires_eleve`
 --
 
-DROP TABLE IF EXISTS `commentaires_eleve`;
 CREATE TABLE `commentaires_eleve` (
   `id` int(11) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -50,7 +51,6 @@ INSERT INTO `commentaires_eleve` (`id`, `Pseudo`, `date_comment`, `commentaire`,
 -- Structure de la table `commentaires_prof`
 --
 
-DROP TABLE IF EXISTS `commentaires_prof`;
 CREATE TABLE `commentaires_prof` (
   `id` int(11) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -66,7 +66,6 @@ CREATE TABLE `commentaires_prof` (
 -- Structure de la table `consigne`
 --
 
-DROP TABLE IF EXISTS `consigne`;
 CREATE TABLE `consigne` (
   `id` int(11) NOT NULL,
   `contenu` text NOT NULL
@@ -85,7 +84,6 @@ INSERT INTO `consigne` (`id`, `contenu`) VALUES
 -- Structure de la table `inscription_admin`
 --
 
-DROP TABLE IF EXISTS `inscription_admin`;
 CREATE TABLE `inscription_admin` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -111,7 +109,6 @@ INSERT INTO `inscription_admin` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_agent`
 --
 
-DROP TABLE IF EXISTS `inscription_agent`;
 CREATE TABLE `inscription_agent` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -138,7 +135,6 @@ INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_eleve`
 --
 
-DROP TABLE IF EXISTS `inscription_eleve`;
 CREATE TABLE `inscription_eleve` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -162,7 +158,7 @@ CREATE TABLE `inscription_eleve` (
 INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
 ('gilet', 'amel', '2025-05-01', 'Aamel2432@gmail.com', '060606076', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'amel', '$2y$10$AARSlK8gKWQeIkTOgK6mvOQS4EnV8NBYm1wKdmMECZcfhbwN/lUpa', 'accepté'),
 ('clemence', 'clemence', '0000-00-00', 'clemence@edu.univ-eiffel.fr', '', '', '', '', '', '', 'clemence.clemence', '$2y$10$yffz5GIL1QkfJXT/7BnoEuem/nOquI4JR.SAXqAYC.o.Uo.Gq/HB6', 'accepté'),
-('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$bhq1GSF8dgwo3IUInzAKvO/LuduRB8EtNsI9mGmKfYDfnx3EsxWUm', 'accepté'),
+('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$0BzBWpp2JnKCDAh9lnhGIOWQHJekvHLBLP.ZeZfNSG1l65v879TKe', 'accepté'),
 ('mathilda', 'mathile', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'mathilde', '$2y$10$QuTpBIhstDsLnbb1pgpN2./NiAeB5AJayVNuKxWvDj9N1GmSz0wEe', 'accepté'),
 ('yacine', 'yacine', '2025-05-01', 'yacine@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD1', 'TPA', 'yacine1', '$2y$10$vnooSPuPIg1y0FLFraEQZ.Ey/m6JvE0M8Pq6Wq/5chpLx2qvYgsMa', 'accepté');
 
@@ -172,7 +168,6 @@ INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_ema
 -- Structure de la table `inscription_prof`
 --
 
-DROP TABLE IF EXISTS `inscription_prof`;
 CREATE TABLE `inscription_prof` (
   `Nom` varchar(50) NOT NULL,
   `Prenom` varchar(50) NOT NULL,
@@ -203,7 +198,6 @@ INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_emai
 -- Structure de la table `materiel`
 --
 
-DROP TABLE IF EXISTS `materiel`;
 CREATE TABLE `materiel` (
   `Nom` varchar(50) NOT NULL,
   `Description_materiel` varchar(500) DEFAULT NULL,
@@ -250,7 +244,6 @@ INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`,
 -- Structure de la table `reservation_etudiant`
 --
 
-DROP TABLE IF EXISTS `reservation_etudiant`;
 CREATE TABLE `reservation_etudiant` (
   `Id` int(100) NOT NULL,
   `Pseudo` varchar(30) DEFAULT NULL,
@@ -282,7 +275,6 @@ INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudia
 -- Structure de la table `reservation_prof`
 --
 
-DROP TABLE IF EXISTS `reservation_prof`;
 CREATE TABLE `reservation_prof` (
   `Id` int(100) NOT NULL,
   `Nom` varchar(50) DEFAULT NULL,
