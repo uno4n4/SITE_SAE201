@@ -2,6 +2,13 @@
 include 'config.php';
 session_start();
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
 if (!isset($_SESSION['utilisateur'])) {
   echo "Erreur : Utilisateur non connecté.";
   exit();
@@ -48,6 +55,58 @@ if (isset($_POST["accepter"])) {
   $stmt = $pdo->prepare("UPDATE reservation_prof SET accepte = 'oui' WHERE Id = ? AND Pseudo = ?");
   $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
 
+  if (isset($_POST['pseudo_resa'], $_POST['id_resa'])) {
+    $pseudo = $_POST['pseudo_resa'];
+    $id = $_POST['id_resa'];
+
+    // Essayer d'abord dans reservation_etudiant
+    $stmt = $pdo->prepare("SELECT * FROM reservation_etudiant WHERE Pseudo = ? AND Id = ?");
+    $stmt->execute([$pseudo, $id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Si pas trouvé, essayer dans reservation_prof
+    if (!$user) {
+      $stmt = $pdo->prepare("SELECT * FROM reservation_prof WHERE Pseudo = ? AND Id = ?");
+      $stmt->execute([$pseudo, $id]);
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if ($user) {
+      $email = $user['Adresse_email'];
+      $Pseudo = $user['Pseudo'];
+      $materiel = $user['materiel'];
+      $date = $user['Date_reservation'];
+
+      require 'vendor/autoload.php';
+
+      $mail = new PHPMailer(true);
+
+      try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'materiel.iut@gmail.com';
+        $mail->Password = 'obmv hoac gbrw ftwz'; //
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+        $mail->addAddress($email, $Pseudo);
+        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+        $mail->Subject = 'Réservation acceptée';
+        $mail->Body = "Bonjour $Pseudo,\n\nVotre réservation de $materiel du $date a été acceptée.\n\nCordialement,\nL'équipe IUT";
+
+        $mail->send();
+        echo "Message envoyé avec succès.";
+      } catch (Exception $e) {
+        echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+      }
+    } else {
+      echo "Aucune réservation trouvée avec ce pseudo et cet identifiant.";
+    }
+  }
+
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">La réservation a été acceptée</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
@@ -62,6 +121,56 @@ if (isset($_POST["refuser"])) {
   // Met à jour reservation_prof
   $stmt = $pdo->prepare("UPDATE reservation_prof SET accepte = 'non' WHERE Id = ? AND Pseudo = ?");
   $stmt->execute([$_POST['id_resa'], $_POST['pseudo_resa']]);
+
+  if (isset($_POST['pseudo_resa'], $_POST['id_resa'])) {
+    $pseudo = $_POST['pseudo_resa'];
+    $id = $_POST['id_resa'];
+
+    // Essayer d'abord dans reservation_etudiant
+    $stmt = $pdo->prepare("SELECT * FROM reservation_etudiant WHERE Pseudo = ? AND Id = ?");
+    $stmt->execute([$pseudo, $id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Si pas trouvé, essayer dans reservation_prof
+    if (!$user) {
+      $stmt = $pdo->prepare("SELECT * FROM reservation_prof WHERE Pseudo = ? AND Id = ?");
+      $stmt->execute([$pseudo, $id]);
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    if ($user) {
+      $email = $user['Adresse_email'];
+      $Pseudo = $user['Pseudo'];
+      $materiel = $user['materiel'];
+      $date = $user['Date_reservation'];
+
+      $mail = new PHPMailer(true);
+
+      try {
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'materiel.iut@gmail.com';
+        $mail->Password = 'obmv hoac gbrw ftwz';
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+
+        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+        $mail->addAddress($email, $Pseudo);
+        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+        $mail->Subject = 'Réservation refusée';
+        $mail->Body = "Bonjour $Pseudo,\n\nVotre réservation de $materiel du $date a été refusée.\n\nCordialement,\nL'équipe IUT";
+
+        $mail->send();
+        echo "Message envoyé avec succès.";
+      } catch (Exception $e) {
+        echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+      }
+    } else {
+      echo "Aucune réservation trouvée avec ce pseudo et cet identifiant.";
+    }
+  }
 
   echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <p class="mb-2">La réservation a été refusée</p>
@@ -131,29 +240,29 @@ if (isset($_POST["supprime"])) {
         <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
       </div>
       <div class="d-flex align-items-center ms-auto gap-2">
-       <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+        <?php
+        if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+          $nom = $_SESSION['utilisateur']['Nom'];
 
-    // ADMIN :
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-    $stmt->execute([$nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          // ADMIN :
+          $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+          $stmt->execute([$nom]);
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+          if ($row['total'] > 0) {
+            echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-    } else {
-        // Aucun des deux trouvés
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+          } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
               ';
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+          }
+        }
+        ?>
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
 
       </div>
     </div>
@@ -247,13 +356,7 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                             <button type="button" id="modifier" class="col-2 col-md-3 btn btn-light fw-medium">
                               <i class="bi bi-pencil-square mx-1"></i><span class="d-none d-sm-inline">Modifier</span>
                             </button>
-                            <button type="button" name="commenter" class="col-2 col-md-3 btn btn-light fw-medium">
-                              <i class="bi bi-chat-left-text mx-1"></i><span class="d-none d-sm-inline">Commenter</span>
-                            </button>
-                            <button type="button" name="" class="col-2 col-md-3 btn btn-light fw-medium text-danger">
-                              <i class="bi bi-trash-fill mx-1"></i><span class="d-none d-sm-inline">Supprimer</span>
                           </form>
-                          </button>
                         </div>
                       </th>
                     </tr>
@@ -261,16 +364,16 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                   <!--Tout les autres lignes de ton tableau c'est toujours le meme code-->
                   <tbody>
                     <?php
-$stmt = $pdo->prepare("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet 
+                    $stmt = $pdo->prepare("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, nom_projet, accepte
                         FROM reservation_etudiant 
                         UNION 
-                        SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL 
+                        SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel, NULL, accepte
                         FROM reservation_prof");
-$stmt->execute();
-$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+                    $stmt->execute();
+                    $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
 
-<?php foreach ($reservations as $reservation): ?>
+                    <?php foreach ($reservations as $reservation): ?>
                       <tr>
                         <td>
                           <p class="d-flex mt-3"><input class="form-check-input mx-2 reservation-checkbox" type="checkbox">Réservation de <?= htmlspecialchars($reservation['materiel']) ?></p>
@@ -284,6 +387,21 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                       } ?>"></i><?= htmlspecialchars($reservation['Nom']) ?> <?= htmlspecialchars($reservation['Prenom']) ?>
                           </p>
                         </td>
+                        <td>
+                          <?php if (htmlspecialchars($reservation['accepte']) == 'oui'): ?>
+                            <span class="rounded bg-success text-center text-white d-flex align-items-center gap-2 text-dark">
+                              <span class="ms-1">Acceptée</span>
+                            </span>
+                          <?php elseif (htmlspecialchars($reservation['accepte']) == 'non'): ?>
+                            <span class="rounded bg-danger text-center text-white d-flex align-items-center gap-2 text-dark">
+                              <span class="ms-1">Refusée</span>
+                            </span>
+                          <?php else: ?>
+                            <span class="rounded bg-secondary text-center text-white d-flex align-items-center gap-2 text-dark">
+                              <span class="">à accepter</span>
+                            </span>
+                          <?php endif; ?>
+                        </td>
                         <form method="post">
                           <td>
                             <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i>
@@ -296,7 +414,7 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <p class="d-flex mt-3"><i class="bi bi-clock mx-2"></i><input type="date" name="date_reservation" value="<?= htmlspecialchars($reservation['Date_reservation']) ?>" readonly>
                               <input type="hidden" name="id_resa" value="<?= htmlspecialchars($reservation['Id']) ?>">
                               <input type="hidden" name="pseudo_resa" value="<?= htmlspecialchars($reservation['Pseudo']) ?>">
-                              <button type="submit" id="valid" name="validmodif" class="mx-2" style="display:none;">Valider</button>
+                              <button type="submit" id="valid" name="validmodif" class="mx-2">Valider</button>
                             </p>
                           </td>
                         </form>
@@ -349,118 +467,115 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
 
           <div class=" mt-5 col-12">
-            <h2 class="my-3 ms-3">Statistiques</h2>
+            <div id="pdf-contentstat">
+              <h2 class="my-3 ms-3">Statistiques</h2>
 
-            <div class="row gap-2 ms-3">
-              <div class="col-8 col-md-4 card p-2">
-                <p>Total des réservations : </p>
-                <div class="card-body">
-                  <div class="d-flex align-items-center">
-                    <h3 id="nb-reservation">
-                      <?php
-$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total");
-$stmt->execute();
-$total = $stmt->fetchColumn();
-echo $total;
-?>
- réservations</h3>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-8 col-md-4 card p-2">
-                <p>Réservation validées : </p>
-                <div class="card-body">
-                  <div class="d-flex align-items-center">
-                    <h3 id="nb-venir">
-                      <?php
-$stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total");
-$stmt->execute();
-$total = $stmt->fetchColumn();
-echo $total;
-?>
- réservations</h3>
-                  </div>
-                </div>
-              </div>
-
-              <div id="stats" class="col-8 col-md-2 card p-2">
-                <p>Article le plus réservé : </p>
-                <?php
-// le matériel le plus demandé
-$stmt = $pdo->prepare("SELECT materiel, COUNT(*) AS total FROM ( 
-                          SELECT materiel FROM reservation_etudiant 
-                          UNION ALL 
-                          SELECT materiel FROM reservation_prof) AS reservations
-                          GROUP BY materiel ORDER BY total DESC LIMIT 1;");
-$stmt->execute();
-$materielData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Récupérer l'image du matériel obtenu
-$stmt2 = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
-$stmt2->execute([$materielData['materiel']]);
-$imageData = $stmt2->fetch(PDO::FETCH_ASSOC);
-
-$materiel = $materielData['materiel'];
-$total = $materielData['total'];
-$Image_un = $imageData['Image_un'];
-?>
-
-
-                <div class="card-body">
-                  <div class="d-flex gap-1 align-items-center">
-                    <img src="../IMG/images/<?= htmlspecialchars($Image_un) ?>" id="photo-article" alt="<?= htmlspecialchars($materiel) ?>">
-                    <h4 id="nom-article"><?= htmlspecialchars($materiel) ?></h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 rounded my-3 p-5">
-              <?php
-// Récupération des réservations par mois
-$months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-$reservationsParMois = array_fill(0, 12, 0);
-
-$stmt = $pdo->prepare("
-    SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total 
-    FROM (
-        SELECT Date_reservation FROM reservation_etudiant 
-        UNION ALL 
-        SELECT Date_reservation FROM reservation_prof
-    ) AS reservations 
-    GROUP BY mois
-");
-$stmt->execute();
-
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $reservationsParMois[$row['mois'] - 1] = $row['total'];
-}
-?>
-
-              <div class="row ms-3 mt-5">
-                <div class="card col-11 col-md-8">
-                  <div class="row align-items-center">
-                    <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
-                  </div>
-
-                  <div class="col-12 rounded my-3 p-4">
-                    <div class="text-center">
-                      <div class="d-flex gap-3 align-items-end justify-content-center" style="height: 300px;">
-                        <?php foreach ($reservationsParMois as $index => $total): ?>
-                          <div class="bar-vertical bg-primary rounded" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
-                            <small class="d-block mt-2"><?= $months[$index] ?></small>
-                          </div>
-                        <?php endforeach; ?>
-                      </div>
+              <div class="row gap-2 ms-3">
+                <div class="col-8 col-md-4 card p-2">
+                  <p>Total des réservations : </p>
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <h3 id="nb-reservation">
+                        <?php
+                        $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total");
+                        $stmt->execute();
+                        $total = $stmt->fetchColumn();
+                        echo $total;
+                        ?>
+                        réservations</h3>
                     </div>
                   </div>
                 </div>
 
-                <div class="pdf col-auto col-md-3 mt-2 mt-md-0 text-end">
-                  <a href="#" download id="telecharger" class="text-black">
-                    Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
-                  </a>
+                <div class="col-8 col-md-4 card p-2">
+                  <p>Réservation validées : </p>
+                  <div class="card-body">
+                    <div class="d-flex align-items-center">
+                      <h3 id="nb-venir">
+                        <?php
+                        $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total");
+                        $stmt->execute();
+                        $total = $stmt->fetchColumn();
+                        echo $total;
+                        ?>
+                        réservations</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="stats" class="col-8 col-md-2 card p-2">
+                  <p>Article le plus réservé : </p>
+                  <?php
+                  // le matériel le plus demandé
+                  $stmt = $pdo->prepare("SELECT materiel, COUNT(*) AS total FROM ( 
+                          SELECT materiel FROM reservation_etudiant 
+                          UNION ALL 
+                          SELECT materiel FROM reservation_prof) AS reservations
+                          GROUP BY materiel ORDER BY total DESC LIMIT 1;");
+                  $stmt->execute();
+                  $materielData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                  // Récupérer l'image du matériel obtenu
+                  $stmt2 = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
+                  $stmt2->execute([$materielData['materiel']]);
+                  $imageData = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+                  $materiel = $materielData['materiel'];
+                  $total = $materielData['total'];
+                  $Image_un = $imageData['Image_un'];
+                  ?>
+
+
+                  <div class="card-body">
+                    <div class="d-flex gap-1 align-items-center">
+                      <img src="../IMG/images/<?= htmlspecialchars($Image_un) ?>" id="photo-article" alt="<?= htmlspecialchars($materiel) ?>">
+                      <h4 id="nom-article"><?= htmlspecialchars($materiel) ?></h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 rounded my-3 p-5">
+                <?php
+                // Récupération des réservations par mois
+                $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+                $reservationsParMois = array_fill(0, 12, 0);
+
+                $stmt = $pdo->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total 
+                        FROM (SELECT Date_reservation FROM reservation_etudiant 
+                        UNION ALL 
+                        SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
+                $stmt->execute();
+
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $reservationsParMois[$row['mois'] - 1] = $row['total'];
+                }
+                ?>
+
+                <div class="row ms-3 mt-5">
+                  <div class="card col-11 col-md-8">
+                    <div class="row align-items-center">
+                      <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
+                    </div>
+
+                    <div class="col-12 rounded my-3 p-4">
+                      <div class="text-center">
+                        <div class="d-flex gap-3 align-items-end justify-content-center" style="height: 300px;">
+                          <?php foreach ($reservationsParMois as $index => $total): ?>
+                            <div class="bar-vertical bg-primary rounded" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
+                              <small class="d-block mt-2"><?= $months[$index] ?></small>
+                            </div>
+                          <?php endforeach; ?>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pdf col-auto col-md-3 mt-2 mt-md-0 text-end">
+                    <button id="telecharge" style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdfstat()'>
+                      Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

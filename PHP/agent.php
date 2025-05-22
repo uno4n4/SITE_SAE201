@@ -3,6 +3,13 @@
 include 'config.php';
 session_start();
 
+$sql = "SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, nom_projet, signature_eleve, signature_admin FROM reservation_etudiant WHERE accepte = 'oui' 
+      UNION 
+        SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, NULL, signature_prof, signature_admin AS nom_projet FROM reservation_prof WHERE accepte = 'oui'";
+
+$stmt = $pdo->query($sql);
+$reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 if (!isset($_SESSION['utilisateur'])) {
   echo "Erreur : Utilisateur non connecté.";
   exit();
@@ -13,169 +20,190 @@ if (!isset($_SESSION['utilisateur'])) {
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
-    <script src="../JS/profile.js" defer></script>
-    <script src="../JS/setting.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
-    <title>Profil de l'agent</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <script src="../JS/pdfreserve.js" defer></script>
+  <script src="../JS/profile.js" defer></script>
+  <script src="../JS/setting.js" defer></script>
+  <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
+  <title>Profil de l'agent</title>
 </head>
+
 <body>
-    
-<header class="container-fluid px-0">
+
+  <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <?php
+        if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+          $nom = $_SESSION['utilisateur']['Nom'];
 
-    // Étudiant
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_agent WHERE nom = ?");
-    $stmt->execute([$nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          // Étudiant
+          $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_agent WHERE nom = ?");
+          $stmt->execute([$nom]);
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+          if ($row['total'] > 0) {
+            echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #F4A261;"></span>';
-    } else {
-        // Aucun des deux trouvés
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+          } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                 ';
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+          }
+        }
+        ?>
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
 
-        </div>
+      </div>
     </div>
-</header>
-    
-    <div class="container-fluid">
-        <div class="row flex-nowrap">
-          <!-- Sidebar -->
-          <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
-              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
-      
-                <li class="nav-item">
-                  <a href="#" class="nav-link align-middle px-0">
-                    <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
-                  </a>
-                </li>
-              </ul>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row flex-nowrap">
+      <!-- Sidebar -->
+      <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 d-flex flex-column min-vh-100">
+        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white flex-grow-1">
+          <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
+
+            <li class="nav-item">
+              <a href="#" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col py-3 custom-bg d-flex justify-content-lg-start">
+        <div class="d-flex flex-column flex-lg-column align-items-start gap-3">
+          <div class="d-flex flex-column gap-2 align-items-start">
+            <form>
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" id="notif">
+                <div class="w-100 w-md-auto mb-3 mb-md-0 d-md-flex align-items-center justify-content-start">
+                  <div class="d-flex justify-content-between w-100">
+                    <label for="filtre" class="me-3">Filtrer par :</label>
+
+                    <div class="filters-container d-flex flex-column flex-md-row text-end align-items-md-center ms-auto">
+                      <select class="custom-select mb-2 mb-md-0 me-md-2">
+                        <option selected>Mois</option>
+                        <option value="Jan">Janvier</option>
+                        <option value="Fevr">Février</option>
+                        <option value="Mar">Mars</option>
+                        <option value="Avril">Avril</option>
+                        <option value="Mai">Mai</option>
+                        <option value="Juin">Juin</option>
+                        <option value="Juillet">Juillet</option>
+                        <option value="Août">Août</option>
+                        <option value="Sept">Septembre</option>
+                        <option value="Oct">Octobre</option>
+                        <option value="Nov">Novembre</option>
+                        <option value="Dec">Décembre</option>
+                      </select>
+
+                      <select class="custom-select mb-2 mb-md-0 me-md-2">
+                        <option selected>Types</option>
+                        <option value="Mat">Matériels</option>
+                        <option value="Sall">Salles</option>
+                      </select>
+
+                      <select class="custom-select mb-2 mb-md-0">
+                        <option selected>Profiles</option>
+                        <option value="Etu">Etudiants</option>
+                        <option value="Prof">Professeurs</option>
+                      </select>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="w-100 w-md-auto text-end text-md-end">
+                  <button type="submit" class="btn btn-custom">Confirmer</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="container">
+              <div class="row d-flex">
+                <!-- Calendrier (reste en place) -->
+                <div class="col-12 col-lg-6 mb-4 ms-auto text-end order-1">
+                  <div id="container-calendrier">
+                    <div class="calendar-header d-flex justify-content-between align-items-center">
+                      <button class="prev-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-left"></i></button>
+                      <h2 id="month-year">Avril 2025</h2>
+                      <button class="after-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+
+                    <table class="calendar ms-auto text-end w-100">
+                      <thead>
+                        <tr>
+                          <th>Lun</th>
+                          <th>Mar</th>
+                          <th>Mer</th>
+                          <th>Jeu</th>
+                          <th>Ven</th>
+                        </tr>
+                      </thead>
+                      <tbody id="calendar-days"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Section des cartes à droite -->
+                <div class="col-12 d-flex flex-column order-2">
+                  <?php foreach ($reservations as $reserve): ?>
+                    <div class="rounded bg-light border text-center p-3 m-2">
+                      <div class="d-flex justify-content-baseline"><i></i><?= htmlspecialchars($reserve['Nom']) ?> <?= htmlspecialchars($reserve['Prenom']) ?> a effectué une réservation
+                        pour le <span class="text-black ms-1"><?= htmlspecialchars($reserve['Date_reservation']) ?></span></div>
+                      <div class="d-flex justify-content-between">
+                        <div><?= htmlspecialchars($reserve['materiel']) ?></div>
+                        <div id="pdf-content" style="display: none;">
+                          <h5 class='mb-4 ms-4'>Réservation</h5>
+                          <div>Nom : <?= htmlspecialchars($reserve['Nom']) ?></div>
+                          <div class='mb-4'>Prénom : <?= htmlspecialchars($reserve['Prenom']) ?></div>
+                          <div><?php isset($reserve['Num_etudiant']) ? 'Numéro étudiant: ' . htmlspecialchars($reserve['Num_etudiant']) : '' ?></div>
+                          <div>Adresse email universitaire : <?= htmlspecialchars($reserve['Adresse_email']) ?></div>
+                          <div class='mb-4'>Date de réservation : <?= htmlspecialchars($reserve['Date_reservation']) ?></div>
+                          <div>Horaire de réservation :<?= htmlspecialchars($reserve['heure_debut']) ?> - <?= htmlspecialchars($reserve['heure_fin']) ?></div>
+                          <div class='mb-4'><?php isset($reserve['nom_projet']) ? 'Nom du projet: ' . htmlspecialchars($reserve['nom_projet']) : '' ?></div>
+                          <div><?php isset($reserve['participants']) ? 'Etudiants participants: ' . htmlspecialchars($reserve['participants']) : '' ?></div>
+                          <p>Matériel : <?= htmlspecialchars($reserve['materiel']) ?> x<?= htmlspecialchars($reserve['quantite']) ?></p>
+                          <p>
+                            <?php
+                            if ($reserve['nom_projet'] !== null) {
+                              echo 'Signature: ' . htmlspecialchars($reserve['signature_eleve']);
+                            } else {
+                              echo 'Signature: ' . htmlspecialchars($reserve['signature_prof']);
+                            }
+                            ?>
+                          </p>
+
+                          <p><?php echo '           ' . htmlspecialchars($reserve['signature_admin']) ?></p>
+                        </div>
+                        <button style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdf()'>
+                          Télécharger le PDF
+                          <img src='../IMG/google-docs.png' alt='google-docs'>
+                        </button>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
             </div>
           </div>
-    
-          <div class="col py-3 custom-bg d-flex justify-content-lg-start">
-            <div class="d-flex flex-column flex-lg-column align-items-start gap-3">
-                <div class="d-flex flex-column gap-2 align-items-start">
-                  <form>
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center" id="notif">
-                      <div class="w-100 w-md-auto mb-3 mb-md-0 d-md-flex align-items-center justify-content-start">
-                        <div class="d-flex justify-content-between w-100">
-                          <label for="filtre" class="me-3">Filtrer par :</label>
-                          
-                          <div class="filters-container d-flex flex-column flex-md-row text-end align-items-md-center ms-auto">
-                            <select class="custom-select mb-2 mb-md-0 me-md-2">
-                              <option selected>Mois</option>
-                              <option value="Jan">Janvier</option>
-                              <option value="Fevr">Février</option>
-                              <option value="Mar">Mars</option>
-                              <option value="Avril">Avril</option>
-                              <option value="Mai">Mai</option>
-                              <option value="Juin">Juin</option>
-                              <option value="Juillet">Juillet</option>
-                              <option value="Août">Août</option>
-                              <option value="Sept">Septembre</option>
-                              <option value="Oct">Octobre</option>
-                              <option value="Nov">Novembre</option>
-                              <option value="Dec">Décembre</option>
-                            </select>
-    
-                            <select class="custom-select mb-2 mb-md-0 me-md-2">
-                              <option selected>Types</option>
-                              <option value="Mat">Matériels</option>
-                              <option value="Sall">Salles</option>
-                            </select>
-    
-                            <select class="custom-select mb-2 mb-md-0">
-                              <option selected>Profiles</option>
-                              <option value="Etu">Etudiants</option>
-                              <option value="Prof">Professeurs</option>
-                            </select>
-    
-                          </div>
-                        </div>
-                      </div>
-                      <div class="w-100 w-md-auto text-end text-md-end">
-                        <button type="submit" class="btn btn-custom">Confirmer</button>
-                      </div>
-                    </div>
-                  </form>
-
-                <div class="container">
-                    <div class="row d-flex">
-                        <!-- Calendrier (reste en place) -->
-                        <div class="col-12 col-lg-6 mb-4 ms-auto text-end order-1">
-                            <div id="container-calendrier">
-                                <div class="calendar-header d-flex justify-content-between align-items-center">
-                                    <button class="prev-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-left"></i></button>
-                                    <h2 id="month-year">Avril 2025</h2>
-                                    <button class="after-month border-0 fs-4 bgcustom"><i class="fa-solid fa-arrow-right"></i></button>
-                                </div>
-                
-                                <table class="calendar ms-auto text-end w-100">
-                                    <thead>
-                                        <tr>
-                                            <th>Lun</th>
-                                            <th>Mar</th>
-                                            <th>Mer</th>
-                                            <th>Jeu</th>
-                                            <th>Ven</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="calendar-days"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                
-                        <!-- Section des cartes à droite -->
-                        <div class="col-12 col-lg-6 d-flex flex-column order-2">
-                            <!-- Première carte -->
-                            <div class="card custom-card mb-4">
-                                <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
-                                <p id="nom"></p>
-                                <div class="card-body">
-                                    <div class="text-end">
-                                        <a href="#" download="" id="telecharger" class="text-black px-2">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card custom-card">
-                                <p>A effectué une réservation pour le : <bold id="jour"></bold></p>
-                                <p id="nom2"></p>
-                                <div class="card-body">
-                                    <div class="text-end">
-                                        <a href="#" download="" id="telecharger" class="text-black px-2">Télécharger le PDF<i class="fa-solid fa-file-arrow-down ms-2"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 </body>
+
 </html>

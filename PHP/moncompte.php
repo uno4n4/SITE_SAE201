@@ -35,7 +35,9 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
     <script src="../JS/profile.js" defer></script>
+    <script src="../JS/pdfreserve.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <title>Mon compte</title>
 
@@ -43,50 +45,49 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body style="background-color: #d3d2d2; overflow-x: hidden;">
 
-<header class="container-fluid px-0">
-    <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+    <header class="container-fluid px-0">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
+            <div>
+                <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+            </div>
+            <div class="d-flex align-items-center ms-auto gap-2">
+                <?php
+                if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+                    $nom = $_SESSION['utilisateur']['Nom'];
 
-    // Étudiant
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = :nom");
-    $stmt->execute([':nom' => $nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    // Étudiant
+                    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = :nom");
+                    $stmt->execute([':nom' => $nom]);
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+                    if ($row['total'] > 0) {
+                        echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
-    } else {
-        // Professeur
-        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = :nom");
-        $stmt->execute([':nom' => $nom]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    } else {
+                        // Professeur
+                        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = :nom");
+                        $stmt->execute([':nom' => $nom]);
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['total'] > 0) {
-            echo '
+                        if ($row['total'] > 0) {
+                            echo '
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
-        }
-        else {
-            // Aucun des deux trouvés
-            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                        } else {
+                            // Aucun des deux trouvés
+                            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                 <span class="spantext">Utilisateur</span>';
-        }
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+                        }
+                    }
+                }
+                ?>
+                <h6 class="mb-0 text-nowrap text-end">
+                    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+                </h6>
 
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
     <div class="container-fluid">
         <div class="row flex-nowrap">
@@ -102,7 +103,7 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                             </a>
                         </li>
 
-                         <li>
+                        <li>
                             <a href="moncompte.php" class="nav-link px-0 align-middle">
                                 <i class="fa-solid fa-user"></i><span class="ms-1 d-none d-sm-inline">Mon compte</span>
                             </a>
@@ -110,7 +111,7 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
 
                         <li>
                             <a href="mesemprunts.php" class="nav-link px-0 align-middle">
-                            <i class="fa-solid fa-box-open"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
+                                <i class="fa-solid fa-box-open"></i><span class="ms-1 d-none d-sm-inline">Mes emprunts</span>
                             </a>
                         </li>
 
@@ -144,33 +145,33 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                                 <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
                             </h2>
                             <?php
-// Si l'utilisateur est connecté
-if (isset($_SESSION['utilisateur'])) {
-    $nomUtilisateur = $_SESSION['utilisateur']['Nom'];
+                            // Si l'utilisateur est connecté
+                            if (isset($_SESSION['utilisateur'])) {
+                                $nomUtilisateur = $_SESSION['utilisateur']['Nom'];
 
-    $stmt = $pdo->prepare("SELECT Formation, Td, Tp FROM inscription_eleve WHERE nom = :nom");
-    $stmt->execute([':nom' => $nomUtilisateur]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                $stmt = $pdo->prepare("SELECT Formation, Td, Tp FROM inscription_eleve WHERE nom = :nom");
+                                $stmt->execute([':nom' => $nomUtilisateur]);
+                                $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row) {
-        echo '<span class="badge d-flex align-items-baseline gap-2 text-dark">
+                                if ($row) {
+                                    echo '<span class="badge d-flex align-items-baseline gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
                 <h6 class="spantext">Étudiant(e) ' . ' ' . htmlspecialchars($row['Formation'])  . ' ' . htmlspecialchars($row['Td']) . ' ' . htmlspecialchars($row['Tp']) . '</h6>
               </span>';
-    } else {
-        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = :nom");
-        $stmt->execute([':nom' => $nomUtilisateur]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                } else {
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = :nom");
+                                    $stmt->execute([':nom' => $nomUtilisateur]);
+                                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['total'] > 0) {
-            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                                    if ($row['total'] > 0) {
+                                        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                     <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
                     <span class="spantext">Enseignant(e)</span>
                   </span>';
-        }
-    }
-}
-?>
+                                    }
+                                }
+                            }
+                            ?>
 
                             <div class="progress" role="progressbar" aria-label="Example 1px high" aria-valuenow="25"
                                 aria-valuemin="0" aria-valuemax="100" style="height: 10px">
@@ -180,26 +181,26 @@ if (isset($_SESSION['utilisateur'])) {
                                 <span class="badge d-flex align-items-baseline gap-2 text-dark">
                                     <span class="spantext">
                                         <?php
-$stmt = $pdo->prepare("SELECT count(*) AS total FROM reservation_etudiant WHERE Pseudo = :pseudo");
-$stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo $row['total'];
-?>
-</span>
+                                        $stmt = $pdo->prepare("SELECT count(*) AS total FROM reservation_etudiant WHERE Pseudo = :pseudo");
+                                        $stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
+                                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        echo $row['total'];
+                                        ?>
+                                    </span>
                                     <span class="spantext">Réservations</span>
                                 </span>
                                 <span class="badge d-flex align-items-baseline gap-2 text-dark">
                                     <i class="fa-regular fa-comment"></i>
                                     <span class="spantext">
                                         <?php
-$stmt = $pdo->prepare("SELECT count(*) AS total FROM commentaires_eleve WHERE Pseudo = :pseudo"); //A CHANGER POUR LA BDD COMENTAIRES
-$stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo $row['total'];
-?>
-</span>
+                                        $stmt = $pdo->prepare("SELECT count(*) AS total FROM commentaires_eleve WHERE Pseudo = :pseudo"); //A CHANGER POUR LA BDD COMENTAIRES
+                                        $stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
+                                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        echo $row['total'];
+                                        ?>
                                     </span>
-                                    <span class="spantext">Commentaires</span>
+                                </span>
+                                <span class="spantext">Commentaires</span>
                                 </span>
                             </div>
                         </div>
@@ -208,23 +209,59 @@ echo $row['total'];
                         <!-- CALENDRIER -->
                         <div class="col-12 col-lg-8">
                             <?php foreach ($reservations as $reserve): ?>
-                            <div class="rounded bg-light border text-center p-3 m-2">
-                                <div class="d-flex justify-content-baseline"><i></i>Vous avez effectué une réservation
-                                    pour le <span class="text-black ms-1"><?= htmlspecialchars($reserve['Date_reservation']) ?></span></div>
-                                <div class="d-flex justify-content-between">
-                                    <div><?= htmlspecialchars($reserve['materiel']) ?></div>
-                                    <a class='icon-link link-dark' href='#'>
-                                        Télécharger le PDF
-                                        <img src='../IMG/google-docs.png' alt='google-docs'>
-                                    </a>
+                                <div class="rounded bg-light border text-center p-3 m-2">
+                                    <?php if (htmlspecialchars($reserve['accepte']) == 'oui'): ?>
+                                        <span class="rounded bg-success text-center text-white d-flex align-items-center gap-2 text-dark" style="width: 15%;">
+                                            <span class="ms-3">Acceptée</span>
+                                        </span>
+                                    <?php elseif (htmlspecialchars($reserve['accepte']) == 'non'): ?>
+                                        <span class="rounded bg-danger text-center text-white d-flex align-items-center gap-2 text-dark" style="width: 15%;">
+                                            <span class="ms-3">Refusée</span>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="rounded bg-secondary text-center text-white d-flex align-items-center gap-2 text-dark" style="width: 15%;">
+                                            <span class="ms-3">à accepter</span>
+                                        </span>
+                                    <?php endif; ?>
+                                    <div class="d-flex justify-content-baseline"><i></i>Vous avez effectué une réservation
+                                        pour le <span class="text-black ms-1"><?= htmlspecialchars($reserve['Date_reservation']) ?></span></div>
+                                    <div class="d-flex justify-content-between">
+                                        <div><?= htmlspecialchars($reserve['materiel']) ?></div>
+                                        <div id="pdf-content" style="display: none;">
+                                            <h5 class='mb-4 ms-4'>Votre Réservation</h5>
+                                            <div>Nom : <?= htmlspecialchars($reserve['Nom']) ?></div>
+                                            <div class='mb-4'>Prénom : <?= htmlspecialchars($reserve['Prenom']) ?></div>
+                                            <div><?php isset($reserve['Num_etudiant']) ? 'Numéro étudiant: ' . htmlspecialchars($reserve['Num_etudiant']) : '' ?></div>
+                                            <div>Adresse email universitaire : <?= htmlspecialchars($reserve['Adresse_email']) ?></div>
+                                            <div class='mb-4'>Date de réservation : <?= htmlspecialchars($reserve['Date_reservation']) ?></div>
+                                            <div>Horaire de réservation :<?= htmlspecialchars($reserve['heure_debut']) ?> - <?= htmlspecialchars($reserve['heure_fin']) ?></div>
+                                            <div class='mb-4'><?php isset($reserve['nom_projet']) ? 'Nom du projet: ' . htmlspecialchars($reserve['nom_projet']) : '' ?></div>
+                                            <div><?php isset($reserve['participants']) ? 'Etudiants participants: ' . htmlspecialchars($reserve['participants']) : '' ?></div>
+                                            <p>Matériel : <?= htmlspecialchars($reserve['materiel']) ?> x<?= htmlspecialchars($reserve['quantite']) ?></p>
+                                            <p>
+                                                <?php
+                                                if ($reserve['nom_projet'] !== null) {
+                                                    echo 'Signature: ' . htmlspecialchars($reserve['signature_eleve']);
+                                                } else {
+                                                    echo 'Signature: ' . htmlspecialchars($reserve['signature_prof']);
+                                                }
+                                                ?>
+                                            </p>
+
+                                            <p><?php echo '           ' . htmlspecialchars($reserve['signature_admin']) ?></p>
+                                        </div>
+                                        <button id='telecharge' style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdf()'>
+                                            Télécharger le PDF
+                                            <i class="fa-solid fa-file-arrow-down ms-2"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
                             <?php endforeach; ?>
                             <?php
-$stmt = $pdo->prepare("SELECT * FROM commentaires_eleve WHERE Pseudo = :pseudo");
-$stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
-$commentaires = $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupérer tous les commentaires sous forme de tableau associatif
-?>
+                            $stmt = $pdo->prepare("SELECT * FROM commentaires_eleve WHERE Pseudo = :pseudo");
+                            $stmt->execute([':pseudo' => $_SESSION['utilisateur']['Pseudo']]);
+                            $commentaires = $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupérer tous les commentaires sous forme de tableau associatif
+                            ?>
 
 
                             <?php foreach ($commentaires as $commentaire): ?>
@@ -235,7 +272,7 @@ $commentaires = $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupérer tous les comme
                                     </div>
                                     <div class="d-flex justify-content-between">
                                         <div><?= htmlspecialchars($commentaire['materiel']) ?></div>
-                                        <a class='icon-link link-dark' href='produit.php?id=<?= htmlspecialchars($commentaire['materiel'])?>#com1'>
+                                        <a class='icon-link link-dark' href='produit.php?id=<?= htmlspecialchars($commentaire['materiel']) ?>#com1'>
                                             Voir le commentaire
                                         </a>
                                     </div>
