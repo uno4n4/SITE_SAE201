@@ -253,7 +253,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
           }
           ?>
         </div>
-        <a href="modifier-materiel.php" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
+        <a href="materiel.php" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
       </div>
     </div>
   </div>

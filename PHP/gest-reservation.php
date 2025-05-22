@@ -144,8 +144,6 @@ if (isset($_POST["refuser"])) {
       $materiel = $user['materiel'];
       $date = $user['Date_reservation'];
 
-      require 'vendor/autoload.php';
-
       $mail = new PHPMailer(true);
 
       try {

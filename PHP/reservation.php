@@ -303,8 +303,8 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <li class="ms-4">
                         <h5 class="mb-4">Informations Personnelles</h5>
                     </li>
-                    <input type="hidden" name="nom_produit" value="<?= htmlspecialchars($id) ?>">
-                    <input type="hidden" name="quantite" value="<? htmlspecialchars($quantite) ?>">
+                    <input type="hidden" name="nom_produit" value="<?= htmlspecialchars($_GET['id']); ?>">
+                    <input type="hidden" name="quantite" value="<?php echo htmlspecialchars($_GET['quantite']); ?>">
 
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>

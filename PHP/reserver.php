@@ -198,6 +198,7 @@ if ($pdo === null) {
     }
 
     if (isset($_POST["submit-prof"])) {
+        var_dump($_POST);
         $nom = htmlspecialchars($_POST['nom']) ?? '';
         $prenom = htmlspecialchars($_POST['prenom']) ?? '';
         $email = htmlspecialchars($_POST['email']) ?? '';
@@ -208,7 +209,7 @@ if ($pdo === null) {
         $quantite = htmlspecialchars($_POST['quantite']) ?? '';
         $signature = htmlspecialchars($_POST['signature_prof']) ?? '';
 
-        if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['email']) && !empty($_POST['date']) && !empty($_POST['heureRetrait']) && !empty($_POST['heureRetour'])) {
+        if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['email']) && !empty($_POST['date']) && !empty($_POST['heureRetrait']) && !empty($_POST['heureRetour']) && !empty($_POST['nom_produit']) && !empty($_POST['quantite']) && !empty($_POST['signature_prof'])) {
             // Formulaire de reçu redirigé vers page accueil à la validation
             echo "<section id='3'>
             <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
