@@ -41,7 +41,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
         $mail->Username = 'materiel.iut@gmail.com';
-        $mail->Password = 'obmv hoac gbrw ftwz'; // ⚠️ À remplacer par un mot de passe sécurisé
+        $mail->Password = 'obmv hoac gbrw ftwz'; 
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 

@@ -1,6 +1,8 @@
+//CHECKBOX PAGE GESTION RESERVATION
 document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
     checkbox.addEventListener('change', reservationSelect);
 });
+
 
 function reservationSelect() {
     const checkedreserve = document.querySelectorAll('input[type="checkbox"]:checked');
@@ -8,11 +10,10 @@ function reservationSelect() {
     Nbselection.textContent = checkedreserve.length + ' Réservations sélectionnées';
 }
 document.addEventListener('DOMContentLoaded', () => {
-    const table = document.querySelector('table'); // ou remplace par un ID si t’as
+    const table = document.querySelector('table');
 
     table.addEventListener('click', function (e) {
         if (e.target.closest('.modifier-btn')) {
-            e.preventDefault();
 
             const btn = e.target.closest('.modifier-btn');
             const tr = btn.closest('.ligne-materiel');
@@ -20,34 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             inputs.forEach(input => {
                 input.disabled = false;
-                $disabled = '';
             });
         }
-    });
-});
-
-
-document.getElementById('modifier').addEventListener('click', function (e) {
-    e.preventDefault(); // Pour éviter un submit si c’est dans un form
-
-    // Récupère toutes les checkbox cochées
-    const checkedBoxes = document.querySelectorAll('.reservation-checkbox:checked');
-    const valid = document.getElementById('valid');
-    valid.style.display = 'block';
-
-
-    checkedBoxes.forEach(checkbox => {
-        // Récupère la ligne <tr> parente
-        const tr = checkbox.closest('tr');
-        // Trouve les inputs time et date dans cette ligne
-        const inputs = tr.querySelectorAll('input[type="time"], input[type="date"]');
-
-        inputs.forEach(input => {
-            input.disabled = false;
-            if (input.type === 'date') {
-                input.readOnly = false;
-            }
-        });
     });
 });
 
@@ -84,3 +59,38 @@ function aujourdhui() {
 }
 
 updateCheckedCount(); // Initialisation
+
+
+
+
+
+//GESTION MATERIEL
+document.getElementById('modifier').addEventListener('click', function (e) {
+
+    // Récupère toutes les checkbox cochées
+    const checkedBoxes = document.querySelectorAll('.reservation-checkbox:checked');
+    const valid = document.getElementById('valid');
+
+
+    checkedBoxes.forEach(checkbox => {
+        // Récupère la ligne <tr> parente
+        const tr = checkbox.closest('tr');
+        // Trouve les inputs time et date dans cette ligne
+        const inputs = tr.querySelectorAll('input[type="time"], input[type="date"]');
+
+        inputs.forEach(input => {
+            input.disabled = false;
+            if (input.type === 'date') {
+                input.readOnly = false;
+            }
+        });
+    });
+});
+
+//UPLOAD IMAGES MATERIEL
+function toggleUploadForm(index) {
+    const imgDiv = document.getElementById("images-" + index);
+    const formDiv = document.getElementById("upload-form-" + index);
+    imgDiv.style.display = "none";
+    formDiv.classList.remove("d-none");
+}
