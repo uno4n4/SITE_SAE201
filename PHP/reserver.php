@@ -48,7 +48,7 @@ if ($pdo === null) {
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href=":esmeprunts.php">
+                            <a class="icon-link link-dark" href="mesmeprunts.php">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>
@@ -143,22 +143,22 @@ if ($pdo === null) {
     <div class="w-100"></div>
 
     <?php
-    if (isset($_POST["submit-etud"])) {
-        $nom = htmlspecialchars($_POST['nom']) ?? '';
-        $prenom = htmlspecialchars($_POST['prenom']) ?? '';
-        $numcarteetud = htmlspecialchars($_POST['numcarteetud']) ?? '';
-        $email = htmlspecialchars($_POST['email']) ?? '';
-        $date = htmlspecialchars($_POST['date']) ?? '';
-        $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
-        $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
-        $nomProjet = htmlspecialchars($_POST['nomProjet']) ?? '';
-        $participants = htmlspecialchars($_POST['participants']) ?? '';
-        $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable']) ?? '';
-        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
-        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
-        $signature = htmlspecialchars($_POST['signature_eleve']) ?? '';
+    if (isset($_POST["submit_etud"])) {
+        $nom = htmlspecialchars($_POST['nom'] ?? '');
+        $prenom = htmlspecialchars($_POST['prenom'] ?? '');
+        $numcarteetud = htmlspecialchars($_POST['numcarteetud'] ?? '');
+        $email = htmlspecialchars($_POST['email'] ?? '');
+        $date = htmlspecialchars($_POST['date'] ?? '');
+        $heureRetrait = htmlspecialchars($_POST['heureRetrait'] ?? '');
+        $heureRetour = htmlspecialchars($_POST['heureRetour'] ?? '');
+        $nomProjet = htmlspecialchars($_POST['nomProjet'] ?? '');
+        $participants = htmlspecialchars($_POST['participants'] ?? '');
+        $enseignantResponsable = htmlspecialchars($_POST['enseignantResponsable'] ?? '');
+        $nom_produit = urldecode($_POST['nom_produit'] ?? '');
+        $quantite = htmlspecialchars($_POST['quantite'] ?? '');
+        $signature = htmlspecialchars($_POST['signature_eleve'] ?? '');
 
-        if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['numcarteetud']) && !empty($_POST['email']) && !empty($_POST['date']) && !empty($_POST['heureRetrait']) && !empty($_POST['heureRetour']) && !empty($_POST['nomProjet']) && !empty($_POST['participants']) && !empty($_POST['enseignantResponsable']) && !empty($_POST['signature'])) {
+        if (!empty($nom) && !empty($prenom) && !empty($numcarteetud) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nomProjet) && !empty($participants) && !empty($enseignantResponsable) && !empty($signature)) {
             // Formulaire de reçu redirigé vers page accueil à la validation
             echo "<section id='3'>
                 <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
@@ -189,7 +189,7 @@ if ($pdo === null) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                            <a href='../PHP/reservation.php?id={$nom_produit}&quantite=1' type='button' class='btn btn-primary col-3'><img
+                            <a href='../PHP/reservation.php?id=" . htmlspecialchars($nom_produit) . "&quantite=1' type='button' class='btn btn-primary col-3'><img
                                     src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                         </div>
             <div class='clearfix'></div>
@@ -197,19 +197,18 @@ if ($pdo === null) {
         }
     }
 
-    if (isset($_POST["submit-prof"])) {
-        var_dump($_POST);
-        $nom = htmlspecialchars($_POST['nom']) ?? '';
-        $prenom = htmlspecialchars($_POST['prenom']) ?? '';
-        $email = htmlspecialchars($_POST['email']) ?? '';
-        $date = htmlspecialchars($_POST['date']) ?? '';
-        $heureRetrait = htmlspecialchars($_POST['heureRetrait']) ?? '';
-        $heureRetour = htmlspecialchars($_POST['heureRetour']) ?? '';
-        $nom_produit = urldecode($_POST['nom_produit']) ?? '';
-        $quantite = htmlspecialchars($_POST['quantite']) ?? '';
-        $signature = htmlspecialchars($_POST['signature_prof']) ?? '';
+    if (isset($_POST["submit_prof"])) {
+        $nom = htmlspecialchars($_POST['nom'] ?? '');
+        $prenom = htmlspecialchars($_POST['prenom'] ?? '');
+        $email = htmlspecialchars($_POST['email'] ?? '');
+        $date = htmlspecialchars($_POST['date'] ?? '');
+        $heureRetrait = htmlspecialchars($_POST['heureRetrait'] ?? '');
+        $heureRetour = htmlspecialchars($_POST['heureRetour'] ?? '');
+        $nom_produit = urldecode($_POST['nom_produit'] ?? '');
+        $quantite = htmlspecialchars($_POST['quantite'] ?? '');
+        $signature = htmlspecialchars($_POST['signature_prof'] ?? '');
 
-        if (!empty($_POST['nom']) && !empty($_POST['prenom']) && !empty($_POST['email']) && !empty($_POST['date']) && !empty($_POST['heureRetrait']) && !empty($_POST['heureRetour']) && !empty($_POST['nom_produit']) && !empty($_POST['quantite']) && !empty($_POST['signature_prof'])) {
+        if (!empty($nom) && !empty($prenom) && !empty($email) && !empty($date) && !empty($heureRetrait) && !empty($heureRetour) && !empty($nom_produit) && !empty($quantite) && !empty($signature)) {
             // Formulaire de reçu redirigé vers page accueil à la validation
             echo "<section id='3'>
             <form action='../PHP/accueil.php' method='post' class='col-sm-6 float-end p-4 mb-4'>
@@ -236,7 +235,7 @@ if ($pdo === null) {
         } else {
             echo "<b id='erreur' class='text-danger col-sm-12 d-flex justify-content-center align-items-center'>Veuillez saisir tous les champs! </b>";
             echo "<div class='row mt-5 d-flex justify-content-center align-items-center'>
-                        <a href='../PHP/reservation.php?id=$nom_produit&quantite=1' type='button' class='btn btn-primary col-3'><img
+                        <a href='../PHP/reservation.php?id=" . htmlspecialchars($nom_produit) . "&quantite=1' type='button' class='btn btn-primary col-3'><img
                                 src='../IMG/fleche-gauche.png' alt='retour'>Retour au formulaire</a>
                     </div>
         <div class='clearfix'></div>

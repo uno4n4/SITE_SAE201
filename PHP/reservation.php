@@ -162,14 +162,14 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
                         <div class="col-sm-10">
-                            <input name="nom" type="text" class="form-control" id="nom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>">
+                            <input name="nom" type="text" class="form-control" id="nom" value="<?= htmlspecialchars($_SESSION['utilisateur']['Nom']) ?>">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
                         <div class="col-sm-10">
-                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>">
+                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= htmlspecialchars($_SESSION['utilisateur']['Prenom']) ?>">
                         </div>
                     </div>
 
@@ -215,7 +215,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetrait" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetrait">
+                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
                         </div>
                     </div>
 
@@ -224,7 +224,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                             matériel
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetour" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetour">
+                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
                         </div>
                     </div>
 
@@ -285,7 +285,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-etud" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
+                            <button type="submit" name="submit_etud" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
@@ -309,14 +309,14 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                     <div class="mb-3 row">
                         <label for="nom" class="col-sm-2 col-form-label">Nom :</label>
                         <div class="col-sm-10">
-                            <input name="nom" type="text" class="form-control" id="nom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Nom'])) ?>">
+                            <input name="nom" type="text" class="form-control" id="nom" value="<?= htmlspecialchars($_SESSION['utilisateur']['Nom']) ?>">
                         </div>
                     </div>
 
                     <div class="mb-3 row">
                         <label for="prenom" class="col-sm-2 col-form-label">Prénom :</label>
                         <div class="col-sm-10">
-                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>">
+                            <input name="prenom" type="text" class="form-control" id="prenom" value="<?= htmlspecialchars($_SESSION['utilisateur']['Prenom']) ?>">
                         </div>
                     </div>
 
@@ -354,7 +354,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         <label for="heureRetrait" class="col-sm-12 offset-sm-1 col-form-label">Heure de retrait
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetrait" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetrait">
+                            <input name="heureRetrait" type="time" class="form-control" id="heureRetrait">
                         </div>
                     </div>
 
@@ -363,7 +363,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                             matériel
                             :</label>
                         <div class="col-sm-12">
-                            <input name="heureRetour" type="time" step="900" min="08:00" max="18:00" class="form-control" id="heureRetour">
+                            <input name="heureRetour" type="time" class="form-control" id="heureRetour">
                         </div>
                     </div>
 
@@ -398,7 +398,7 @@ if (isset($_GET['id']) && isset($_GET['quantite'])) {
                         </div>
                         <div class="col-sm-4"></div>
                         <div class="col-sm-4">
-                            <button type="submit" name="submit-prof" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
+                            <button type="submit" name="submit_prof" class="btn btn-info">Suivant <i class="fa-solid fa-arrow-right" style="color: #FFF;"></i></button>
                         </div>
                     </div>
                 </section>
