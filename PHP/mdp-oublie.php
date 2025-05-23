@@ -39,6 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           $mail->SMTPSecure = 'tls';
           $mail->Port = 587;
 
+          $mail->CharSet = 'UTF-8';
+          $mail->Encoding = 'base64';
           $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
           $mail->addAddress($email, $Pseudo);
           $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support'); // Ajout du Reply-To

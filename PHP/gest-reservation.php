@@ -88,6 +88,8 @@ if (isset($_POST["accepter"])) {
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
         $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
         $mail->addAddress($email, $Pseudo);
         $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');

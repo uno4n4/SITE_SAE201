@@ -46,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
+        $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
         $mail->setFrom('materiel.iut@gmail.com', 'Site Réservation'); 
         $mail->addAddress('materiel.iut@gmail.com'); 
         $mail->addReplyTo($email, $nom); 

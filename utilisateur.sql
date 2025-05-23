@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
-<<<<<<< HEAD
--- Généré le : ven. 23 mai 2025 à 08:41
-=======
--- Généré le : jeu. 22 mai 2025 à 20:18
->>>>>>> 89977f8a4f4b7204ed907e0991a18e63747cf35d
+-- Généré le : ven. 23 mai 2025 à 10:09
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -42,13 +38,6 @@ CREATE TABLE `commentaires_eleve` (
   `materiel` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Déchargement des données de la table `commentaires_eleve`
---
-
-INSERT INTO `commentaires_eleve` (`id`, `Pseudo`, `date_comment`, `commentaire`, `reaction`, `materiel`) VALUES
-(1, 'diabasmr', '2025-05-17 15:30:00', 'Trop fan de ce matos, il est top qualité !', 5, 'Gopro');
-
 -- --------------------------------------------------------
 
 --
@@ -74,13 +63,6 @@ CREATE TABLE `consigne` (
   `id` int(11) NOT NULL,
   `contenu` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `consigne`
---
-
-INSERT INTO `consigne` (`id`, `contenu`) VALUES
-(1, '\n                    <p id=\"ecrire\" name=\"contenu\" style=\"text-align: center;\">bonjour</p>\n                  ');
 
 -- --------------------------------------------------------
 
@@ -125,14 +107,6 @@ CREATE TABLE `inscription_agent` (
   `Statut` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Déchargement des données de la table `inscription_agent`
---
-
-INSERT INTO `inscription_agent` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('prsn', 'test', '0000-00-00', 'testpersonne@gmail.com', '', '', 'prsn.test', '$2y$10$V1lWwcfDt1pjl5uaQQsFOeJDTFZEwijsNYqkxMOPAoT8BP8jXHeIS', 'accepté'),
-('tomas', 'tom', '2025-05-01', 'tom@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', 'tom', '$2y$10$jxL02VcfFYEBIMSlvxrE9uMaSvsSm6KUuxC8o4OaYVCVbzYW5B4Nu', 'accepté');
-
 -- --------------------------------------------------------
 
 --
@@ -155,17 +129,6 @@ CREATE TABLE `inscription_eleve` (
   `Statut` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Déchargement des données de la table `inscription_eleve`
---
-
-INSERT INTO `inscription_eleve` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Num_etudiant`, `Formation`, `Td`, `Tp`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('gilet', 'amel', '2025-05-01', 'Aamel2432@gmail.com', '060606076', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'amel', '$2y$10$AARSlK8gKWQeIkTOgK6mvOQS4EnV8NBYm1wKdmMECZcfhbwN/lUpa', 'accepté'),
-('clemence', 'clemence', '0000-00-00', 'clemence@edu.univ-eiffel.fr', '', '', '', '', '', '', 'clemence.clemence', '$2y$10$yffz5GIL1QkfJXT/7BnoEuem/nOquI4JR.SAXqAYC.o.Uo.Gq/HB6', 'accepté'),
-('samoura', 'diaba', '2025-05-01', 'diaba.samoura@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD3', 'TPA', 'diabasmr', '$2y$10$zlDGebs5UneBaZXF/OFVm.W3PwXSp8EakcCHnEbSW62jjLplvCvxy', 'accepté'),
-('mathilda', 'mathile', '2025-05-03', 'test@gmail.com', '0606060606', '1 rue de la rue', '22222', 'MMI1', 'TD3', 'TPA', 'mathilde', '$2y$10$QuTpBIhstDsLnbb1pgpN2./NiAeB5AJayVNuKxWvDj9N1GmSz0wEe', 'accepté'),
-('yacine', 'yacine', '2025-05-01', 'yacine@edu.univ-eiffel.fr', '0606060606', '1 rue de la rue', '982132', 'MMI1', 'TD1', 'TPA', 'yacine1', '$2y$10$vnooSPuPIg1y0FLFraEQZ.Ey/m6JvE0M8Pq6Wq/5chpLx2qvYgsMa', 'accepté');
-
 -- --------------------------------------------------------
 
 --
@@ -183,18 +146,6 @@ CREATE TABLE `inscription_prof` (
   `Mdp` varchar(255) NOT NULL,
   `Statut` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `inscription_prof`
---
-
-INSERT INTO `inscription_prof` (`Nom`, `Prenom`, `Date_naissance`, `Adresse_email`, `Numero_tel`, `Adresse`, `Pseudo`, `Mdp`, `Statut`) VALUES
-('chloe', 'chloe', '2025-05-01', 'chloe@gmail.com', '0606060606', '1 rue de la rue', 'chloe', '$2y$10$IKs2ENJq9sZGJ9yaa7FxN.Mg7AcHVUrelMqCq6PHscQjijFMcLjya', 'accepté'),
-('mathis', 'mathis', '2025-05-01', 'test@gmail.com', '0606060606', '1 rue de la rue', 'diabasmr', '$2y$10$b9Ix5AGRkhIKOdU1LH2zLe3nTMcilHgG9aplbwW1RwfbcwL79102i', 'accepté'),
-('domingues', 'clara', '0000-00-00', 'clara@gmail.com', '', '', 'domingues.clara', '$2y$10$CccikOy/.mMjJADYChtpEerYfAv6xnVK4UK47cfGRx/thwnq5gQ8u', 'accepté'),
-('Mathus', 'samantha', '2025-05-31', 'mathus.samantha@gmail.com', '0606060606', '1 rue de la rue', 'noob1233', '$2y$10$nDyb0HEjG3So7x.d5UGpweO0GA8iiDabg0ADrv.gTKNWjaVy9Tc7e', 'refusé'),
-('tir', 'fouad', '2025-05-01', 'tir@univ-eiffel.fr', '0606060606', '1 rue de la rue', 'tir', '$2y$10$/aNGTHz1Za/W9wVYvFqqRebuAYWIEac9gNZ2BHKvffn6gMJep8nX6', 'accepté'),
-('yacine', 'yacine', '2025-05-01', 'yacine@univ-eiffel.fr', '0606060606', '1 rue de la rue', 'yacine', '$2y$10$NijuQ4MAGiCL.UbwLTk/2OLI/D/.dF1.5OzcrTdsVxEt0qJonXmsu', 'accepté');
 
 -- --------------------------------------------------------
 
@@ -265,13 +216,6 @@ CREATE TABLE `reservation_etudiant` (
   `signature` varchar(19) DEFAULT NULL,
   `accepte` varchar(3) DEFAULT 'oui'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `reservation_etudiant`
---
-
-INSERT INTO `reservation_etudiant` (`Id`, `Pseudo`, `Nom`, `Prenom`, `Num_etudiant`, `Adresse_email`, `Date_reservation`, `heure_debut`, `heure_fin`, `nom_projet`, `participants`, `materiel`, `quantite`, `signature`, `accepte`) VALUES
-(1, 'diabasmr', 'Diaba', 'Samoura', '280000', 'mathus.samantha@gmail.com', '2025-05-23', '19:10:00', '20:10:00', 'SpeakLens', 'Amel, Maxence', 'Logitech Brio Webcam 4K', 1, NULL, 'oui');
 
 -- --------------------------------------------------------
 

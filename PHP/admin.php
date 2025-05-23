@@ -1,11 +1,19 @@
 <?php
 
-include 'config.php';
+include('config.php');
 session_start();
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
+// Vérification de la connexion utilisateur
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
 
@@ -225,6 +233,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="container">
               <div class="row g-5 justify-content-between">
+
                 <!-- GERER MATERIEL -->
                 <div class="col-12 col-lg-6 mb-lg-0">
                   <div class="materiel d-flex align-items-center justify-content-between mb-2" id="gest-materiel">
@@ -280,7 +289,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $color = '#6c757d';
       }
     ?>
-      <form method="post" action="admin.php">
+      <form method="post" action="gest-comptes.php">
         <div class="d-flex align-items-center gap-2">
           <span class="rounded-circle" style="width:10px;height:10px;margin-top:-13px;background-color: <?= $color ?>;"></span>
           <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>

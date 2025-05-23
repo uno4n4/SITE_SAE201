@@ -1,6 +1,12 @@
 <?php 
 
 include('config.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
 
 function pseudoExiste($pdo, $pseudo) {
     // Vérifie dans inscription_eleve
@@ -53,6 +59,43 @@ if (isset($_POST['Nom']) && isset($_POST['Prenom'])) {
         $Statut = "en attente";
 
         if ($stmt->execute([$Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Numetu, $Formation, $TD, $TP, $Pseudo, $Mdp, $Statut])) {
+
+        $stmtUser = $pdo->prepare("SELECT * FROM inscription_eleve WHERE Nom = :Nom");
+        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+        $stmtUser->execute();
+        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $email = $user['Adresse_email'];
+            $Nom = $user['Nom'];
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'materiel.iut@gmail.com';
+                $mail->Password = 'obmv hoac gbrw ftwz';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                $mail->addAddress($email, $Nom);
+                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+                $mail->Subject = 'Inscription réussie';
+                $mail->Body = "Bonjour $Nom,\n\nNous avons bien reçu votre demande d'inscription. Merci et bienvenue ! \n Votre compte est actuellement en attente d'approbation par un administrateur. Dès qu'il sera validé, vous en serez informé et vous pourrez accéder à notre site et effectuer vos réservations librement.\nÀ très bientôt,\nL'équipe IUT";
+
+                $mail->send();
+            } catch (Exception $e) {
+                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+            }
+        } else {
+            echo "Utilisateur introuvable après mise à jour.";
+        }
             echo <<<HTML
             <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
               <b class="mb-2 d-block">Inscription étudiant réussie !</b>
@@ -87,6 +130,43 @@ elseif (isset($_POST['Nomprof']) && isset($_POST['Prenomprof'])) {
         $Statut = "en attente";
 
         if ($stmt->execute([$Nom, $Prenom, $Anniv, $Email, $Tel, $Adresse, $Pseudo, $Mdp, $Statut])) {
+
+          $stmtUser = $pdo->prepare("SELECT * FROM inscription_prof WHERE Nom = :Nom");
+        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+        $stmtUser->execute();
+        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $email = $user['Adresse_email'];
+            $Nom = $user['Nom'];
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'materiel.iut@gmail.com';
+                $mail->Password = 'obmv hoac gbrw ftwz';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                $mail->addAddress($email, $Nom);
+                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+                $mail->Subject = 'Inscription réussie';
+                $mail->Body = "Bonjour $Nom,\n\nNous avons bien reçu votre demande d'inscription. Merci et bienvenue ! \n Votre compte est actuellement en attente d'approbation par un administrateur. Dès qu'il sera validé, vous en serez informé et vous pourrez accéder à notre site et effectuer vos réservations librement.\nÀ très bientôt,\nL'équipe IUT";
+
+                $mail->send();
+            } catch (Exception $e) {
+                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+            }
+        } else {
+            echo "Utilisateur introuvable après mise à jour.";
+        }
             echo <<<HTML
             <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
               <b class="mb-2 d-block">Inscription professeur réussie !</b>

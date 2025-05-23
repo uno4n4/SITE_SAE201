@@ -1,11 +1,19 @@
 <?php
 
-include 'config.php';
+include('config.php');
 session_start();
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer-master/src/Exception.php';
+require '../PHPMailer-master/src/PHPMailer.php';
+require '../PHPMailer-master/src/SMTP.php';
+
+// Vérification de la connexion utilisateur
 if (!isset($_SESSION['utilisateur'])) {
-  echo "Erreur : Utilisateur non connecté.";
-  exit();
+    echo "Erreur : Utilisateur non connecté.";
+    exit();
 }
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
@@ -29,7 +37,47 @@ foreach ($tables as $table) {
             $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
             
             // Exécuter la requête
-            $stmt->execute();
+            if ($stmt->execute()){
+              $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :nom LIMIT 1");
+                $stmtUser->bindParam(':nom', $nom, PDO::PARAM_STR);
+                $stmtUser->execute();
+                $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+                if ($user) {
+                    $email = $user['Adresse_email'];
+                    $Nom = $user['Nom'];
+                    $Pseudo = $user['Pseudo'];
+
+                    // 🔽 Envoi d’email selon statut
+                    $mail = new PHPMailer(true);
+                    try {
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.gmail.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'materiel.iut@gmail.com';
+                        $mail->Password = 'obmv hoac gbrw ftwz'; // 🔒 Utilise un fichier sécurisé en prod
+                        $mail->SMTPSecure = 'tls';
+                        $mail->Port = 587;
+                        $mail->CharSet = 'UTF-8';
+                        $mail->Encoding = 'base64';
+                        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                        $mail->addAddress($email, $Nom);
+                        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+                        if ($action === 'accepté') {
+                            $mail->Subject = "Votre compte a été accepté";
+                            $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été accepté par un administrateur.\n\nVous pouvez dès maintenant vous connecter au site et effectuer vos réservations.\n\nÀ bientôt,\nL'équipe IUT";
+                        } elseif ($action === 'refusé') {
+                            $mail->Subject = "Votre inscription n'a pas été acceptée";
+                            $mail->Body = "Bonjour $Nom,\n\nAprès examen de votre demande, nous sommes au regret de vous informer que votre inscription n’a pas été acceptée.\n\nSi vous pensez qu’il s’agit d’une erreur, vous pouvez nous contacter à l’adresse : materiel.iut@gmail.com\n\nMerci de votre compréhension,\nL'équipe IUT";
+                        }
+
+                        $mail->send();
+                    } catch (Exception $e) {
+                        echo "Erreur email pour $Nom : {$mail->ErrorInfo}<br>";
+                    }
+                }
+            }
         }
     }
 }
@@ -250,21 +298,64 @@ echo $total . " compte(s) en attente";
                                 <?php
 if (isset($_POST["accepter1"])) {
     $Nom = $_POST["Nom"];
+
+    // Mise à jour du statut
     $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = :Nom");
     $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-    if($stmt->execute()){
-      echo <<<HTML
-                <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-                    <b class="mb-2 d-block">L'utilisateur a été accepté avec succès !</b>
-                    <div class="text-center mt-3">
-                        <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
-                    </div>
-                </div>
-            HTML;
+
+    if ($stmt->execute()) {
+        // 🔽 Récupération de l'utilisateur après la mise à jour
+        $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
+        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+        $stmtUser->execute();
+        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $email = $user['Adresse_email'];
+            $Nom = $user['Nom'];
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'materiel.iut@gmail.com';
+                $mail->Password = 'obmv hoac gbrw ftwz';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                $mail->addAddress($email, $Nom);
+                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+                $mail->Subject = 'Votre compte a été activé';
+                $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été validé par un administrateur. Vous pouvez désormais vous connecter à notre site et effectuer vos réservations librement.\n\nRendez-vous dès maintenant sur notre plateforme pour profiter de nos services.\n\n À bientôt, \nL'équipe IUT";
+
+                $mail->send();
+                echo "Message envoyé avec succès.";
+            } catch (Exception $e) {
+                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+            }
         } else {
-            echo "Erreur : " . $stmtInsert->errorInfo()[2];
+            echo "Utilisateur introuvable après mise à jour.";
         }
-    };
+
+        // ✅ Message de confirmation HTML
+        echo <<<HTML
+            <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+                <b class="mb-2 d-block">L'utilisateur a été accepté avec succès !</b>
+                <div class="text-center mt-3">
+                    <a href="gest-comptes.php" class="btn btn-success">Fermer</a>
+                </div>
+            </div>
+        HTML;
+    } else {
+        echo "Erreur : " . $stmt->errorInfo()[2];
+    }
+}
 ?>
 
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
@@ -276,9 +367,47 @@ if (isset($_POST["refuser1"])) {
     $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = :Nom");
     $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
     if($stmt->execute()){
+
+      $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
+        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+        $stmtUser->execute();
+        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $email = $user['Adresse_email'];
+            $Nom = $user['Nom'];
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'materiel.iut@gmail.com';
+                $mail->Password = 'obmv hoac gbrw ftwz';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port = 587;
+
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                $mail->addAddress($email, $Nom);
+                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+                $mail->Subject = "Votre demande d'inscription n'a pas été acceptée";
+                $mail->Body = "Bonjour $Nom,\n\nNous vous remercions pour votre demande d'inscription.\nAprès examen, nous sommes au regret de vous informer que votre demande n'a pas été accepte par notre équipe.\nSi vous pensez qu'il s'agit d'une erreur ou que vous souhaitez plus d'informations, vous pouvez nous contacter à l'adresse suivante : [materiel.iut@gmail.com].\n\Merci de votre compréhension,\nL'équipe IUT";
+
+                $mail->send();
+                echo "Message envoyé avec succès.";
+            } catch (Exception $e) {
+                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+            }
+        } else {
+            echo "Utilisateur introuvable après mise à jour.";
+        }
       echo <<<HTML
                 <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-                    <b class="mb-2 d-block">L'utilisateur a été refusé'</b>
+                    <b class="mb-2 d-block">L'utilisateur a été refusé.</b>
                     <div class="text-center mt-3">
                         <a href="gest-comptes.php" class="btn btn-danger">Fermer</a>
                     </div>
