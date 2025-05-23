@@ -50,47 +50,22 @@ if (isset($_POST['search'])) {
     <section class="container-fluid px-0">
         <nav class="navbar navbar-expand">
             <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="../PHP/accueil.php">
+                <a class="navbar-brand" href="../PHP/accueil_admin.php">
                     <img src="../IMG/logo-iut.png" class="img-fluid" alt="logo iut" id="logo-iut-head">
                 </a>
 
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
-                        <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../PHP/mesemprunts.php">
-                                <img src="../IMG/boite.png" alt="boite mes emprunts">
-                                <span class="spantext">Mes Emprunts</span>
-                            </a>
-                        </li>
                         <li class="nav-item mt-3 d-flex flex-column">
-                            <a class="icon-link link-dark" href="moncompte.php">
+                            <a class="icon-link link-dark" href="admin.php">
                                 <img src="../IMG/avatar-de-lutilisateur.png" alt="boite mes emprunts">
                                 <span class="spantext"><?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?></span>
                             </a>
                             <?php
-                            // Si l'user fait partie de la table eleve on affiche etudiant(e) + pastille couleur dédié
-                            $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-                            $stmt->execute([$_SESSION['utilisateur']['Nom']]);
-                            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                            if ($row['total'] > 0) {
-                                echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-        <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>
-        <span class="spantext">Étudiant(e)</span>
+                            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+        <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>
+        <span class="spantext">Admin</span>
     </span>';
-                                // Si l'user fait partie de la table enseignant on affiche enseignant(e) + pastille couleur dédié
-                            } else {
-                                $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-                                $stmt->execute([$_SESSION['utilisateur']['Nom']]);
-                                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                                if ($row['total'] > 0) {
-                                    echo '<span class="badge d-flex align-items-center gap-2 text-dark">
-            <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>
-            <span class="spantext">Enseignant(e)</span>
-        </span>';
-                                }
-                            }
                             ?>
 
                         </li>
@@ -161,9 +136,9 @@ if (isset($_POST['search'])) {
         </div>
     </section>
     <?php
-if (isset($_POST["validerE"])) {
-    try {
-        $stmt = $pdo->prepare("INSERT INTO reservation_etudiant (
+    if (isset($_POST["validerE"])) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO reservation_etudiant (
                 Pseudo, Nom, Prenom, Num_etudiant, Adresse_email,
                 Date_reservation, heure_debut, heure_fin, nom_projet,
                 participants, materiel, quantite, signature_eleve
@@ -171,36 +146,36 @@ if (isset($_POST["validerE"])) {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
-        $stmt->execute([
-            $_SESSION['utilisateur']['Pseudo'],
-            $_POST['nom'],
-            $_POST['prenom'],
-            $_POST['numcarteetud'],
-            $_POST['email'],
-            $_POST['date'],
-            $_POST['heureRetrait'],
-            $_POST['heureRetour'],
-            $_POST['nomProjet'],
-            $_POST['participants'],
-            $_POST['nom_produit'],
-            $_POST['quantite'],
-            $_POST['signature_eleve'] // à bien sécuriser selon le format
-        ]);
+            $stmt->execute([
+                $_SESSION['utilisateur']['Pseudo'],
+                $_POST['nom'],
+                $_POST['prenom'],
+                $_POST['numcarteetud'],
+                $_POST['email'],
+                $_POST['date'],
+                $_POST['heureRetrait'],
+                $_POST['heureRetour'],
+                $_POST['nomProjet'],
+                $_POST['participants'],
+                $_POST['nom_produit'],
+                $_POST['quantite'],
+                $_POST['signature_eleve'] // à bien sécuriser selon le format
+            ]);
 
-        echo '
+            echo '
         <div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <b class="mb-2">MERCI POUR VOTRE RÉSERVATION</b>
             <p class="mb-4">Vous serez informé(e)s par mail lors de sa validation</p>
             <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
         </div>';
-    } catch (PDOException $e) {
-        echo "Erreur lors de l'insertion (étudiant) : " . $e->getMessage();
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion (étudiant) : " . $e->getMessage();
+        }
     }
-}
 
-if (isset($_POST["validerP"])) {
-    try {
-        $stmt = $pdo->prepare("INSERT INTO reservation_prof (
+    if (isset($_POST["validerP"])) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO reservation_prof (
                 Nom, Prenom, Pseudo, Adresse_email,
                 Date_reservation, heure_debut, heure_fin,
                 materiel, quantite, signature_prof
@@ -208,30 +183,30 @@ if (isset($_POST["validerP"])) {
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
-        $stmt->execute([
-            $_POST['nom'],
-            $_POST['prenom'],
-            $_SESSION['utilisateur']['Pseudo'],
-            $_POST['email'],
-            $_POST['date'],
-            $_POST['heureRetrait'],
-            $_POST['heureRetour'],
-            $_POST['nom_produit'],
-            $_POST['quantite'],
-            $_POST['signature_prof']
-        ]);
+            $stmt->execute([
+                $_POST['nom'],
+                $_POST['prenom'],
+                $_SESSION['utilisateur']['Pseudo'],
+                $_POST['email'],
+                $_POST['date'],
+                $_POST['heureRetrait'],
+                $_POST['heureRetour'],
+                $_POST['nom_produit'],
+                $_POST['quantite'],
+                $_POST['signature_prof']
+            ]);
 
-        echo '
+            echo '
         <div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
             <b class="mb-2">MERCI POUR VOTRE RÉSERVATION</b>
             <p class="mb-4">Vous serez informé(e)s par mail lors de sa validation</p>
             <button class="btn btn-primary" onclick="fermer()" role="button">Fermer</button>
         </div>';
-    } catch (PDOException $e) {
-        echo "Erreur lors de l'insertion (professeur) : " . $e->getMessage();
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion (professeur) : " . $e->getMessage();
+        }
     }
-}
-?>
+    ?>
 
 </body>
 

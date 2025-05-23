@@ -12,74 +12,74 @@ require '../PHPMailer-master/src/SMTP.php';
 
 // Vérification de la connexion utilisateur
 if (!isset($_SESSION['utilisateur'])) {
-    echo "Erreur : Utilisateur non connecté.";
-    exit();
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
 }
 
 $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscription_admin'];
 
 foreach ($tables as $table) {
-    if (isset($_POST['noms'])) {
-        // Récupérer les noms envoyés
-        $noms = explode(',', $_POST['noms']);
-        $action = isset($_POST['accepter']) ? 'accepté' : (isset($_POST['refuser']) ? 'refusé' : '');
+  if (isset($_POST['noms'])) {
+    // Récupérer les noms envoyés
+    $noms = explode(',', $_POST['noms']);
+    $action = isset($_POST['accepter']) ? 'accepté' : (isset($_POST['refuser']) ? 'refusé' : '');
 
-        // Mettre à jour le statut de chaque utilisateur
-        foreach ($noms as $nom) {
-            $nom = trim($nom);
-            
-            // Préparer la requête PDO pour la mise à jour
-            $sql = "UPDATE `$table` SET Statut = :statut WHERE Nom = :nom";
-            $stmt = $pdo->prepare($sql);
-            
-            // Lier les paramètres
-            $stmt->bindParam(':statut', $action, PDO::PARAM_STR);
-            $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
-            
-            // Exécuter la requête
-            if ($stmt->execute()){
-              $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :nom LIMIT 1");
-                $stmtUser->bindParam(':nom', $nom, PDO::PARAM_STR);
-                $stmtUser->execute();
-                $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+    // Mettre à jour le statut de chaque utilisateur
+    foreach ($noms as $nom) {
+      $nom = trim($nom);
 
-                if ($user) {
-                    $email = $user['Adresse_email'];
-                    $Nom = $user['Nom'];
-                    $Pseudo = $user['Pseudo'];
+      // Préparer la requête PDO pour la mise à jour
+      $sql = "UPDATE `$table` SET Statut = :statut WHERE Nom = :nom";
+      $stmt = $pdo->prepare($sql);
 
-                    // 🔽 Envoi d’email selon statut
-                    $mail = new PHPMailer(true);
-                    try {
-                        $mail->isSMTP();
-                        $mail->Host = 'smtp.gmail.com';
-                        $mail->SMTPAuth = true;
-                        $mail->Username = 'materiel.iut@gmail.com';
-                        $mail->Password = 'obmv hoac gbrw ftwz'; // 🔒 Utilise un fichier sécurisé en prod
-                        $mail->SMTPSecure = 'tls';
-                        $mail->Port = 587;
-                        $mail->CharSet = 'UTF-8';
-                        $mail->Encoding = 'base64';
-                        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
-                        $mail->addAddress($email, $Nom);
-                        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+      // Lier les paramètres
+      $stmt->bindParam(':statut', $action, PDO::PARAM_STR);
+      $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
 
-                        if ($action === 'accepté') {
-                            $mail->Subject = "Votre compte a été accepté";
-                            $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été accepté par un administrateur.\n\nVous pouvez dès maintenant vous connecter au site et effectuer vos réservations.\n\nÀ bientôt,\nL'équipe IUT";
-                        } elseif ($action === 'refusé') {
-                            $mail->Subject = "Votre inscription n'a pas été acceptée";
-                            $mail->Body = "Bonjour $Nom,\n\nAprès examen de votre demande, nous sommes au regret de vous informer que votre inscription n’a pas été acceptée.\n\nSi vous pensez qu’il s’agit d’une erreur, vous pouvez nous contacter à l’adresse : materiel.iut@gmail.com\n\nMerci de votre compréhension,\nL'équipe IUT";
-                        }
+      // Exécuter la requête
+      if ($stmt->execute()) {
+        $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :nom LIMIT 1");
+        $stmtUser->bindParam(':nom', $nom, PDO::PARAM_STR);
+        $stmtUser->execute();
+        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-                        $mail->send();
-                    } catch (Exception $e) {
-                        echo "Erreur email pour $Nom : {$mail->ErrorInfo}<br>";
-                    }
-                }
+        if ($user) {
+          $email = $user['Adresse_email'];
+          $Nom = $user['Nom'];
+          $Pseudo = $user['Pseudo'];
+
+          // 🔽 Envoi d’email selon statut
+          $mail = new PHPMailer(true);
+          try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'materiel.iut@gmail.com';
+            $mail->Password = 'obmv hoac gbrw ftwz'; // 🔒 Utilise un fichier sécurisé en prod
+            $mail->SMTPSecure = 'tls';
+            $mail->Port = 587;
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
+            $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+            $mail->addAddress($email, $Nom);
+            $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+
+            if ($action === 'accepté') {
+              $mail->Subject = "Votre compte a été accepté";
+              $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été accepté par un administrateur.\n\nVous pouvez dès maintenant vous connecter au site et effectuer vos réservations.\n\nÀ bientôt,\nL'équipe IUT";
+            } elseif ($action === 'refusé') {
+              $mail->Subject = "Votre inscription n'a pas été acceptée";
+              $mail->Body = "Bonjour $Nom,\n\nAprès examen de votre demande, nous sommes au regret de vous informer que votre inscription n’a pas été acceptée.\n\nSi vous pensez qu’il s’agit d’une erreur, vous pouvez nous contacter à l’adresse : materiel.iut@gmail.com\n\nMerci de votre compréhension,\nL'équipe IUT";
             }
+
+            $mail->send();
+          } catch (Exception $e) {
+            echo "Erreur email pour $Nom : {$mail->ErrorInfo}<br>";
+          }
         }
+      }
     }
+  }
 }
 
 ?>
@@ -103,41 +103,41 @@ foreach ($tables as $table) {
 
 <body>
 
-<header class="container-fluid px-0">
+  <header class="container-fluid px-0">
     <div class="d-flex align-items-center justify-content-between px-3 py-2 w-100">
-        <div>
-            <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
-        </div>
-        <div class="d-flex align-items-center ms-auto gap-2">
-            <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+      <div>
+        <img src="../IMAGE/logo-iut.png" alt="Logo IUT" style="width: auto; height: 45px;">
+      </div>
+      <div class="d-flex align-items-center ms-auto gap-2">
+        <?php
+        if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+          $nom = $_SESSION['utilisateur']['Nom'];
 
-    // ADMIN
-    $sql = "SELECT COUNT(*) as total FROM inscription_admin WHERE nom = :nom";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          // ADMIN
+          $sql = "SELECT COUNT(*) as total FROM inscription_admin WHERE nom = :nom";
+          $stmt = $pdo->prepare($sql);
+          $stmt->bindParam(':nom', $nom, PDO::PARAM_STR);
+          $stmt->execute();
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+          if ($row['total'] > 0) {
+            echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-    } else {
-        // Aucun des deux trouvés
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+          } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
             ';
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+          }
+        }
+        ?>
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
 
-        </div>
+      </div>
     </div>
-</header>
+  </header>
 
 
   <div class="container-fluid">
@@ -148,8 +148,14 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
             <li class="nav-item">
+              <a href="accueil_admin.php" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a href="admin.php" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                <i class="fas fa-tachometer-alt"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
 
@@ -195,18 +201,18 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                   <h2>Approbation des comptes</h2>
                   <h6>
                     <?php
-$total = 0;
-foreach ($tables as $table) {
-    $sql = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'en attente'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        $total += (int)$row['count'];
-    }
-}
-echo $total . " compte(s) en attente";
-?>
+                    $total = 0;
+                    foreach ($tables as $table) {
+                      $sql = "SELECT COUNT(*) as count FROM `$table` WHERE statut = 'en attente'";
+                      $stmt = $pdo->prepare($sql);
+                      $stmt->execute();
+                      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                      if ($row) {
+                        $total += (int)$row['count'];
+                      }
+                    }
+                    echo $total . " compte(s) en attente";
+                    ?>
 
                 </div>
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
@@ -250,20 +256,20 @@ echo $total . " compte(s) en attente";
                 <div class="d-flex flex-wrap justify-content-center gap-4">
                   <!-- Carte 1 -->
                   <?php foreach ($tables as $table): ?>
-    <?php
-    $sql = "SELECT * FROM `$table` WHERE statut = 'en attente'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    while ($user = $stmt->fetch(PDO::FETCH_ASSOC)):
-        $color = '';
-        if ($table === 'inscription_eleve') {
-            $color = '#12A19A';
-        } elseif ($table === 'inscription_prof') {
-            $color = '#8B1E3F';
-        } else {
-            $color = '#6c757d';
-        }
-    ?>
+                    <?php
+                    $sql = "SELECT * FROM `$table` WHERE statut = 'en attente'";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+                    while ($user = $stmt->fetch(PDO::FETCH_ASSOC)):
+                      $color = '';
+                      if ($table === 'inscription_eleve') {
+                        $color = '#12A19A';
+                      } elseif ($table === 'inscription_prof') {
+                        $color = '#8B1E3F';
+                      } else {
+                        $color = '#6c757d';
+                      }
+                    ?>
 
                       <div class="card-wrapper">
                         <form action="gest-comptes.php" method="post">
@@ -275,14 +281,14 @@ echo $total . " compte(s) en attente";
                                 </div>
                               </div>
                             </div>
-                          <div class="d-flex align-items-center justify-content-center gap-1 ms-1">
-                            <!-- Pastille -->
-                            <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
-                            <!-- Nom et prénom -->
-                            <h6 class="text-nowrap mb-0 text-center" class="nom-prenom">
-                              <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
-                            </h6>
-                          </div>
+                            <div class="d-flex align-items-center justify-content-center gap-1 ms-1">
+                              <!-- Pastille -->
+                              <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
+                              <!-- Nom et prénom -->
+                              <h6 class="text-nowrap mb-0 text-center" class="nom-prenom">
+                                <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
+                              </h6>
+                            </div>
                             <p class="text-center" id="classe">
                               <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
                               <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
@@ -296,55 +302,55 @@ echo $total . " compte(s) en attente";
                                   <i class="fa-solid fa-circle-check"></i>
                                 </button>
                                 <?php
-if (isset($_POST["accepter1"])) {
-    $Nom = $_POST["Nom"];
+                                if (isset($_POST["accepter1"])) {
+                                  $Nom = $_POST["Nom"];
 
-    // Mise à jour du statut
-    $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = :Nom");
-    $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+                                  // Mise à jour du statut
+                                  $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = :Nom");
+                                  $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
 
-    if ($stmt->execute()) {
-        // 🔽 Récupération de l'utilisateur après la mise à jour
-        $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
-        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-        $stmtUser->execute();
-        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+                                  if ($stmt->execute()) {
+                                    // 🔽 Récupération de l'utilisateur après la mise à jour
+                                    $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
+                                    $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+                                    $stmtUser->execute();
+                                    $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            $email = $user['Adresse_email'];
-            $Nom = $user['Nom'];
+                                    if ($user) {
+                                      $email = $user['Adresse_email'];
+                                      $Nom = $user['Nom'];
 
-            $mail = new PHPMailer(true);
+                                      $mail = new PHPMailer(true);
 
-            try {
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'materiel.iut@gmail.com';
-                $mail->Password = 'obmv hoac gbrw ftwz';
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 587;
+                                      try {
+                                        $mail->isSMTP();
+                                        $mail->Host = 'smtp.gmail.com';
+                                        $mail->SMTPAuth = true;
+                                        $mail->Username = 'materiel.iut@gmail.com';
+                                        $mail->Password = 'obmv hoac gbrw ftwz';
+                                        $mail->SMTPSecure = 'tls';
+                                        $mail->Port = 587;
 
-                $mail->CharSet = 'UTF-8';
-                $mail->Encoding = 'base64';
-                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
-                $mail->addAddress($email, $Nom);
-                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+                                        $mail->CharSet = 'UTF-8';
+                                        $mail->Encoding = 'base64';
+                                        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                                        $mail->addAddress($email, $Nom);
+                                        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
 
-                $mail->Subject = 'Votre compte a été activé';
-                $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été validé par un administrateur. Vous pouvez désormais vous connecter à notre site et effectuer vos réservations librement.\n\nRendez-vous dès maintenant sur notre plateforme pour profiter de nos services.\n\n À bientôt, \nL'équipe IUT";
+                                        $mail->Subject = 'Votre compte a été activé';
+                                        $mail->Body = "Bonjour $Nom,\n\nBonne nouvelle ! Votre compte a été validé par un administrateur. Vous pouvez désormais vous connecter à notre site et effectuer vos réservations librement.\n\nRendez-vous dès maintenant sur notre plateforme pour profiter de nos services.\n\n À bientôt, \nL'équipe IUT";
 
-                $mail->send();
-                echo "Message envoyé avec succès.";
-            } catch (Exception $e) {
-                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
-            }
-        } else {
-            echo "Utilisateur introuvable après mise à jour.";
-        }
+                                        $mail->send();
+                                        echo "Message envoyé avec succès.";
+                                      } catch (Exception $e) {
+                                        echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+                                      }
+                                    } else {
+                                      echo "Utilisateur introuvable après mise à jour.";
+                                    }
 
-        // ✅ Message de confirmation HTML
-        echo <<<HTML
+                                    // ✅ Message de confirmation HTML
+                                    echo <<<HTML
             <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
                 <b class="mb-2 d-block">L'utilisateur a été accepté avec succès !</b>
                 <div class="text-center mt-3">
@@ -352,60 +358,60 @@ if (isset($_POST["accepter1"])) {
                 </div>
             </div>
         HTML;
-    } else {
-        echo "Erreur : " . $stmt->errorInfo()[2];
-    }
-}
-?>
+                                  } else {
+                                    echo "Erreur : " . $stmt->errorInfo()[2];
+                                  }
+                                }
+                                ?>
 
                                 <button class="card-link text-light border-0 rounded btn-acces mb-2 me-2" id="refuser1" name="refuser1">
                                   <i class="fa-solid fa-circle-xmark"></i>
                                 </button>
                                 <?php
-if (isset($_POST["refuser1"])) {
-    $Nom = $_POST["Nom"];
-    $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = :Nom");
-    $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-    if($stmt->execute()){
+                                if (isset($_POST["refuser1"])) {
+                                  $Nom = $_POST["Nom"];
+                                  $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = :Nom");
+                                  $stmt->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+                                  if ($stmt->execute()) {
 
-      $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
-        $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
-        $stmtUser->execute();
-        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+                                    $stmtUser = $pdo->prepare("SELECT * FROM `$table` WHERE Nom = :Nom");
+                                    $stmtUser->bindParam(':Nom', $Nom, PDO::PARAM_STR);
+                                    $stmtUser->execute();
+                                    $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-        if ($user) {
-            $email = $user['Adresse_email'];
-            $Nom = $user['Nom'];
+                                    if ($user) {
+                                      $email = $user['Adresse_email'];
+                                      $Nom = $user['Nom'];
 
-            $mail = new PHPMailer(true);
+                                      $mail = new PHPMailer(true);
 
-            try {
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = 'materiel.iut@gmail.com';
-                $mail->Password = 'obmv hoac gbrw ftwz';
-                $mail->SMTPSecure = 'tls';
-                $mail->Port = 587;
+                                      try {
+                                        $mail->isSMTP();
+                                        $mail->Host = 'smtp.gmail.com';
+                                        $mail->SMTPAuth = true;
+                                        $mail->Username = 'materiel.iut@gmail.com';
+                                        $mail->Password = 'obmv hoac gbrw ftwz';
+                                        $mail->SMTPSecure = 'tls';
+                                        $mail->Port = 587;
 
-                $mail->CharSet = 'UTF-8';
-                $mail->Encoding = 'base64';
-                $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
-                $mail->addAddress($email, $Nom);
-                $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
+                                        $mail->CharSet = 'UTF-8';
+                                        $mail->Encoding = 'base64';
+                                        $mail->setFrom('materiel.iut@gmail.com', 'IUT Support');
+                                        $mail->addAddress($email, $Nom);
+                                        $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
 
-                $mail->Subject = "Votre demande d'inscription n'a pas été acceptée";
-                $mail->Body = "Bonjour $Nom,\n\nNous vous remercions pour votre demande d'inscription.\nAprès examen, nous sommes au regret de vous informer que votre demande n'a pas été accepte par notre équipe.\nSi vous pensez qu'il s'agit d'une erreur ou que vous souhaitez plus d'informations, vous pouvez nous contacter à l'adresse suivante : [materiel.iut@gmail.com].\n\Merci de votre compréhension,\nL'équipe IUT";
+                                        $mail->Subject = "Votre demande d'inscription n'a pas été acceptée";
+                                        $mail->Body = "Bonjour $Nom,\n\nNous vous remercions pour votre demande d'inscription.\nAprès examen, nous sommes au regret de vous informer que votre demande n'a pas été accepte par notre équipe.\nSi vous pensez qu'il s'agit d'une erreur ou que vous souhaitez plus d'informations, vous pouvez nous contacter à l'adresse suivante : [materiel.iut@gmail.com].\n\Merci de votre compréhension,\nL'équipe IUT";
 
-                $mail->send();
-                echo "Message envoyé avec succès.";
-            } catch (Exception $e) {
-                echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
-            }
-        } else {
-            echo "Utilisateur introuvable après mise à jour.";
-        }
-      echo <<<HTML
+                                        $mail->send();
+                                        echo "Message envoyé avec succès.";
+                                      } catch (Exception $e) {
+                                        echo "Erreur lors de l'envoi de l'email : {$mail->ErrorInfo}";
+                                      }
+                                    } else {
+                                      echo "Utilisateur introuvable après mise à jour.";
+                                    }
+                                    echo <<<HTML
                 <div class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
                     <b class="mb-2 d-block">L'utilisateur a été refusé.</b>
                     <div class="text-center mt-3">
@@ -413,12 +419,12 @@ if (isset($_POST["refuser1"])) {
                     </div>
                 </div>
             HTML;
-        } else {
-            echo "Erreur : " . $stmtInsert->errorInfo()[2];
-        }
-    };
+                                  } else {
+                                    echo "Erreur : " . $stmtInsert->errorInfo()[2];
+                                  }
+                                };
 
-?>
+                                ?>
 
                               </div>
                             </div>
@@ -434,17 +440,17 @@ if (isset($_POST["refuser1"])) {
                   <h2>Gestions des comptes</h2>
                   <h6>
                     <?php
-$total = 0;
-foreach ($tables as $table) {
-    $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'");
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($row) {
-        $total += (int)$row['count'];
-    }
-}
-echo $total . " comptes acceptés";
-?>
+                    $total = 0;
+                    foreach ($tables as $table) {
+                      $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM `$table` WHERE statut = 'accepté'");
+                      $stmt->execute();
+                      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                      if ($row) {
+                        $total += (int)$row['count'];
+                      }
+                    }
+                    echo $total . " comptes acceptés";
+                    ?>
 
                   </h6>
                 </div>
@@ -487,87 +493,87 @@ echo $total . " comptes acceptés";
                   </div>
                 </div>
                 <div class="d-flex flex-wrap justify-content-center gap-4">
-  <?php foreach ($tables as $table): ?>
-    <?php
-    $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE statut = 'accepté'");
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  <?php foreach ($tables as $table): ?>
+                    <?php
+                    $stmt = $pdo->prepare("SELECT * FROM `$table` WHERE statut = 'accepté'");
+                    $stmt->execute();
+                    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($result && count($result) > 0):
-        foreach ($result as $user):
-            // Couleur selon le type d'utilisateur
-            $color = match($table) {
-                'inscription_eleve' => '#12A19A',
-                'inscription_prof' => '#8B1E3F',
-                'inscription_agent' => '#F4A261',
-                'inscription_admin' => '#2F2A85',
-                default => '#6c757d',
-            };
-    ?>
+                    if ($result && count($result) > 0):
+                      foreach ($result as $user):
+                        // Couleur selon le type d'utilisateur
+                        $color = match ($table) {
+                          'inscription_eleve' => '#12A19A',
+                          'inscription_prof' => '#8B1E3F',
+                          'inscription_agent' => '#F4A261',
+                          'inscription_admin' => '#2F2A85',
+                          default => '#6c757d',
+                        };
+                    ?>
 
-      <div class="card-wrapper">
-        <div class="card custom-card">
-          <div class="card-top d-flex justify-content-end align-items-start mx-3 mt-2 position-relative">
-            <span class="kebab-icon">
-              <i class="fa-solid fa-ellipsis-vertical justify-content-end"></i>
-            </span>
-            <div class="kebab-menu" data-pseudo="<?= htmlspecialchars($user['Pseudo']) ?>"></div>
-          </div>
+                        <div class="card-wrapper">
+                          <div class="card custom-card">
+                            <div class="card-top d-flex justify-content-end align-items-start mx-3 mt-2 position-relative">
+                              <span class="kebab-icon">
+                                <i class="fa-solid fa-ellipsis-vertical justify-content-end"></i>
+                              </span>
+                              <div class="kebab-menu" data-pseudo="<?= htmlspecialchars($user['Pseudo']) ?>"></div>
+                            </div>
 
-          <div class="d-flex justify-content-center align-items-center gap-2">
-            <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
-            <h6 class="text-nowrap mb-0 nom-prenom">
-              <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
-            </h6>
-          </div>
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                              <span class="rounded-circle" style="width:10px;height:10px;background-color: <?= $color ?>;"></span>
+                              <h6 class="text-nowrap mb-0 nom-prenom">
+                                <?= strtoupper(htmlspecialchars($user['Nom'])) . ' ' . htmlspecialchars($user['Prenom']) ?>
+                              </h6>
+                            </div>
 
-          <p class="text-center classe">
-            <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
-            <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
-            <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
-          </p>
+                            <p class="text-center classe">
+                              <?= isset($user['Formation']) ? htmlspecialchars($user['Formation']) . ' ' : '' ?>
+                              <?= isset($user['Td']) ? htmlspecialchars($user['Td']) . ' ' : '' ?>
+                              <?= isset($user['Tp']) ? htmlspecialchars($user['Tp']) : '' ?>
+                            </p>
 
-          <div class="card-body p-2">
-            <div class="d-flex justify-content-between gap-4">
-              <p class="derniere-reservation">Dernière réservation</p>
-              <p class="date-reser">
-                <?php
-$reservation_table = isset($user['Td']) ? 'reservation_etudiant' : 'reservation_prof';
-$stmt = $pdo->prepare("SELECT MAX(Date_reservation) AS last_date FROM $reservation_table WHERE Pseudo = ?");
-$stmt->execute([$user['Pseudo']]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo $row['last_date'] ?? '—';
-?>
+                            <div class="card-body p-2">
+                              <div class="d-flex justify-content-between gap-4">
+                                <p class="derniere-reservation">Dernière réservation</p>
+                                <p class="date-reser">
+                                  <?php
+                                  $reservation_table = isset($user['Td']) ? 'reservation_etudiant' : 'reservation_prof';
+                                  $stmt = $pdo->prepare("SELECT MAX(Date_reservation) AS last_date FROM $reservation_table WHERE Pseudo = ?");
+                                  $stmt->execute([$user['Pseudo']]);
+                                  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                  echo $row['last_date'] ?? '—';
+                                  ?>
 
-              </p>
-            </div>
+                                </p>
+                              </div>
 
-            <p class="text-left card-text"><strong>Email :</strong> <?= htmlspecialchars($user['Adresse_email']) ?></p>
-            <p class="text-left card-text"><strong>Numéro de téléphone :</strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
-            <p class="text-left card-text"><strong>Pseudo :</strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
+                              <p class="text-left card-text"><strong>Email :</strong> <?= htmlspecialchars($user['Adresse_email']) ?></p>
+                              <p class="text-left card-text"><strong>Numéro de téléphone :</strong> <?= htmlspecialchars($user['Numero_tel']) ?></p>
+                              <p class="text-left card-text"><strong>Pseudo :</strong> <?= htmlspecialchars($user['Pseudo']) ?></p>
 
-            <?php
-if ($table === 'inscription_eleve'):
+                              <?php
+                              if ($table === 'inscription_eleve'):
 
-    // Récupérer le numéro étudiant via PDO
-    $stmt = $pdo->prepare("SELECT Num_etudiant FROM $table WHERE Pseudo = ?");
-    $stmt->execute([$user['Pseudo']]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                                // Récupérer le numéro étudiant via PDO
+                                $stmt = $pdo->prepare("SELECT Num_etudiant FROM $table WHERE Pseudo = ?");
+                                $stmt->execute([$user['Pseudo']]);
+                                $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $num_etudiant = $result['Num_etudiant'] ?? '';
-?>
-    <p class="text-left card-text"><strong>Numéro étudiant :</strong> <?= htmlspecialchars($num_etudiant) ?></p>
-<?php endif; ?>
+                                $num_etudiant = $result['Num_etudiant'] ?? '';
+                              ?>
+                                <p class="text-left card-text"><strong>Numéro étudiant :</strong> <?= htmlspecialchars($num_etudiant) ?></p>
+                              <?php endif; ?>
 
-          </div>
-        </div>
-      </div>
-    <?php
-      endforeach;
-    endif;
-    ?>
-  <?php endforeach; ?>
-</div>
+                            </div>
+                          </div>
+                        </div>
+                    <?php
+                      endforeach;
+                    endif;
+                    ?>
+                  <?php endforeach; ?>
+                </div>
 
               </div>
             </div>

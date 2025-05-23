@@ -18,8 +18,7 @@ if (isset($_POST['upload'])) {
     // Récupérer d'abord les anciens noms dans la BDD (exemple avec PDO)
     $sql = "SELECT Image_un, Image_deux, Image_trois FROM materiel WHERE Nom = ? LIMIT 1";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindParam($materiel, PDO::PARAM_STR);
-    $stmt->execute();
+    $stmt->execute([$materiel]);
     $oldImages = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Initialiser les noms à garder par défaut
@@ -41,6 +40,7 @@ if (isset($_POST['upload'])) {
             $extension = pathinfo($originalName, PATHINFO_EXTENSION);
             $newName = preg_replace('/[^a-zA-Z0-9_-]/', '', $materiel) . "_image$i" . '_' . uniqid() . "." . $extension;
             $targetFile = $targetDir . $newName;
+            move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile);
 
             $newImages[$inputName] = $newName; // On remplace dans la variable
         }
@@ -74,7 +74,7 @@ if (isset($_POST["validmodif"])) {
     ]);
 
     echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">La réservation a été modifiée </p>
+            <p class="mb-2">La matériel a été modifiée </p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
           </div>';
 }
@@ -167,8 +167,14 @@ if (isset($_POST["supprime"])) {
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
                         <li class="nav-item">
+                            <a href="accueil_admin.php" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="admin.php" class="nav-link align-middle px-0">
-                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                                <i class="fas fa-tachometer-alt"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                             </a>
                         </li>
 
@@ -267,7 +273,7 @@ if (isset($_POST["supprime"])) {
                                                         class="img-fluid rounded" style="max-height: 100px; width: auto;">
                                                     <img src="../IMG/images/<?= htmlspecialchars($user['Image_trois']) ?>" alt="Image 3"
                                                         class="img-fluid rounded" style="max-height: 100px; width: auto;">
-                                                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="toggleUploadForm(<?= $index ?>)">
+                                                    <button type="button" class="btn btn-sm btn-secondary mt-2 h-25" onclick="toggleUploadForm(<?= $index ?>)">
                                                         Changer les images
                                                     </button>
                                                 </div>

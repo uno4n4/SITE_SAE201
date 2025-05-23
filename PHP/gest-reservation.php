@@ -94,8 +94,8 @@ if (isset($_POST["accepter"])) {
         $mail->addAddress($email, $Pseudo);
         $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
 
-        $mail->Subject = 'Réservation acceptée';
-        $mail->Body = "Bonjour $Pseudo,\n\nVotre réservation de $materiel du $date a été acceptée.\n\nCordialement,\nL'équipe IUT";
+        $mail->Subject = 'Réservation acceptée – $materiel';
+        $mail->Body = "Bonjour $Pseudo,\n\nNous avons le plaisir de vous informer que votre demande de réservation pour le matériel **$materiel**, prévue le **$date**, a été acceptée.\n\nVous pourrez retirer le matériel à l’horaire convenu.\n\nCordialement,\nL'équipe de l'IUT";
 
         $mail->send();
         echo "Message envoyé avec succès.";
@@ -159,8 +159,8 @@ if (isset($_POST["refuser"])) {
         $mail->addAddress($email, $Pseudo);
         $mail->addReplyTo('materiel.iut@gmail.com', 'IUT Support');
 
-        $mail->Subject = 'Réservation refusée';
-        $mail->Body = "Bonjour $Pseudo,\n\nVotre réservation de $materiel du $date a été refusée.\n\nCordialement,\nL'équipe IUT";
+        $mail->Subject = 'Réservation refusée – $materiel';
+        $mail->Body = "Bonjour $Pseudo,\n\nNous vous informons que votre demande de réservation pour le matériel **$materiel**, prévue le **$date**, n’a pas été acceptée.\n\nNous vous remercions pour votre compréhension.\n\nCordialement,\nL'équipe de l'IUT";
 
         $mail->send();
         echo "Message envoyé avec succès.";
@@ -276,8 +276,14 @@ if (isset($_POST["supprime"])) {
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
             <li class="nav-item">
+              <a href="accueil_admin.php" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a href="admin.php" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                <i class="fas fa-tachometer-alt"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
 
@@ -389,15 +395,15 @@ if (isset($_POST["supprime"])) {
                         </td>
                         <td>
                           <?php if (htmlspecialchars($reservation['accepte']) == 'oui'): ?>
-                            <span class="rounded bg-success text-center text-white d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded bg-success text-center text-white d-flex align-items-center gap-2 text-dark p-2">
                               <span class="ms-1">Acceptée</span>
                             </span>
                           <?php elseif (htmlspecialchars($reservation['accepte']) == 'non'): ?>
-                            <span class="rounded bg-danger text-center text-white d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded bg-danger text-center text-white d-flex align-items-center gap-2 text-dark p-2">
                               <span class="ms-1">Refusée</span>
                             </span>
                           <?php else: ?>
-                            <span class="rounded bg-secondary text-center text-white d-flex align-items-center gap-2 text-dark">
+                            <span class="rounded bg-secondary text-center text-white d-flex align-items-center gap-2 text-dark p-2">
                               <span class="">à accepter</span>
                             </span>
                           <?php endif; ?>

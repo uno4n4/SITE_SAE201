@@ -10,9 +10,9 @@ if (!isset($_SESSION['utilisateur'])) {
 
 $pseudo  = $_SESSION['utilisateur']['Pseudo'];
 if (isset($_SESSION['utilisateur']['Td'])) {
-    $stmt = $pdo->prepare("SELECT * FROM reservation_etudiant WHERE Pseudo = ?");
+    $stmt = $pdo->prepare("SELECT * FROM reservation_etudiant WHERE Pseudo = ? AND accepte = 'oui'");
 } else {
-    $stmt = $pdo->prepare("SELECT * FROM reservation_prof WHERE Pseudo = ?");
+    $stmt = $pdo->prepare("SELECT * FROM reservation_prof WHERE Pseudo = ? AND accepte = 'oui'");
 }
 
 $stmt->execute([$pseudo]);

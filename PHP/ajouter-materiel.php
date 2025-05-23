@@ -20,7 +20,7 @@ if (isset($_POST['submit'])) {
     // Mise à jour du matériel avec PDO
     $sql = "INSERT INTO materiel(Nom, Description_materiel, categorie, date_achat, prix, quantite, disponibilite) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
-    
+
     try {
         $stmt = $pdo->prepare($sql);
         $success = $stmt->execute([$Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite]);
@@ -70,20 +70,20 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <h6 class="mb-0 text-nowrap text-end">
-    <?php
-    if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-        // Utilisation de PDO pour récupérer le nom et prénom de l'utilisateur
-        $nom = $_SESSION['utilisateur']['Nom'];
-        $prenom = $_SESSION['utilisateur']['Prenom'];
+                    <?php
+                    if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+                        // Utilisation de PDO pour récupérer le nom et prénom de l'utilisateur
+                        $nom = $_SESSION['utilisateur']['Nom'];
+                        $prenom = $_SESSION['utilisateur']['Prenom'];
 
 
-        // Affichage du nom et prénom ou un message si l'utilisateur n'est pas connecté
-        echo isset($_SESSION['utilisateur']) ? htmlspecialchars($nom) . ' ' . htmlspecialchars($prenom) : 'Utilisateur non connecté';
-    } else {
-        echo 'Utilisateur non connecté';
-    }
-    ?>
-</h6>
+                        // Affichage du nom et prénom ou un message si l'utilisateur n'est pas connecté
+                        echo isset($_SESSION['utilisateur']) ? htmlspecialchars($nom) . ' ' . htmlspecialchars($prenom) : 'Utilisateur non connecté';
+                    } else {
+                        echo 'Utilisateur non connecté';
+                    }
+                    ?>
+                </h6>
 
                 <img class="card-img-top img-card" src="../IMAGE/logo-iut.png" alt="Image de profil carte" id="img-profil">
             </div>
@@ -98,8 +98,14 @@ if (isset($_POST['submit'])) {
                     <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
                         <li class="nav-item">
+                            <a href="accueil_admin.php" class="nav-link align-middle px-0">
+                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
                             <a href="admin.php" class="nav-link align-middle px-0">
-                                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                                <i class="fas fa-tachometer-alt"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
                             </a>
                         </li>
 
