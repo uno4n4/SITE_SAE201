@@ -231,7 +231,7 @@ if (isset($_GET['id'])) {
 
     </div>
 
-    <div class="container-fluid mt-5">
+    <div class="container-fluid my-5">
         <div class="row ms-5">
             <div class="col-sm-4 fs-3 mt-5">
                 Commentaires
@@ -271,7 +271,7 @@ if (isset($_GET['id'])) {
             </div>
         <?php endforeach ?>
 
-        <form action="#" method="post" class="mt-5 d-flex align-items-center ms-5">
+        <form action="#" method="post" class="my-5 d-flex align-items-center ms-5">
             <textarea class="form-control me-3" id="exampleFormControlTextarea1" rows="1"
                 name="commentaire" placeholder="Ecrire un commentaire" style="resize: none; width: 70%;"></textarea>
             <input type="number" name="reaction" value="5" min="1" max="5" style="width: 60px; margin-right: 5px;"> ☆

@@ -57,7 +57,7 @@ if (isset($_POST['search'])) {
                 <div class="d-flex align-items-center gap-2" id="navbar-nav">
                     <ul class="navbar-nav gap-2 mb-2 mb-lg-0">
                         <li class="nav-item mt-3">
-                            <a class="icon-link link-dark" href="../HTML/mesemprunts.php">
+                            <a class="icon-link link-dark" href="../PHP/mesemprunts.php">
                                 <img src="../IMG/boite.png" alt="boite mes emprunts">
                                 <span class="spantext">Mes Emprunts</span>
                             </a>

@@ -34,6 +34,8 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="../JS/pdfreserve.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <script src="../JS/profile.js" defer></script>
@@ -51,35 +53,35 @@ $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div class="d-flex align-items-center ms-auto gap-2">
                 <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+                if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+                    $nom = $_SESSION['utilisateur']['Nom'];
 
-    // Étudiant
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
-    $stmt->execute([$nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    // Étudiant
+                    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_eleve WHERE nom = ?");
+                    $stmt->execute([$nom]);
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+                    if ($row['total'] > 0) {
+                        echo '
         <span class="rounded-circle" style="width:10px;height:10px;background-color: #12A19A;"></span>';
-    } else {
-        // Professeur
-        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
-        $stmt->execute([$nom]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                    } else {
+                        // Professeur
+                        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_prof WHERE nom = ?");
+                        $stmt->execute([$nom]);
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['total'] > 0) {
-            echo '
+                        if ($row['total'] > 0) {
+                            echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #8B1E3F;"></span>';
-        } else {
-            // Aucun des deux trouvés
-            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+                        } else {
+                            // Aucun des deux trouvés
+                            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
             <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
             <span class="spantext">Utilisateur</span>';
-        }
-    }
-}
-?>
+                        }
+                    }
+                }
+                ?>
 
                 <h6 class="mb-0 text-nowrap text-end">
                     <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
@@ -129,11 +131,11 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                     <div class="row">
                         <div class="col-12 col-lg-8">
                             <?php foreach ($reservations as $reserve): ?>
-    <?php
-    $stmt = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
-    $stmt->execute([$reserve['materiel']]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    ?>
+                                <?php
+                                $stmt = $pdo->prepare("SELECT Image_un FROM materiel WHERE Nom = ?");
+                                $stmt->execute([$reserve['materiel']]);
+                                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                ?>
 
                                 <div class="rounded bg-light border text-center p-3 m-2">
                                     <div class="d-flex justify-content-baseline">Vous avez effectué une réservation
@@ -145,9 +147,33 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                                             <div>De: <?= htmlspecialchars($reserve['heure_debut']) ?> à <?= htmlspecialchars($reserve['heure_fin']) ?></div>
                                             <div>Participants: <?= htmlspecialchars($reserve['participants']) ?></div>
                                         </div>
-                                        <a class='icon-link link-dark' href='#'>
+                                        <div id="pdf-content" style="display: none;">
+                                            <h5 class='mb-4 ms-4'>Réservation</h5>
+                                            <div>Nom : <?= htmlspecialchars($reserve['Nom']) ?></div>
+                                            <div class='mb-4'>Prénom : <?= htmlspecialchars($reserve['Prenom']) ?></div>
+                                            <div><?php isset($reserve['Num_etudiant']) ? 'Numéro étudiant: ' . htmlspecialchars($reserve['Num_etudiant']) : '' ?></div>
+                                            <div>Adresse email universitaire : <?= htmlspecialchars($reserve['Adresse_email']) ?></div>
+                                            <div class='mb-4'>Date de réservation : <?= htmlspecialchars($reserve['Date_reservation']) ?></div>
+                                            <div>Horaire de réservation :<?= htmlspecialchars($reserve['heure_debut']) ?> - <?= htmlspecialchars($reserve['heure_fin']) ?></div>
+                                            <div class='mb-4'><?php isset($reserve['nom_projet']) ? 'Nom du projet: ' . htmlspecialchars($reserve['nom_projet']) : '' ?></div>
+                                            <div><?php isset($reserve['participants']) ? 'Etudiants participants: ' . htmlspecialchars($reserve['participants']) : '' ?></div>
+                                            <p>Matériel : <?= htmlspecialchars($reserve['materiel']) ?> x<?= htmlspecialchars($reserve['quantite']) ?></p>
+                                            <p>
+                                                <?php
+                                                if ($reserve['nom_projet'] !== null) {
+                                                    echo 'Signature: ' . htmlspecialchars($reserve['signature_eleve']);
+                                                } else {
+                                                    echo 'Signature: ' . htmlspecialchars($reserve['signature_prof']);
+                                                }
+                                                ?>
+                                            </p>
+
+                                            <p><?php echo '           ' . htmlspecialchars($reserve['signature_admin']) ?></p>
+                                        </div>
+                                        <button style='border:none; background-color:none;' class='icon-link link-dark h-25' onclick='telechargepdf()'>
                                             Télécharger le PDF
                                             <img src='../IMG/google-docs.png' alt='google-docs'>
+                                        </button>
                                         </a>
                                     </div>
                                     <div></div>

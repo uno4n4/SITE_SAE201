@@ -77,8 +77,6 @@ if (isset($_POST["accepter"])) {
       $materiel = $user['materiel'];
       $date = $user['Date_reservation'];
 
-      require 'vendor/autoload.php';
-
       $mail = new PHPMailer(true);
 
       try {
@@ -465,45 +463,46 @@ if (isset($_POST["supprime"])) {
               </a>
             </div>
           </div>
+        </div>
+        <div class="row mt-5">
+          <div id="pdf-contentstat">
+            <h2 class="my-3 ms-md-3">Statistiques</h2>
 
-          <div class=" mt-5 col-12">
-            <div id="pdf-contentstat">
-              <h2 class="my-3 ms-3">Statistiques</h2>
-
-              <div class="row gap-2 ms-3">
-                <div class="col-8 col-md-4 card p-2">
+            <div class="row justify-content-center g-3 ms-md-2">
+              <div class="col-12 col-md-4">
+                <div class="card p-3 h-100">
                   <p>Total des réservations : </p>
                   <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <h3 id="nb-reservation">
-                        <?php
-                        $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total");
-                        $stmt->execute();
-                        $total = $stmt->fetchColumn();
-                        echo $total;
-                        ?>
-                        réservations</h3>
-                    </div>
+                    <h3 id="nb-reservation">
+                      <?php
+                      $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant) + (SELECT COUNT(*) FROM reservation_prof) AS total");
+                      $stmt->execute();
+                      $total = $stmt->fetchColumn();
+                      echo $total;
+                      ?>
+                      réservations</h3>
                   </div>
                 </div>
+              </div>
 
-                <div class="col-8 col-md-4 card p-2">
+              <div class="col-12 col-md-4">
+                <div class="card p-3 h-100">
                   <p>Réservation validées : </p>
                   <div class="card-body">
-                    <div class="d-flex align-items-center">
-                      <h3 id="nb-venir">
-                        <?php
-                        $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total");
-                        $stmt->execute();
-                        $total = $stmt->fetchColumn();
-                        echo $total;
-                        ?>
-                        réservations</h3>
-                    </div>
+                    <h3 id="nb-venir">
+                      <?php
+                      $stmt = $pdo->prepare("SELECT (SELECT COUNT(*) FROM reservation_etudiant WHERE accepte LIKE 'oui') + (SELECT COUNT(*) FROM reservation_prof WHERE accepte LIKE 'oui') AS total");
+                      $stmt->execute();
+                      $total = $stmt->fetchColumn();
+                      echo $total;
+                      ?>
+                      réservations</h3>
                   </div>
                 </div>
+              </div>
 
-                <div id="stats" class="col-8 col-md-2 card p-2">
+              <div id="stats" class="col-12 col-md-4">
+                <div class="card p-3 h-100">
                   <p>Article le plus réservé : </p>
                   <?php
                   // le matériel le plus demandé
@@ -526,91 +525,86 @@ if (isset($_POST["supprime"])) {
                   ?>
 
 
-                  <div class="card-body">
-                    <div class="d-flex gap-1 align-items-center">
-                      <img src="../IMG/images/<?= htmlspecialchars($Image_un) ?>" id="photo-article" alt="<?= htmlspecialchars($materiel) ?>">
-                      <h4 id="nom-article"><?= htmlspecialchars($materiel) ?></h4>
-                    </div>
+                  <div class="card-body d-flex gap-2 align-items-center">
+                    <img src="../IMG/images/<?= htmlspecialchars($Image_un) ?>" id="photo-article" alt="<?= htmlspecialchars($materiel) ?>">
+                    <h4 id="nom-article"><?= htmlspecialchars($materiel) ?></h4>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="col-12 rounded my-3 p-5">
-                <?php
-                // Récupération des réservations par mois
-                $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-                $reservationsParMois = array_fill(0, 12, 0);
+            <?php
+            // Récupération des réservations par mois
+            $months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+            $reservationsParMois = array_fill(0, 12, 0);
 
-                $stmt = $pdo->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total 
+            $stmt = $pdo->prepare("SELECT MONTH(Date_reservation) AS mois, COUNT(*) AS total 
                         FROM (SELECT Date_reservation FROM reservation_etudiant 
                         UNION ALL 
                         SELECT Date_reservation FROM reservation_prof) AS reservations GROUP BY mois");
-                $stmt->execute();
+            $stmt->execute();
 
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $reservationsParMois[$row['mois'] - 1] = $row['total'];
-                }
-                ?>
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $reservationsParMois[$row['mois'] - 1] = $row['total'];
+            }
+            ?>
 
-                <div class="row ms-3 mt-5">
-                  <div class="card col-11 col-md-8">
-                    <div class="row align-items-center">
-                      <h5 class="col-8 ms-2 mt-3">Statistiques des réservations</h5>
-                    </div>
+            <div class="row justify-content-center mt-5 g-3">
+              <div class="col-12 col-md-9">
+                <div class="card p-4">
+                  <h5>Statistiques des réservations</h5>
 
-                    <div class="col-12 rounded my-3 p-4">
-                      <div class="text-center">
-                        <div class="d-flex gap-3 align-items-end justify-content-center" style="height: 300px;">
-                          <?php foreach ($reservationsParMois as $index => $total): ?>
-                            <div class="bar-vertical bg-primary rounded" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
-                              <small class="d-block mt-2"><?= $months[$index] ?></small>
-                            </div>
-                          <?php endforeach; ?>
+                  <div class="text-center mt-4 overflow-auto">
+                    <div class="d-flex gap-3 align-items-end justify-content-start justify-content-md-center" style="height: 300px; min-width: 600px;">
+                      <?php foreach ($reservationsParMois as $index => $total): ?>
+                        <div class="bar-vertical bg-primary rounded text-white text-center" style="height: <?= ($total > 0) ? ($total / max($reservationsParMois)) * 100 : 10 ?>%; width: 40px;" title="<?= $months[$index] ?>: <?= $total ?>">
+                          <small class="d-block mt-2"><?= $months[$index] ?></small>
                         </div>
-                      </div>
+                      <?php endforeach; ?>
                     </div>
                   </div>
-
-                  <div class="pdf col-auto col-md-3 mt-2 mt-md-0 text-end">
-                    <button id="telecharge" style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdfstat()'>
-                      Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
-                    </button>
-                  </div>
                 </div>
+              </div>
+
+              <div class="pdf col-12 col-md-3 text-end d-flex align-items-start justify-content-md-end justify-content-center">
+                <button id="telecharge" style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdfstat()'>
+                  Télécharger sous format PDF <i class="fa-solid fa-file-arrow-down ms-2"></i>
+                </button>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="container-fluid col-10 custom-bg-2 mt-5">
-            <div class="row">
-              <div class="col-12">
-                <h2 id="consignes" class="consigne mb-4">Gestions des consignes de sécurité</h2>
+        <div class="container-fluid col-10 custom-bg-2 mt-5">
+          <div class="row">
+            <div class="col-12">
+              <h2 id="consignes" class="consigne mb-4">Gestions des consignes de sécurité</h2>
+            </div>
+            <div class="col-12">
+              <div class="d-flex custom-back m-0">
+                <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
+                <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
+                <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
+                <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
+                <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
+                <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
+                <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
+                <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
+                <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
+                <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
+                <button id="voir" class="visu">Visualiser</button>
               </div>
-              <div class="col-12">
-                <div class="d-flex custom-back m-0">
-                  <button id="gras" class="ecris"><i class="fa-solid fa-bold"></i></button>
-                  <button id="italic" class="ecris"><i class="fa-solid fa-italic"></i></button>
-                  <button id="link" class="ecris"><i class="fa-solid fa-link"></i></button>
-                  <input type="file" id="input-fichier" style="display: none;" onchange="ajoutfichier">
-                  <button id="gauche" class="ecris"><i class="fa-solid fa-align-left"></i></button>
-                  <button id="centre" class="ecris"><i class="fa-solid fa-align-center"></i></button>
-                  <button id="droite" class="ecris"><i class="fa-solid fa-align-right"></i></button>
-                  <button id="aligner" class="ecris"><i class="fa-solid fa-align-justify"></i></button>
-                  <button id="cote-droite" class="ecris"><i class="fa-solid fa-outdent"></i></button>
-                  <button id="cote-gauche" class="ecris"><i class="fa-solid fa-indent"></i></button>
-                  <button id="voir" class="visu">Visualiser</button>
+              <hr id="ligne">
+              <form action="gest-reservation.php" method="post">
+                <div contenteditable="true" id="zone-ecriture">
+                  <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
                 </div>
-                <hr id="ligne">
-                <form action="gest-reservation.php" method="post">
-                  <div contenteditable="true" id="zone-ecriture">
-                    <p id="ecrire" name="contenu">Aa<i class="fa-solid fa-i-cursor"></i></p>
-                  </div>
-                  <button id="enregistrer">Enregistrer</button>
-                  <div id="message"></div>
-                </form>
-              </div>
+                <button id="enregistrer">Enregistrer</button>
+                <div id="message"></div>
+              </form>
             </div>
           </div>
+        </div>
       </section>
     </div>
 </body>
