@@ -156,9 +156,9 @@ CREATE TABLE `inscription_prof` (
 CREATE TABLE `materiel` (
   `Nom` varchar(50) NOT NULL,
   `Description_materiel` varchar(500) DEFAULT NULL,
-  `Image_un` varchar(19) DEFAULT NULL,
-  `Image_deux` varchar(19) DEFAULT NULL,
-  `Image_trois` varchar(19) DEFAULT NULL,
+  `Image_un` varchar(50) DEFAULT NULL,
+  `Image_deux` varchar(50) DEFAULT NULL,
+  `Image_trois` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
   `date_achat` date DEFAULT NULL,
   `prix` decimal(10,2) DEFAULT NULL,

@@ -12,8 +12,8 @@ require '../PHPMailer-master/src/SMTP.php';
 
 // Vérification de la connexion utilisateur
 if (!isset($_SESSION['utilisateur'])) {
-    echo "Erreur : Utilisateur non connecté.";
-    exit();
+  echo "Erreur : Utilisateur non connecté.";
+  exit();
 }
 
 
@@ -44,28 +44,28 @@ $tables = ['inscription_eleve', 'inscription_prof', 'inscription_agent', 'inscri
       </div>
       <div class="d-flex align-items-center ms-auto gap-2">
         <?php
-if (isset($_SESSION['utilisateur']) && isset($pdo)) {
-    $nom = $_SESSION['utilisateur']['Nom'];
+        if (isset($_SESSION['utilisateur']) && isset($pdo)) {
+          $nom = $_SESSION['utilisateur']['Nom'];
 
-    // ADMIN :
-    $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
-    $stmt->execute([$nom]);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          // ADMIN :
+          $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM inscription_admin WHERE nom = ?");
+          $stmt->execute([$nom]);
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row['total'] > 0) {
-        echo '
+          if ($row['total'] > 0) {
+            echo '
             <span class="rounded-circle" style="width:10px;height:10px;background-color: #2F2A85;"></span>';
-    } else {
-        // Aucun des deux trouvés
-        echo '<span class="badge d-flex align-items-center gap-2 text-dark">
+          } else {
+            // Aucun des deux trouvés
+            echo '<span class="badge d-flex align-items-center gap-2 text-dark">
                 <span class="rounded-circle" style="width:10px;height:10px;background-color: gray;"></span>
                 ';
-    }
-}
-?>
-<h6 class="mb-0 text-nowrap text-end">
-    <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
-</h6>
+          }
+        }
+        ?>
+        <h6 class="mb-0 text-nowrap text-end">
+          <?= isset($_SESSION['utilisateur']) ? strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) : 'Utilisateur non connecté' ?>
+        </h6>
 
       </div>
     </div>
@@ -79,8 +79,14 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
 
             <li class="nav-item">
+              <a href="accueil_admin.php" class="nav-link align-middle px-0">
+                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Accueil</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
               <a href="admin.php" class="nav-link align-middle px-0">
-                <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
+                <i class="fas fa-tachometer-alt"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
 
@@ -189,20 +195,20 @@ if (isset($_SESSION['utilisateur']) && isset($pdo)) {
                 <!-- RESERVATION -->
                 <div class="col-12 col-lg-6 d-flex flex-column">
 
-                 <?php
-$stmt = $pdo->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant WHERE accepte = 'nnn'
+                  <?php
+                  $stmt = $pdo->query("SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_etudiant WHERE accepte = 'nnn'
                       UNION 
                       SELECT Id, Pseudo, Nom, Prenom, Date_reservation, heure_debut, heure_fin, materiel FROM reservation_prof WHERE accepte = 'nnn'");
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<?php foreach ($users as $user): ?>
-  <div class="card custom-card mb-4 p-2">
-    <p>Souhaite effectuer une réservation pour le : <strong id="jour"><?= htmlspecialchars($user['Date_reservation']) ?></strong></p>
-    <p id="nom"><?= htmlspecialchars($user['Nom']) . ' ' . htmlspecialchars($user['Prenom']) ?></p>
-    <?php
-    $id_reservation = htmlspecialchars($user['Id']);
-    $pseudo_reservation = htmlspecialchars($user['Pseudo']);
-    ?>
+                  $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  ?>
+                  <?php foreach ($users as $user): ?>
+                    <div class="card custom-card mb-4 p-2">
+                      <p>Souhaite effectuer une réservation pour le : <strong id="jour"><?= htmlspecialchars($user['Date_reservation']) ?></strong></p>
+                      <p id="nom"><?= htmlspecialchars($user['Nom']) . ' ' . htmlspecialchars($user['Prenom']) ?></p>
+                      <?php
+                      $id_reservation = htmlspecialchars($user['Id']);
+                      $pseudo_reservation = htmlspecialchars($user['Pseudo']);
+                      ?>
 
 
                       <div class="card-body">
@@ -243,88 +249,88 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                   <a href="ajouter-materiel.php" id="ajouter" class=" d-block text-end fs-4 text-dark">Ajouter du matériel</a>
 
                   <?php
-$stmt = $pdo->query("SELECT * FROM materiel WHERE Image_un LIKE '%.jpg'");
-$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
-<?php foreach ($users as $user): ?>
-  <div class="card w-100 custom-card mt-3 p-2">
-    <img class="rounded" src="../IMG/images/<?= htmlspecialchars($user['Image_un']) ?>" id="img-produit">
-    <h4 id="produit"><?= htmlspecialchars($user['Nom']) ?></h4>
-    <div class="card-body">
-      <p id="description"><?= htmlspecialchars($user['Description_materiel']) ?></p>
-      <div class="d-flex align-items-center">
-        <div class="button-group d-flex">
-          <?php
-          if ($user['disponibilite'] == 1) {
-            echo '<a href="#" class="card-link vert" id="dispo">Disponible</a>';
-          } else {
-            echo '<a href="#" class="card-link rouge" id="indispo">Indisponible</a>';
-          }
-          ?>
-        </div>
-        <a href="materiel.php" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
-      </div>
-    </div>
-  </div>
-<?php endforeach ?>
-</div>
+                  $stmt = $pdo->query("SELECT * FROM materiel");
+                  $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                  ?>
+                  <?php foreach ($users as $user): ?>
+                    <div class="card w-100 custom-card mt-3 p-2">
+                      <img class="rounded" src="../IMG/images/<?= htmlspecialchars($user['Image_un']) ?>" id="img-produit">
+                      <h4 id="produit"><?= htmlspecialchars($user['Nom']) ?></h4>
+                      <div class="card-body">
+                        <p id="description"><?= htmlspecialchars($user['Description_materiel']) ?></p>
+                        <div class="d-flex align-items-center">
+                          <div class="button-group d-flex">
+                            <?php
+                            if ($user['disponibilite'] == 1) {
+                              echo '<a href="#" class="card-link vert" id="dispo">Disponible</a>';
+                            } else {
+                              echo '<a href="#" class="card-link rouge" id="indispo">Indisponible</a>';
+                            }
+                            ?>
+                          </div>
+                          <a href="materiel.php" class="card-link text-dark ms-auto px-5 modifierl" id="modifier-mat">Modifier le matériel</a>
+                        </div>
+                      </div>
+                    </div>
+                  <?php endforeach ?>
+                </div>
 
-<!-- APPROUVER -->
-<div class="col-12 col-lg-6 d-flex flex-column justify-content-between">
-  <div class="materiel d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
-    <a href="gest-comptes.php" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
-  </div>
-  <?php foreach ($tables as $table): ?>
-    <?php
-    $stmt = $pdo->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($users as $user):
-      $color = '';
-      if ($table === 'inscription_eleve') {
-        $color = '#12A19A';
-      } elseif ($table === 'inscription_prof') {
-        $color = '#8B1E3F';
-      } else {
-        $color = '#6c757d';
-      }
-    ?>
-      <form method="post" action="gest-comptes.php">
-        <div class="d-flex align-items-center gap-2">
-          <span class="rounded-circle" style="width:10px;height:10px;margin-top:-13px;background-color: <?= $color ?>;"></span>
-          <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
-          <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
-          <p id="Numetu">
-            <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
-          </p>
-        </div>
-        <div class="d-flex gap-3 justify-content-end">
-          <input type="hidden" name="Nom" value="<?= htmlspecialchars($user['Nom']) ?>">
-          <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1">
-            <i class="fa-solid fa-circle-check"></i>
-          </button>
-          <?php
-          if (isset($_POST["accepter1"])) {
-            $Nom = $_POST["Nom"];
-            $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
-            $stmt->execute([$Nom]);
-          }
-          ?>
-          <button class="card-link text-light border-0 rounded btn-acces" id="refuser1" name="refuser1">
-            <i class="fa-solid fa-circle-xmark"></i>
-          </button>
-          <?php
-          if (isset($_POST["refuser1"])) {
-            $Nom = $_POST["Nom"];
-            $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
-            $stmt->execute([$Nom]);
-          }
-          ?>
-        </div>
-      </form>
-    <?php endforeach; ?>
-  <?php endforeach; ?>
-</div>
+                <!-- APPROUVER -->
+                <div class="col-12 col-lg-6 d-flex flex-column justify-content-between">
+                  <div class="materiel d-flex align-items-center justify-content-between mb-4">
+                    <h2 class="mb-0 flex-shrink-1 me-3">Approuver des utilisateurs</h2>
+                    <a href="gest-comptes.php" id="voir"><small class="text-muted text-nowrap me-3">Voir plus</small></a>
+                  </div>
+                  <?php foreach ($tables as $table): ?>
+                    <?php
+                    $stmt = $pdo->query("SELECT * FROM `$table` WHERE statut = 'en attente'");
+                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($users as $user):
+                      $color = '';
+                      if ($table === 'inscription_eleve') {
+                        $color = '#12A19A';
+                      } elseif ($table === 'inscription_prof') {
+                        $color = '#8B1E3F';
+                      } else {
+                        $color = '#6c757d';
+                      }
+                    ?>
+                      <form method="post" action="gest-comptes.php">
+                        <div class="d-flex align-items-center gap-2">
+                          <span class="rounded-circle" style="width:10px;height:10px;margin-top:-13px;background-color: <?= $color ?>;"></span>
+                          <p id="Nom"> <?= strtoupper(htmlspecialchars($user['Nom'])) ?></p>
+                          <p id="Prenom"><?= htmlspecialchars($user['Prenom']) ?></p>
+                          <p id="Numetu">
+                            <?= isset($user['Num_etudiant']) ? htmlspecialchars($user['Num_etudiant']) . ' ' : '' ?>
+                          </p>
+                        </div>
+                        <div class="d-flex gap-3 justify-content-end">
+                          <input type="hidden" name="Nom" value="<?= htmlspecialchars($user['Nom']) ?>">
+                          <button class="card-link text-light border-0 rounded btn-acces" id="accepter1" name="accepter1">
+                            <i class="fa-solid fa-circle-check"></i>
+                          </button>
+                          <?php
+                          if (isset($_POST["accepter1"])) {
+                            $Nom = $_POST["Nom"];
+                            $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'accepté' WHERE Nom = ?");
+                            $stmt->execute([$Nom]);
+                          }
+                          ?>
+                          <button class="card-link text-light border-0 rounded btn-acces" id="refuser1" name="refuser1">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                          </button>
+                          <?php
+                          if (isset($_POST["refuser1"])) {
+                            $Nom = $_POST["Nom"];
+                            $stmt = $pdo->prepare("UPDATE `$table` SET Statut = 'refusé' WHERE Nom = ?");
+                            $stmt->execute([$Nom]);
+                          }
+                          ?>
+                        </div>
+                      </form>
+                    <?php endforeach; ?>
+                  <?php endforeach; ?>
+                </div>
 
 </body>
 
