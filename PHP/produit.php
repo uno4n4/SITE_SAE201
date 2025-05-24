@@ -287,8 +287,8 @@ if (isset($_GET['id'])) {
         if (!empty($commentaire) && !empty($reaction)) {
             if ($_SESSION['utilisateur']['Td']) {
                 // Préparer la requête pour les élèves
-                $sql = "INSERT INTO commentaires_eleve(Pseudo, date_comment, commentaire, reaction) 
-                    VALUES (:pseudo, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'), :commentaire, :reaction)";
+                $sql = "INSERT INTO commentaires_eleve(Pseudo, date_comment, commentaire, reaction, materiel) 
+                    VALUES (:pseudo, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i'), :commentaire, :reaction, :materiel)";
                 $stmt = $pdo->prepare($sql);
 
                 // Vérifier si la préparation a échoué
@@ -300,6 +300,7 @@ if (isset($_GET['id'])) {
                 $stmt->bindParam(':pseudo', $_SESSION['utilisateur']['Pseudo'], PDO::PARAM_STR);
                 $stmt->bindParam(':commentaire', $commentaire, PDO::PARAM_STR);
                 $stmt->bindParam(':reaction', $reaction, PDO::PARAM_STR);
+                $stmt->bindParam(':materiel', $_GET['id'], PDO::PARAM_STR);
 
                 // Exécuter la requête
                 $stmt->execute();
