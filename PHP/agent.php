@@ -5,7 +5,7 @@ session_start();
 
 $sql = "SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, nom_projet, signature_eleve, signature_admin FROM reservation_etudiant WHERE accepte = 'oui' 
       UNION 
-        SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, NULL, signature_prof, signature_admin AS nom_projet FROM reservation_prof WHERE accepte = 'oui'";
+        SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, NULL, signature_prof, signature_admin FROM reservation_prof WHERE accepte = 'oui'";
 
 $stmt = $pdo->query($sql);
 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);

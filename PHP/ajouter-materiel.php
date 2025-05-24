@@ -58,6 +58,7 @@ if (isset($_POST['submit'])) {
     <script src="https://kit.fontawesome.com/76ad15112d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="../CSS/profil.css">
     <script src="../JS/setting.js" defer></script>
+    <script src="../JS/reserve.js" defer></script>
     <title>Gestion matériel</title>
 </head>
 

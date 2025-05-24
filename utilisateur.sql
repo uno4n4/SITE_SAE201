@@ -171,7 +171,6 @@ CREATE TABLE `materiel` (
 --
 
 INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`, `Image_trois`, `quantite`, `date_achat`, `prix`, `categorie`, `disponibilite`) VALUES
-('Caméra', 'test : Une caméra audiovisuel ', NULL, NULL, NULL, 1, '2025-05-18', 100.00, 'Caméra', 1),
 ('Casque audio', 'description', 'P1018477.JPG', 'P1018474.JPG', 'P1018478.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Casque réalité virtuelle 1', 'noir', 'P1018524.JPG', 'P1018525.JPG', 'P1018526.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Drone', 'description', 'P1018442.JPG', 'P1018445.JPG', 'P1018446.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
@@ -179,7 +178,7 @@ INSERT INTO `materiel` (`Nom`, `Description_materiel`, `Image_un`, `Image_deux`,
 ('Logitech Brio Webcam 4K', 'description', 'P1018493.JPG', 'P1018490.JPG', 'P1018492.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Manette MSI', 'description', 'P1018512.JPG', 'P1018516.JPG', 'P1018518.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Micro', 'description', '20230505_100306.jpg', '20230505_100649.jpg', '20230505_101201.jpg', 1, '2024-01-01', 300.00, 'Camera', 1),
-('Oculus cable link (PC VR)', 'Profitez d\'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.', 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
+('Oculus cable link (PC VR)', "Profitez d'une VR fluide avec l’Oculus Link Cable ! Ce câble USB 3 Type-C de 5 m connecte votre casque Meta Quest à votre PC, offrant une expérience PC VR de haute qualité.", 'P1018494.JPG', 'P1018495.JPG', 'none', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Projecteur LG', 'description', '20230505_104216.jpg', '20230505_104109.jpg', 'IMG_0009.JPG', 1, '2024-01-01', 300.00, 'Materiel', 1),
 ('Ricoh Theta SC2 Blanc Caméra 360°', 'description', 'P1018483.JPG', 'P1018482.JPG', 'P1018480.JPG', 1, '2024-01-01', 300.00, 'Camera', 1),
 ('Salle 138', 'description', 'Salle138.jpg', 'none', 'none', 1, '2024-01-01', 300.00, 'Salle', 1),
@@ -213,8 +212,8 @@ CREATE TABLE `reservation_etudiant` (
   `participants` varchar(600) DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL,
-  `accepte` varchar(3) DEFAULT 'oui'
+  `signature_eleve` varchar(150) DEFAULT NULL,
+  `accepte` varchar(3) DEFAULT 'nnn'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -234,8 +233,8 @@ CREATE TABLE `reservation_prof` (
   `heure_fin` time DEFAULT NULL,
   `materiel` varchar(50) DEFAULT NULL,
   `quantite` int(11) DEFAULT NULL,
-  `signature` varchar(19) DEFAULT NULL,
-  `accepte` varchar(3) DEFAULT 'oui'
+  `signature_prof` varchar(150) DEFAULT NULL,
+  `accepte` varchar(3) DEFAULT 'nnn'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
