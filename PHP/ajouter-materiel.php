@@ -23,23 +23,15 @@ if (isset($_POST['submit'])) {
 
     try {
         $stmt = $pdo->prepare($sql);
-        $success = $stmt->execute([$Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite]);
+        $stmt->execute([$Nom, $Description, $Categorie, $Date_achat, $Prix, $Quantite, $Disponibilite]);
 
-        if ($success) {
-            echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
+        echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
                 <p class="mb-2">Le matériel a été ajouté</p>
                 <button class="btn btn-primary" onclick="fermer()">Fermer</button>
                 </div>';
-            exit;
-        } else {
-            echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-                <p class="mb-2">Il y a eu une erreur, veuillez réessayer</p>
-                <button class="btn btn-primary" onclick="fermer()">Fermer</button>
-                </div>';
-        }
     } catch (PDOException $e) {
         echo '<div id="msgConfirmation" class="container-sm-6 bg-light border border-dark rounded p-5 position-absolute top-50 start-50 translate-middle text-center align-items-center justify-content-center" style="--bs-border-opacity: .5; z-index:10; width: 500px;">
-            <p class="mb-2">Erreur PDO : ' . htmlspecialchars($e->getMessage()) . '</p>
+            <p class="mb-2">Il y a eu une erreur, veuillez réessayer : ' . htmlspecialchars($e->getMessage()) . '</p>
             <button class="btn btn-primary" onclick="fermer()">Fermer</button>
             </div>';
     }
