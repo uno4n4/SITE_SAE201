@@ -3,9 +3,9 @@
 include 'config.php';
 session_start();
 
-$sql = "SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, nom_projet, signature_eleve, signature_admin FROM reservation_etudiant WHERE accepte = 'oui' 
+$sql = "SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, nom_projet, signature_eleve FROM reservation_etudiant WHERE accepte = 'oui' 
       UNION 
-        SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, NULL, signature_prof, signature_admin FROM reservation_prof WHERE accepte = 'oui'";
+        SELECT Id, Pseudo, Nom, Prenom, Adresse_email, Date_reservation, heure_debut, heure_fin, materiel, quantite, NULL, signature_prof FROM reservation_prof WHERE accepte = 'oui'";
 
 $stmt = $pdo->query($sql);
 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -84,6 +84,7 @@ if (!isset($_SESSION['utilisateur'])) {
                 <i class="fa-solid fa-house"></i><span class="ms-1 d-none d-sm-inline">Tableau de bord</span>
               </a>
             </li>
+            <a class="btn btn-primary bouton-co" id="deconnexion" href="logout.php" role="button">Se déconnecter</a>
           </ul>
         </div>
       </div>
@@ -190,7 +191,6 @@ if (!isset($_SESSION['utilisateur'])) {
                             ?>
                           </p>
 
-                          <p><?php echo '           ' . htmlspecialchars($reserve['signature_admin']) ?></p>
                         </div>
                         <button style='border:none; background-color:none;' class='icon-link link-dark' onclick='telechargepdf()'>
                           Télécharger le PDF

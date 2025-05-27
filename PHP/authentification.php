@@ -57,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] === "POST"){
         } elseif($table === "inscription_eleve"){
           header("Location: accueil.php");
         } elseif($table === "inscription_agent"){
-          header("Location: ../HTML/agent.html");
+          header("Location: agent.php");
         } else{
           header("Location: admin.php");
         } 
