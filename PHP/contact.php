@@ -10,14 +10,7 @@ require '../PHPMailer-master/src/Exception.php';
 require '../PHPMailer-master/src/PHPMailer.php';
 require '../PHPMailer-master/src/SMTP.php';
 
-// Vérification de la connexion utilisateur
-if (!isset($_SESSION['utilisateur'])) {
-    echo "Erreur : Utilisateur non connecté.";
-    exit();
-}
 
-// Récupération de l'email de l'utilisateur connecté
-$email_utilisateur = $_SESSION['utilisateur']['Adresse_email'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = htmlspecialchars(trim($_POST['nom']));
@@ -108,11 +101,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <form method="post">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nom</label>
-                                <input type="text" name="nom" class="form-control" id="name" value="<?= strtoupper(htmlspecialchars($_SESSION['utilisateur']['Nom'])) . ' ' . ucfirst(htmlspecialchars($_SESSION['utilisateur']['Prenom'])) ?>" required>
+                                <input type="text" name="nom" class="form-control" id="name"  required>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Adresse email</label>
-                                <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($_SESSION['utilisateur']['Adresse_email']) ?>" id="email" required>
+                                <input type="email" name="email" class="form-control" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="message" class="form-label">Message</label>
